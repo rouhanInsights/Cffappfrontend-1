@@ -17,6 +17,8 @@ import RazorpayCheckout from 'react-native-razorpay';
 import NavBar from '../components/Navbar';
 import { useCart } from '../contexts/CartContext';
 import styles from '../styles/CheckoutStyles';
+import { RAZORPAY_KEY_ID } from '@env';
+
 
 const CheckoutScreen = () => {
   const navigation = useNavigation();
@@ -270,9 +272,7 @@ const handleSetDefault = async (addressId) => {
 
 const handleConfirmOrder = async () => {
   const selected = new Date(deliveryDate);
-  const isMonday = selected.getDay() === 1;
-
-  if (isMonday) {
+  if (selected.getDay() === 1) {
     Alert.alert('Outlet Closed', 'Our Outlets are Closed on Mondays');
     return;
   }
@@ -317,13 +317,12 @@ const handleConfirmOrder = async () => {
     }
   };
 
-  // ✅ Handle COD directly
   if (paymentMethod === 'COD') {
     await placeOrder();
     return;
   }
 
-  // ✅ Handle Razorpay payment
+  // Handle Razorpay flow
   try {
     const orderRes = await fetch(`${BASE_URL}/api/payments/create-order`, {
       method: 'POST',
@@ -341,7 +340,7 @@ const handleConfirmOrder = async () => {
       description: 'Calcutta Fresh Foods Payment',
       image: 'https://yourdomain.com/logo.png',
       currency: orderData.currency,
-      key: process.env.RAZORPAY_KEY_ID || 'rzp_test_dummy', // Replace for production
+      key: RAZORPAY_KEY_ID,
       amount: orderData.amount,
       name: 'Calcutta Fresh Foods',
       order_id: orderData.order_id,
@@ -351,12 +350,17 @@ const handleConfirmOrder = async () => {
         name: selectedAddress.name,
       },
       theme: { color: '#81991f' },
+      method: {
+        netbanking: true,
+        card: true,
+        upi: true,
+      },
     };
 
     RazorpayCheckout.open(options)
       .then(async (razorpayResponse) => {
-        // ✅ Step 1: Record Payment
-        await fetch(`${BASE_URL}/api/payments/create-order`, {
+        // ✅ Step 1: Record the payment
+        await fetch(`${BASE_URL}/api/payments`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -382,6 +386,7 @@ const handleConfirmOrder = async () => {
     Alert.alert('Error', err.message || 'Something went wrong.');
   }
 };
+
 
   return (
     <View style={{ flex: 1 }}>
