@@ -125,6 +125,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.4)',
+  justifyContent: 'flex-end',
+},
+modalContent: {
+  backgroundColor: '#fff',
+  padding: 20,
+  borderTopLeftRadius: 16,
+  borderTopRightRadius: 16,
+  maxHeight: '90%',
+},
+edit: {
+  color: '#0066cc',
+  fontWeight: '600',
+  marginLeft: 16,
+},
+
 });
 
 export default styles;

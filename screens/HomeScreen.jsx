@@ -100,7 +100,7 @@ const HomeScreen = () => {
           <>
             <TopOffersSection products={products.slice(6, 20)} />
             <AllProductsSection products={products} />
-            <BestSellersSection products={products.slice(20)} />
+            <BestSellersSection products={products} />
             {Array.isArray(previouslyBought) && previouslyBought.length > 0 && (
               <PreviouslyBoughtSection products={previouslyBought} />
             )}
