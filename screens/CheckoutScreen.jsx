@@ -50,32 +50,48 @@ const CheckoutScreen = () => {
 
   const BASE_URL = API_BASE_URL;
 
-  const getDisabledDates = () => {
-    const today = new Date();
-    const disabled = {};
-    for (let i = 0; i < 90; i++) {
-      const date = new Date();
-      date.setDate(today.getDate() + i);
-      const iso = date.toISOString().split('T')[0];
-      if (date.getDay() === 1) {
-        disabled[iso] = { disabled: true, disableTouchEvent: true };
-      }
-    }
-    return disabled;
-  };
+  const getValidDeliveryDates = () => {
+  const today = new Date();
+  const validDates = [];
 
-  const getInitialValidDate = () => {
-    const now = new Date();
-    const base = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let i = 0;
+  while (validDates.length < 3) {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
 
-    if (now.getHours() >= 9 || base.getDay() === 1) {
-      do {
-        base.setDate(base.getDate() + 1);
-      } while (base.getDay() === 1);
+    // Skip Monday (getDay() === 1)
+    if (date.getDay() !== 1) {
+      validDates.push(date.toISOString().split('T')[0]);
     }
 
-    return base.toISOString().split('T')[0];
-  };
+    i++;
+  }
+
+  return validDates;
+};
+
+const getDisabledDates = () => {
+  const today = new Date();
+  const disabled = {};
+  const validDates = getValidDeliveryDates();
+
+  for (let i = -30; i <= 30; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+    const iso = date.toISOString().split('T')[0];
+
+    if (!validDates.includes(iso)) {
+      disabled[iso] = { disabled: true, disableTouchEvent: true };
+    }
+  }
+
+  return disabled;
+};
+
+const getInitialValidDate = () => {
+  return getValidDeliveryDates()[0];
+};
+
 
   const paymentOptions = [
     { value: 'COD', label: 'Cash on Delivery' },
@@ -448,14 +464,15 @@ const handleConfirmOrder = async () => {
 
             <Text style={styles.sectionTitle}>Select Delivery Date</Text>
             <Calendar
-              minDate={new Date().toISOString().split('T')[0]}
-              markedDates={{
-                ...getDisabledDates(),
-                [deliveryDate]: { selected: true, selectedColor: '#81991f' },
-              }}
-              onDayPress={(day) => setDeliveryDate(day.dateString)}
-              disableAllTouchEventsForDisabledDays={true}
-            />
+  minDate={new Date().toISOString().split('T')[0]}
+  markedDates={{
+    ...getDisabledDates(),
+    [deliveryDate]: { selected: true, selectedColor: '#81991f' },
+  }}
+  onDayPress={(day) => setDeliveryDate(day.dateString)}
+  disableAllTouchEventsForDisabledDays={true}
+/>
+
             {new Date(deliveryDate).getDay() === 1 && (
   <Text style={{ color: 'red', marginTop: 8, fontWeight: 'bold' }}>
     Our Outlets are Closed on Mondays
