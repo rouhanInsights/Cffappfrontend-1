@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9d3d0',
-    paddingHorizontal: 1,
+    paddingHorizontal: 6,
  
   },
 
@@ -113,39 +113,40 @@ const styles = StyleSheet.create({
   horizontalList: {
     paddingBottom: 24,
   },
-  horizontalCard: {
-    width: 160,
-    borderRadius: 16,
-    backgroundColor: '#fff',
-    marginHorizontal: 10,
-    marginBottom: 16,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
-    alignItems: 'center',
-  },
-  horizontalImage: {
-    width: 150,
-    height: 160,
-    borderRadius: 10,
-    resizeMode: 'cover',
-    marginBottom: 8,
-  },
+ horizontalCard: {
+  backgroundColor: '#fff',
+  borderRadius: 10,
+  marginRight: 12,
+  width: 160,             // Match compact card
+  padding:0,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 1 },
+  shadowOpacity: 0.1,
+  shadowRadius: 2,
+  elevation: 2,
+  height:300,
+},
+
+ horizontalImage: {
+  width: 160,
+  height: 180,
+  borderRadius: 8,
+  resizeMode: 'cover', // ensures good crop
+},
+
+
+horizontalTitle: {
+  fontSize: 14,
+  fontWeight: '600',
+  marginTop: 8,
+  textAlign: 'center',
+  minHeight: 40, // 👈 fixes height for 2 lines
+},
+horizontalPrice: {
+  fontSize: 14,
+  fontWeight: 'bold',
   
-  horizontalTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: 6,
-    color: '#333',
-  },
-  horizontalPrice: {
-    fontSize: 14,
-    textAlign: 'center',
-  },
+},
   navbarContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -192,60 +193,40 @@ const styles = StyleSheet.create({
   },
   
  
-  addToCartButton: {
-    backgroundColor: '#2e7d32',
-    marginTop: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
+ addToCartButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#81991f',
+  paddingVertical: 6,
+  paddingHorizontal: 12,
+  borderRadius: 20,
+  marginTop: 6,
+  alignSelf: 'center',
+  height: 36, // 👈 consistent height
+},
   
   addToCartText: {
-    color: '#fff',
-    fontSize: 13,
-    fontWeight: '500',
-  },
-  
-  qtySelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  
-  qtyText: {
-    marginHorizontal: 8,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  popupContainer: {
-    position: 'absolute',
-    bottom:90,
-    left: 20,
-    right: 20,
-    backgroundColor: '#fff',
-    padding:16,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 10,
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  popupText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 6,
-  },
-  popupLink: {
-    color: '#e53935',
-    fontSize: 15,
-    fontWeight: '600',
-  },
+  color: '#fff',
+  fontWeight: '600',
+  marginLeft: 6,
+},
+
+qtySelector: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: 100,
+  alignSelf: 'center',
+  marginTop: 6,
+},
+
+qtyText: {
+  fontSize: 16,
+  fontWeight: '600',
+  marginHorizontal: 10,
+},
+
     cartContainer: {
     position: 'relative',
     backgroundColor: '#ffffff',
@@ -321,7 +302,8 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     color: '#1c2b31', // or '#81991f' for branding
   },
-  
+  sectionSpacing: {
+    marginBottom: 24},
   
 
 });

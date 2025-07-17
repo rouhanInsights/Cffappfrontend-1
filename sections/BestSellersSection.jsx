@@ -1,5 +1,3 @@
-// ✅ components/BestSellersSection.js
-
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -7,8 +5,8 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  Animated,
-  ActivityIndicator
+  ActivityIndicator,
+  StyleSheet,
 } from 'react-native';
 import { API_BASE_URL } from '@env';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,9 +19,6 @@ const BestSellersSection = () => {
   const [loading, setLoading] = useState(true);
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
-  const [slideAnim] = useState(new Animated.Value(100));
 
   const fetchBestSellers = async () => {
     try {
@@ -42,45 +37,8 @@ const BestSellersSection = () => {
     fetchBestSellers();
   }, []);
 
-  const triggerPopup = (message) => {
-    setPopupMessage(message);
-    setShowPopup(true);
-
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    setTimeout(() => {
-      Animated.timing(slideAnim, {
-        toValue: 100,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setShowPopup(false);
-      });
-    }, 2500);
-  };
-
   const calculateCartTotal = (cartObj) =>
     Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
-
-  const handleIncrement = (id) => {
-    incrementQty(id);
-    setTimeout(() => {
-      const total = calculateCartTotal(cartItems) + 1;
-      triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
-    }, 100);
-  };
-
-  const handleDecrement = (id) => {
-    decrementQty(id);
-    setTimeout(() => {
-      const total = Math.max(calculateCartTotal(cartItems) - 1, 0);
-      triggerPopup(`${total} item${total !== 1 ? 's' : ''} in cart`);
-    }, 100);
-  };
 
   const renderProduct = ({ item }) => {
     const quantity = cartItems[item.id] || 0;
@@ -101,8 +59,12 @@ const BestSellersSection = () => {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           {item.sale_price ? (
             <>
-              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999' }]}>₹{item.price}</Text>
-              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>₹{item.sale_price}</Text>
+              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999' }]}>
+                ₹{item.price}
+              </Text>
+              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>
+                ₹{item.sale_price}
+              </Text>
             </>
           ) : (
             <Text style={styles.horizontalPrice}>₹{item.price}</Text>
@@ -112,22 +74,18 @@ const BestSellersSection = () => {
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => {
-              addToCart(item.id);
-              const total = calculateCartTotal(cartItems) + 1;
-              triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
-            }}
+            onPress={() => addToCart(item.id)}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
             <Text style={styles.addToCartText}>Add to Cart</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => handleDecrement(item.id)}>
+            <TouchableOpacity onPress={() => decrementQty(item.id)}>
               <Ionicons name="remove-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => handleIncrement(item.id)}>
+            <TouchableOpacity onPress={() => incrementQty(item.id)}>
               <Ionicons name="add-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
           </View>
@@ -137,7 +95,7 @@ const BestSellersSection = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={localStyles.wrapper}>
       <Text style={styles.topTitle}>💥 Best Sellers</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#81991f" />
@@ -152,25 +110,16 @@ const BestSellersSection = () => {
         />
       )}
 
-      {showPopup && (
-        <Animated.View
-          style={[
-            styles.popupContainer,
-            {
-              transform: [{ translateY: slideAnim }],
-            },
-          ]}
-        >
-          <Text style={styles.popupText}>{popupMessage}</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Home', {
-            screen: 'CartScreen',
-          })}>
-            <Text style={styles.popupLink}>View Cart</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
     </View>
   );
 };
+
+const localStyles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    position: 'relative',
+    paddingBottom: 20, // keep space for cart bar
+  },
+});
 
 export default BestSellersSection;
