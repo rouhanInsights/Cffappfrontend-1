@@ -11,12 +11,11 @@ import {
 import { API_BASE_URL } from '@env';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useCart } from '../contexts/CartContext';
-import styles from '../styles/HomeStyles';
+import styles from '../styles/TopOffersStyles';
 import { useNavigation } from '@react-navigation/native';
-import CartBar from '../components/CartBar';
 
 const TopOffersSection = () => {
-  const [offers, setOffers] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
@@ -25,10 +24,10 @@ const TopOffersSection = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/products/top-offers`);
       const data = await res.json();
-      if (res.ok) setOffers(data);
-      else console.error('Error fetching top offers:', data.error);
+      if (res.ok) setProducts(data);
+      else console.error('Error fetching best sellers:', data.error);
     } catch (err) {
-      console.error('Top Offers Fetch Error:', err);
+      console.error('Best Sellers Fetch Error:', err);
     } finally {
       setLoading(false);
     }
@@ -38,32 +37,79 @@ const TopOffersSection = () => {
     fetchTopOffers();
   }, []);
 
-  const calculateCartTotal = (cartObj) =>
-    Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
-
   const renderProduct = ({ item }) => {
-    const quantity = cartItems[item.id] || 0;
+    const quantity = cartItems[item.product_id || item.id] || 0;
 
     return (
       <View style={styles.horizontalCard}>
         <View style={{ position: 'relative', alignItems: 'center' }}>
-          <Image source={{ uri: item.image }} style={styles.horizontalImage} />
+          <Image
+            source={{ uri: item.image || item.image_url }}
+            style={styles.horizontalImage}
+          />
           {item.sale_price && (
             <View style={styles.ribbonContainer}>
               <Text style={styles.ribbonText}>SALE</Text>
             </View>
           )}
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ProductDetails', {
+              productId: item.product_id || item.id,
+            })
+          }
+        >
           <Text style={styles.horizontalTitle}>{item.name}</Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+
+        <Text
+          style={[
+            styles.horizontalWeight,
+            {
+              color: '#999',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: 20,
+            },
+          ]}
+        >
+          {item.weight}
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 4,
+          }}
+        >
           {item.sale_price ? (
             <>
-              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999' }]}>
+              <Text
+                style={[
+                  styles.horizontalPrice,
+                  {
+                    textDecorationLine: 'line-through',
+                    color: '#999',
+                    marginRight: 4,
+                  },
+                ]}
+              >
                 ₹{item.price}
               </Text>
-              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>
+              <Text
+                style={[
+                  styles.horizontalPrice,
+                  {
+                    color: '#d32f2f',
+                    fontWeight: 'bold',
+                  },
+                ]}
+              >
                 ₹{item.sale_price}
               </Text>
             </>
@@ -75,18 +121,18 @@ const TopOffersSection = () => {
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => addToCart(item.id)}
+            onPress={() => addToCart(item.product_id || item.id)}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
             <Text style={styles.addToCartText}>Add to Cart</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => decrementQty(item.id)}>
+            <TouchableOpacity onPress={() => decrementQty(item.product_id || item.id)}>
               <Ionicons name="remove-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQty(item.id)}>
+            <TouchableOpacity onPress={() => incrementQty(item.product_id || item.id)}>
               <Ionicons name="add-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
           </View>
@@ -97,20 +143,21 @@ const TopOffersSection = () => {
 
   return (
     <View style={localStyles.wrapper}>
-      <Text style={styles.topTitle}>🔥 Top Offers</Text>
+      <Text style={styles.topTitle}>💥 Top Offers</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#81991f" />
       ) : (
         <FlatList
-          data={offers}
+          data={products}
           renderItem={renderProduct}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) =>
+            (item.product_id || item.id).toString()
+          }
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalList}
         />
       )}
-
     </View>
   );
 };

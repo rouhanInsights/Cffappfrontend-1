@@ -15,7 +15,7 @@ import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import TopOffersSection from '../sections/TopOffersSection';
-import AllProductsSection from '../sections/AllProductsSection';
+import ProductSection from './ProductSection';
 import BestSellersSection from '../sections/BestSellersSection';
 import PreviouslyBoughtSection from '../sections/PreviouslyBoughtSection';
 import { useCart } from '../contexts/CartContext';
@@ -103,9 +103,9 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#2e7d32" style={{ marginTop: 50 }} />
         ) : (
           <>
-            <TopOffersSection products={products.slice(6, 20)} />
-            <AllProductsSection products={products} />
-            <BestSellersSection products={products} />
+            <TopOffersSection  />
+            <ProductSection products={products} />
+            <BestSellersSection  />
             {Array.isArray(previouslyBought) && previouslyBought.length > 0 && (
               <PreviouslyBoughtSection products={previouslyBought} />
             )}

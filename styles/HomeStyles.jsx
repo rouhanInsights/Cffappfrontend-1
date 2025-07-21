@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9d3d0',
-    paddingHorizontal: 6,
+    paddingHorizontal: 4,
  
   },
 
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 1,
   },
 
   headerTitle: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   shadowOpacity: 0.1,
   shadowRadius: 2,
   elevation: 2,
-  height:300,
+  height:320,
 },
 
  horizontalImage: {
@@ -191,7 +191,9 @@ horizontalPrice: {
     fontWeight: 'bold',
     color: '#FF4D4D',
   },
-  
+  horizontalWeight: {
+  fontSize: 14,       
+  },
  
  addToCartButton: {
   flexDirection: 'row',
@@ -226,7 +228,6 @@ qtyText: {
   fontWeight: '600',
   marginHorizontal: 10,
 },
-
     cartContainer: {
     position: 'relative',
     backgroundColor: '#ffffff',
@@ -303,7 +304,7 @@ qtyText: {
     color: '#1c2b31', // or '#81991f' for branding
   },
   sectionSpacing: {
-    marginBottom: 24},
+    marginBottom: 20},
   
 
 });

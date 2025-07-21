@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native';
 
-const TopOffersStyles = StyleSheet.create({
+const BestSellersStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 6,
@@ -90,8 +90,6 @@ qtyText: {
   fontWeight: '600',
   marginHorizontal: 10,
 },
-
- 
     cartContainer: {
     position: 'relative',
     backgroundColor: '#ffffff',
@@ -136,4 +134,4 @@ qtyText: {
   },
 });
 
-export default TopOffersStyles;
+export default BestSellersStyles;

@@ -45,6 +45,7 @@ const ProductSection = ({ title, products }) => {
         <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
           <Text style={styles.horizontalTitle}>{item.name}</Text>
         </TouchableOpacity>
+        <Text style={[styles.horizontalWeight, { color: '#999',flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginLeft:'20'}]}>{item.weight}</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
           {item.sale_price ? (
             <>

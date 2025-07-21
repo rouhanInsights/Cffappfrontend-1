@@ -11,7 +11,7 @@ import {
 import { API_BASE_URL } from '@env';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useCart } from '../contexts/CartContext';
-import styles from '../styles/HomeStyles';
+import styles from '../styles/BestSellersStyles';
 import { useNavigation } from '@react-navigation/native';
 
 const BestSellersSection = () => {
@@ -37,32 +37,79 @@ const BestSellersSection = () => {
     fetchBestSellers();
   }, []);
 
-  const calculateCartTotal = (cartObj) =>
-    Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
-
   const renderProduct = ({ item }) => {
-    const quantity = cartItems[item.id] || 0;
+    const quantity = cartItems[item.product_id || item.id] || 0;
 
     return (
       <View style={styles.horizontalCard}>
         <View style={{ position: 'relative', alignItems: 'center' }}>
-          <Image source={{ uri: item.image }} style={styles.horizontalImage} />
+          <Image
+            source={{ uri: item.image || item.image_url }}
+            style={styles.horizontalImage}
+          />
           {item.sale_price && (
             <View style={styles.ribbonContainer}>
               <Text style={styles.ribbonText}>SALE</Text>
             </View>
           )}
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('ProductDetails', {
+              productId: item.product_id || item.id,
+            })
+          }
+        >
           <Text style={styles.horizontalTitle}>{item.name}</Text>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+
+        <Text
+          style={[
+            styles.horizontalWeight,
+            {
+              color: '#999',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: 20,
+            },
+          ]}
+        >
+          {item.weight}
+        </Text>
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 4,
+          }}
+        >
           {item.sale_price ? (
             <>
-              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999' }]}>
+              <Text
+                style={[
+                  styles.horizontalPrice,
+                  {
+                    textDecorationLine: 'line-through',
+                    color: '#999',
+                    marginRight: 4,
+                  },
+                ]}
+              >
                 ₹{item.price}
               </Text>
-              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>
+              <Text
+                style={[
+                  styles.horizontalPrice,
+                  {
+                    color: '#d32f2f',
+                    fontWeight: 'bold',
+                  },
+                ]}
+              >
                 ₹{item.sale_price}
               </Text>
             </>
@@ -74,18 +121,18 @@ const BestSellersSection = () => {
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => addToCart(item.id)}
+            onPress={() => addToCart(item.product_id || item.id)}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
             <Text style={styles.addToCartText}>Add to Cart</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => decrementQty(item.id)}>
+            <TouchableOpacity onPress={() => decrementQty(item.product_id || item.id)}>
               <Ionicons name="remove-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQty(item.id)}>
+            <TouchableOpacity onPress={() => incrementQty(item.product_id || item.id)}>
               <Ionicons name="add-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
           </View>
@@ -103,13 +150,14 @@ const BestSellersSection = () => {
         <FlatList
           data={products}
           renderItem={renderProduct}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) =>
+            (item.product_id || item.id).toString()
+          }
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalList}
         />
       )}
-
     </View>
   );
 };
@@ -118,7 +166,7 @@ const localStyles = StyleSheet.create({
   wrapper: {
     flex: 1,
     position: 'relative',
-    paddingBottom: 20, // keep space for cart bar
+    paddingBottom: 20,
   },
 });
 

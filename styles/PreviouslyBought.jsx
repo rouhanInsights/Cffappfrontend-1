@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 100,
+    padding: 1,
   },
   sectionContainer: {
     marginTop: 24,
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
     elevation: 5, // Adds shadow effect
     width: 160,// Adjust width for horizontal list
-    height:210 ,
+    height:240,
     
 
   },
@@ -46,6 +46,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 4,
   },
+  // Add these to your styles if not already present
+addToCartButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#81991f',
+  paddingVertical: 6,
+  paddingHorizontal: 10,
+  borderRadius: 6,
+  marginTop: 6,
+},
+addToCartText: {
+  color: '#fff',
+  fontWeight: 'bold',
+  marginLeft: 6,
+},
+qtySelector: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  marginTop: 6,
+},
+qtyText: {
+  fontSize: 16,
+  fontWeight: 'bold',
+  marginHorizontal: 10,
+},
+
 });
 
 export default styles;

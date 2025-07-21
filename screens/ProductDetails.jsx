@@ -12,20 +12,22 @@ import { useCart } from '../contexts/CartContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import styles from '../styles/ProductDetailsStyles';
 import { useNavigation } from '@react-navigation/native';
-import NavBar from '../components/Navbar';
-import { API_BASE_URL } from '@env'; // Ensure you have the correct path to your .env file
-const BASE_URL = API_BASE_URL; // Update to your backend IP or domain
+import { API_BASE_URL } from '@env';
+
+const BASE_URL = API_BASE_URL;
 
 const ProductDetails = ({ route }) => {
-  const { product } = route.params;
+  const { product: initialProduct, productId } = route.params;
+  const [product, setProduct] = useState(initialProduct || null);
+  const [relatedItems, setRelatedItems] = useState([]);
+
   const { addToCart, incrementQty, decrementQty, cartItems } = useCart();
   const navigation = useNavigation();
 
-  const quantity = cartItems[product.product_id] || 0;
+  const quantity = product ? cartItems[product.product_id] || 0 : 0;
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const slideAnim = useRef(new Animated.Value(100)).current;
-  const [relatedItems, setRelatedItems] = useState([]);
 
   const getTotalItems = () =>
     Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
@@ -54,10 +56,21 @@ const ProductDetails = ({ route }) => {
     }, 2000);
   };
 
-  const fetchRelatedItems = async () => {
+  const fetchProductById = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/api/products/${productId}`);
+      const data = await res.json();
+      if (res.ok) setProduct(data);
+      else console.warn('Product fetch failed:', data);
+    } catch (err) {
+      console.error('Product fetch error:', err);
+    }
+  };
+
+  const fetchRelatedItems = async (categoryId, excludeId) => {
     try {
       const res = await fetch(
-        `${BASE_URL}/api/products/related/${product.category_id}/${product.product_id}`
+        `${BASE_URL}/api/products/related/${categoryId}/${excludeId}`
       );
       const data = await res.json();
       if (res.ok) setRelatedItems(data);
@@ -67,12 +80,27 @@ const ProductDetails = ({ route }) => {
   };
 
   useEffect(() => {
-    fetchRelatedItems();
+    if (!initialProduct && productId) {
+      fetchProductById();
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    if (product?.category_id && product?.product_id) {
+      fetchRelatedItems(product.category_id, product.product_id);
+    }
   }, [product]);
+
+  if (!product) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading product...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>
-      <NavBar />
       <ScrollView contentContainerStyle={styles.container}>
         <Image source={{ uri: product.image_url }} style={styles.image} />
 
@@ -89,12 +117,10 @@ const ProductDetails = ({ route }) => {
                 </Text>
               </>
             ) : (
-              <Text style={styles.price}>
-                ₹{product.price}
-              </Text>
+              <Text style={styles.price}>₹{product.price}</Text>
             )}
           </View>
-
+          <Text style={styles.description}>{product.product_short_description}</Text>
           <Text style={styles.description}>
             {product.description ||
               'Delicious and freshly sourced item to make your meals delightful.'}
@@ -106,11 +132,12 @@ const ProductDetails = ({ route }) => {
             <View style={styles.badge}><Text style={styles.badgeText}>Ready to Cook</Text></View>
           </View>
 
-
-
           <View style={styles.cartActionContainer}>
             {quantity === 0 ? (
-              <TouchableOpacity style={styles.addBtn} onPress={() => handleAddToCart(product.product_id)}>
+              <TouchableOpacity
+                style={styles.addBtn}
+                onPress={() => handleAddToCart(product.product_id)}
+              >
                 <Ionicons name="cart-outline" size={20} color="#fff" />
                 <Text style={styles.addBtnText}>Add to Cart</Text>
               </TouchableOpacity>
@@ -162,7 +189,9 @@ const ProductDetails = ({ route }) => {
                   return (
                     <View style={styles.relatedCard}>
                       <Image source={{ uri: item.image_url }} style={styles.relatedImage} />
-                      <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
+                      <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', {
+                        productId: item.product_id
+                      })}>
                         <Text style={styles.relatedName} numberOfLines={1}>
                           {item.name}
                         </Text>
@@ -206,7 +235,6 @@ const ProductDetails = ({ route }) => {
                   );
                 }}
               />
-
             </>
           )}
         </View>
@@ -217,10 +245,9 @@ const ProductDetails = ({ route }) => {
             style={[styles.popupContainer, { transform: [{ translateY: slideAnim }] }]}
           >
             <Text style={styles.popupText}>{popupMessage}</Text>
-           
-                   <TouchableOpacity onPress={() => navigation.navigate('Home', {
-                                           screen: 'CartScreen'
-                                       })}>
+            <TouchableOpacity onPress={() => navigation.navigate('Home', {
+              screen: 'CartScreen'
+            })}>
               <Text style={styles.popupLink}>View Cart</Text>
             </TouchableOpacity>
           </Animated.View>

@@ -95,9 +95,8 @@ const getInitialValidDate = () => {
 
   const paymentOptions = [
     { value: 'COD', label: 'Cash on Delivery' },
-    { value: 'UPI', label: 'UPI / Google Pay / PhonePe' },
-    { value: 'NETBANKING', label: 'Net Banking' },
-    { value: 'CARD', label: 'Credit / Debit Card' },
+    { value: 'Pay Online', label: 'Pay Online' },
+    
   ];
 
   useEffect(() => {
