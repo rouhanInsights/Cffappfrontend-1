@@ -1,131 +1,144 @@
-import { StyleSheet } from "react-native";
-const styles = StyleSheet.create({
+import { StyleSheet } from 'react-native';
+
+export default StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    backgroundColor: '#f9f9f9',
+    paddingBottom: 40,
   },
   heading: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
-    color: '#2e7d32',
+    color: '#333',
+    marginTop: 16,
+    marginBottom: 12,
   },
   emptyText: {
     textAlign: 'center',
-    marginTop: 40,
+    marginTop: 50,
     fontSize: 16,
-    color: '#777',
+    color: '#666',
   },
   card: {
     backgroundColor: '#fff',
-    padding: 16,
     borderRadius: 12,
+    padding: 16,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 2,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 6,
   },
   orderId: {
-    fontWeight: '600',
+    fontWeight: 'bold',
+    fontSize: 16,
     color: '#333',
   },
   orderDate: {
-    fontSize: 13,
-    color: '#666',
+    fontSize: 14,
+    color: '#888',
   },
   status: {
+    marginTop: 4,
+    fontSize: 14,
     color: '#2e7d32',
     fontWeight: '600',
-    marginTop: 6,
   },
   paymentInfo: {
-    fontSize: 13,
-    color: '#444',
+    fontSize: 14,
     marginTop: 2,
+    color: '#444',
   },
   deliveryInfo: {
-    fontSize: 13,
-    color: '#444',
-    marginTop: 2,
+    fontSize: 14,
+    color: '#555',
+    marginTop: 4,
   },
   slotInfo: {
-    fontSize: 13,
-    color: '#444',
-    marginTop: 2,
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 8,
   },
   divider: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    marginVertical: 10,
+    height: 1,
+    backgroundColor: '#eee',
+    marginVertical: 8,
   },
   itemRow: {
     flexDirection: 'row',
-    marginBottom: 10,
     alignItems: 'center',
+    marginBottom: 10,
   },
   itemImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    marginRight: 12,
+    width: 50,
+    height: 50,
+    borderRadius: 6,
+    marginRight: 10,
   },
   itemDetails: {
     flex: 1,
   },
   itemName: {
-    fontWeight: '600',
-    fontSize: 15,
-    color: '#333',
+    fontWeight: '500',
+    fontSize: 14,
+    color: '#222',
   },
   itemQty: {
     fontSize: 13,
-    color: '#666',
+    color: '#555',
   },
   itemPrice: {
-    fontSize: 14,
-    color: '#e53935',
+    fontSize: 13,
     fontWeight: '600',
+    color: '#000',
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 8,
-    paddingTop: 8,
-    borderTopColor: '#eee',
-    borderTopWidth: 1,
   },
   totalLabel: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   totalAmount: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
-    color: '#2e7d32',
+    color: '#8BAD2B',
   },
-  loadMoreButton: {
-    marginTop: 20,
-    marginBottom: 40,
-    backgroundColor: '#2e7d32',
-    padding: 12,
-    borderRadius: 8,
+  invoiceButton: {
+    backgroundColor: '#f0f0f0',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 6,
+    marginTop: 12,
     alignItems: 'center',
-    alignSelf: 'center',
-    minWidth: 120,
   },
-  loadMoreText: {
+  invoiceButtonText: {
+    color: '#333',
+    fontWeight: '600',
+  },
+  feedbackButton: {
+    backgroundColor: '#8BAD2B',
+    paddingVertical: 10,
+    borderRadius: 6,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  feedbackButtonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
-  }
-  
-});
+  },
+  feedbackSubmittedText: {
+  marginTop: 10,
+  color: "#2e7d32",
+  fontWeight: "600",
+},
 
-export default styles;
+});

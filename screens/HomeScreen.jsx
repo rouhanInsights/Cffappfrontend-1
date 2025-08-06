@@ -104,9 +104,9 @@ const HomeScreen = () => {
         ) : (
           <>
             <TopOffersSection  />
+             <BestSellersSection  />
             <ProductSection products={products} />
-            <BestSellersSection  />
-            {Array.isArray(previouslyBought) && previouslyBought.length > 0 && (
+              {Array.isArray(previouslyBought) && previouslyBought.length > 0 && (
               <PreviouslyBoughtSection products={previouslyBought} />
             )}
           </>

@@ -13,16 +13,22 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import NavBar from '../components/Navbar';
-import styles from "../styles/MyOrderStyles";
 import RNFS from 'react-native-fs';
 import FileViewer from 'react-native-file-viewer';
-import { API_BASE_URL } from '@env'; // Ensure you have the correct path to your .env file
+
+import NavBar from '../components/Navbar';
+import styles from '../styles/MyOrderStyles';
+import FeedbackModal from '../components/FeedbackModal';
+import { API_BASE_URL } from '@env';
+
 const BASE_URL = API_BASE_URL;
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [feedbackVisible, setFeedbackVisible] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [submittedFeedback, setSubmittedFeedback] = useState([]);
 
   const fetchOrders = async () => {
     try {
@@ -45,8 +51,24 @@ export default function MyOrders() {
     }
   };
 
+  const fetchSubmittedFeedback = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const res = await fetch(`${BASE_URL}/api/feedback/submitted`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.order_ids)) {
+        setSubmittedFeedback(data.order_ids);
+      }
+    } catch (err) {
+      console.error('Failed to fetch submitted feedbacks', err);
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
+    fetchSubmittedFeedback();
   }, []);
 
   const handleDownloadInvoice = async (orderId) => {
@@ -134,6 +156,22 @@ export default function MyOrders() {
       >
         <Text style={styles.invoiceButtonText}>Download Invoice</Text>
       </TouchableOpacity>
+
+      {!submittedFeedback.includes(order.order_id) ? (
+        <TouchableOpacity
+          style={styles.feedbackButton}
+          onPress={() => {
+            setSelectedOrderId(order.order_id);
+            setFeedbackVisible(true);
+          }}
+        >
+          <Text style={styles.feedbackButtonText}>Leave Feedback</Text>
+        </TouchableOpacity>
+      ) : (
+        <Text style={{ marginTop: 10, color: "#2e7d32", fontWeight: "600" }}>
+          ✅ Feedback Submitted
+        </Text>
+      )}
     </View>
   );
 
@@ -156,6 +194,17 @@ export default function MyOrders() {
           }
         />
       )}
+
+      {/* Feedback Modal */}
+      <FeedbackModal
+        visible={feedbackVisible}
+        onClose={() => setFeedbackVisible(false)}
+        orderId={selectedOrderId}
+        onFeedbackSubmitted={(orderId) => {
+          setSubmittedFeedback((prev) => [...prev, orderId]);
+          setFeedbackVisible(false);
+        }}
+      />
     </SafeAreaView>
   );
 }

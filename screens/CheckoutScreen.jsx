@@ -51,55 +51,95 @@ const CheckoutScreen = () => {
   const BASE_URL = API_BASE_URL;
 
   const getValidDeliveryDates = () => {
-  const today = new Date();
-  const validDates = [];
+    const now = new Date();
+    const isAfter9AM = now.getHours() >= 9;
+    const validDates = [];
 
-  let i = 0;
-  while (validDates.length < 3) {
+    let i = 0;
+    while (validDates.length < 3) {
+      const date = new Date();
+      date.setDate(now.getDate() + i);
+      const iso = date.toISOString().split('T')[0];
+
+      const isToday = i === 0;
+      const isMonday = date.getDay() === 1;
+
+      if (!isMonday && (!isAfter9AM || !isToday)) {
+        validDates.push(iso);
+      }
+
+      i++;
+    }
+
+    return validDates;
+  };
+
+
+
+  const getDisabledDates = () => {
+    const today = new Date();
+    const disabled = {};
+    const validDates = getValidDeliveryDates();
+
+    for (let i = -30; i <= 365; i++) {
+      const date = new Date();
+      date.setDate(today.getDate() + i);
+      const iso = date.toISOString().split('T')[0];
+
+      if (!validDates.includes(iso)) {
+        disabled[iso] = {
+          disabled: true,
+          disableTouchEvent: true
+        };
+      }
+    }
+
+    return disabled;
+  };
+
+
+  const getMondayHighlights = () => {
+  const highlights = {};
+  const today = new Date();
+
+  // Check next 3 months (~90 days)
+  for (let i = 0; i <= 365; i++) {
     const date = new Date();
     date.setDate(today.getDate() + i);
 
-    // Skip Monday (getDay() === 1)
-    if (date.getDay() !== 1) {
-      validDates.push(date.toISOString().split('T')[0]);
-    }
-
-    i++;
-  }
-
-  return validDates;
-};
-
-const getDisabledDates = () => {
-  const today = new Date();
-  const disabled = {};
-  const validDates = getValidDeliveryDates();
-
-  for (let i = -30; i <= 30; i++) {
-    const date = new Date();
-    date.setDate(today.getDate() + i);
-    const iso = date.toISOString().split('T')[0];
-
-    if (!validDates.includes(iso)) {
-      disabled[iso] = { disabled: true, disableTouchEvent: true };
+    if (date.getDay() === 1) {
+      const iso = date.toISOString().split('T')[0];
+      highlights[iso] = {
+        customStyles: {
+         
+          text: { color: '#D32F2F' },
+        },
+      };
     }
   }
 
-  return disabled;
+  return highlights;
 };
 
-const getInitialValidDate = () => {
-  return getValidDeliveryDates()[0];
-};
+
+
+
+  const getInitialValidDate = () => {
+    return getValidDeliveryDates()[0];
+  };
 
 
   const paymentOptions = [
     { value: 'COD', label: 'Cash on Delivery' },
     { value: 'Pay Online', label: 'Pay Online' },
-    
+
   ];
 
   useEffect(() => {
+    const validDate = getValidDeliveryDates()[0];
+    setDeliveryDate(validDate);
+    setIsAfter9am(new Date().getHours() >= 9);
+
     const fetchInitialData = async () => {
       try {
         setLoading(true);
@@ -145,88 +185,88 @@ const getInitialValidDate = () => {
   }, []);
 
   const handleAddAddress = async () => {
-  const { name, phone, address_line1, city, state, pincode } = newAddress;
-  if (!name || !phone || !address_line1 || !city || !state || !pincode) {
-    Alert.alert('Missing Info', 'Please fill all required fields.');
-    return;
-  }
+    const { name, phone, address_line1, city, state, pincode } = newAddress;
+    if (!name || !phone || !address_line1 || !city || !state || !pincode) {
+      Alert.alert('Missing Info', 'Please fill all required fields.');
+      return;
+    }
 
-  try {
-    const token = await AsyncStorage.getItem('token');
-    const method = editingAddressId ? 'PUT' : 'POST';
-    const url = editingAddressId
-      ? `${BASE_URL}/api/users/addresses/${editingAddressId}`
-      : `${BASE_URL}/api/users/addresses`;
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const method = editingAddressId ? 'PUT' : 'POST';
+      const url = editingAddressId
+        ? `${BASE_URL}/api/users/addresses/${editingAddressId}`
+        : `${BASE_URL}/api/users/addresses`;
 
-    const res = await fetch(url, {
-      method,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...newAddress,
-        is_default: !editingAddressId && addresses.length === 0,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      setModalVisible(false);
-      setEditingAddressId(null);
-      setNewAddress({
-        name: '',
-        phone: '',
-        address_line1: '',
-        address_line2: '',
-        floor_no: '',
-        landmark: '',
-        city: '',
-        state: '',
-        pincode: '',
+      const res = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...newAddress,
+          is_default: !editingAddressId && addresses.length === 0,
+        }),
       });
-      const updatedAddresses = editingAddressId
-        ? addresses.map((a) => (a.address_id === data.address_id ? data : a))
-        : [...addresses, data];
-      setAddresses(updatedAddresses);
-      setSelectedAddress(data);
-    } else {
-      Alert.alert('Error', data.error || 'Failed to save address');
-    }
-  } catch (err) {
-    console.error('Save Address Error:', err);
-    Alert.alert('Error', 'Something went wrong.');
-  }
-};
-const handleSetDefault = async (addressId) => {
-  try {
-    const token = await AsyncStorage.getItem('token');
-    const res = await fetch(`${BASE_URL}/api/users/addresses/${addressId}/default`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
 
-    if (res.ok) {
-      const updated = await res.json();
-      const refreshed = addresses.map((addr) =>
-        addr.address_id === updated.address.address_id
-          ? { ...addr, is_default: true }
-          : { ...addr, is_default: false }
-      );
-      setAddresses(refreshed);
-      setSelectedAddress(updated.address);
-    } else {
       const data = await res.json();
-      Alert.alert('Error', data.error || 'Failed to update');
+
+      if (res.ok) {
+        setModalVisible(false);
+        setEditingAddressId(null);
+        setNewAddress({
+          name: '',
+          phone: '',
+          address_line1: '',
+          address_line2: '',
+          floor_no: '',
+          landmark: '',
+          city: '',
+          state: '',
+          pincode: '',
+        });
+        const updatedAddresses = editingAddressId
+          ? addresses.map((a) => (a.address_id === data.address_id ? data : a))
+          : [...addresses, data];
+        setAddresses(updatedAddresses);
+        setSelectedAddress(data);
+      } else {
+        Alert.alert('Error', data.error || 'Failed to save address');
+      }
+    } catch (err) {
+      console.error('Save Address Error:', err);
+      Alert.alert('Error', 'Something went wrong.');
     }
-  } catch (err) {
-    console.error('Set Default Error:', err);
-    Alert.alert('Error', 'Something went wrong.');
-  }
-};
+  };
+  const handleSetDefault = async (addressId) => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const res = await fetch(`${BASE_URL}/api/users/addresses/${addressId}/default`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        const refreshed = addresses.map((addr) =>
+          addr.address_id === updated.address.address_id
+            ? { ...addr, is_default: true }
+            : { ...addr, is_default: false }
+        );
+        setAddresses(refreshed);
+        setSelectedAddress(updated.address);
+      } else {
+        const data = await res.json();
+        Alert.alert('Error', data.error || 'Failed to update');
+      }
+    } catch (err) {
+      console.error('Set Default Error:', err);
+      Alert.alert('Error', 'Something went wrong.');
+    }
+  };
 
 
   const cartProductList = Object.entries(cartItems)
@@ -234,10 +274,10 @@ const handleSetDefault = async (addressId) => {
       const product = allProducts.find((p) => p.product_id === parseInt(id));
       return product
         ? {
-            ...product,
-            quantity: qty,
-            price: product.sale_price || product.price,
-          }
+          ...product,
+          quantity: qty,
+          price: product.sale_price || product.price,
+        }
         : null;
     })
     .filter(Boolean);
@@ -285,122 +325,122 @@ const handleSetDefault = async (addressId) => {
     }
   };
 
-const handleConfirmOrder = async () => {
-  const selected = new Date(deliveryDate);
-  if (selected.getDay() === 1) {
-    Alert.alert('Outlet Closed', 'Our Outlets are Closed on Mondays');
-    return;
-  }
-
-  if (!selectedAddress || !paymentMethod || !selectedSlotId || !deliveryDate) {
-    Alert.alert('Missing Info', 'Please complete all fields.');
-    return;
-  }
-
-  const token = await AsyncStorage.getItem('token');
-
-  const orderPayload = {
-    total,
-    address: `${selectedAddress.address_line1}, ${selectedAddress.city} - ${selectedAddress.pincode}`,
-    address_id: selectedAddress.address_id,
-    slot_id: selectedSlotId,
-    slot_date: deliveryDate,
-    payment_method: paymentMethod,
-    items: cartProductList.map((item) => ({
-      id: item.product_id,
-      quantity: item.quantity,
-      price: item.price,
-    })),
-  };
-
-  const placeOrder = async () => {
-    const res = await fetch(`${BASE_URL}/api/orders`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderPayload),
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      clearCart();
-      navigation.reset({ index: 0, routes: [{ name: 'OrderSuccess' }] });
-    } else {
-      Alert.alert('Order Failed', data.error || 'Something went wrong.');
+  const handleConfirmOrder = async () => {
+    const selected = new Date(deliveryDate);
+    if (selected.getDay() === 1) {
+      Alert.alert('Outlet Closed', 'Our Outlets are Closed on Mondays');
+      return;
     }
-  };
 
-  if (paymentMethod === 'COD') {
-    await placeOrder();
-    return;
-  }
+    if (!selectedAddress || !paymentMethod || !selectedSlotId || !deliveryDate) {
+      Alert.alert('Missing Info', 'Please complete all fields.');
+      return;
+    }
 
-  // Handle Razorpay flow
-  try {
-    const orderRes = await fetch(`${BASE_URL}/api/payments/create-order`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ amount: total }),
-    });
+    const token = await AsyncStorage.getItem('token');
 
-    const orderData = await orderRes.json();
-    if (!orderRes.ok) throw new Error(orderData.error || 'Failed to create Razorpay order');
-
-    const options = {
-      description: 'Calcutta Fresh Foods Payment',
-      image: 'https://yourdomain.com/logo.png',
-      currency: orderData.currency,
-      key: RAZORPAY_KEY_ID,
-      amount: orderData.amount,
-      name: 'Calcutta Fresh Foods',
-      order_id: orderData.order_id,
-      prefill: {
-        email: 'user@example.com',
-        contact: selectedAddress.phone,
-        name: selectedAddress.name,
-      },
-      theme: { color: '#81991f' },
-      method: {
-        netbanking: true,
-        card: true,
-        upi: true,
-      },
+    const orderPayload = {
+      total,
+      address: `${selectedAddress.address_line1}, ${selectedAddress.city} - ${selectedAddress.pincode}`,
+      address_id: selectedAddress.address_id,
+      slot_id: selectedSlotId,
+      slot_date: deliveryDate,
+      payment_method: paymentMethod,
+      items: cartProductList.map((item) => ({
+        id: item.product_id,
+        quantity: item.quantity,
+        price: item.price,
+      })),
     };
 
-    RazorpayCheckout.open(options)
-      .then(async (razorpayResponse) => {
-        // ✅ Step 1: Record the payment
-        await fetch(`${BASE_URL}/api/payments`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            order_id: orderData.order_id,
-            amount: orderData.amount / 100,
-            payment_method: paymentMethod,
-            payment_status: 'Success',
-          }),
-        });
-
-        // ✅ Step 2: Place the order
-        await placeOrder();
-      })
-      .catch((error) => {
-        console.warn('Razorpay error:', error);
-        Alert.alert('Payment Failed', error.description || 'Transaction cancelled.');
+    const placeOrder = async () => {
+      const res = await fetch(`${BASE_URL}/api/orders`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderPayload),
       });
-  } catch (err) {
-    console.error('Payment Init Error:', err);
-    Alert.alert('Error', err.message || 'Something went wrong.');
-  }
-};
+
+      const data = await res.json();
+      if (res.ok) {
+        clearCart();
+        navigation.reset({ index: 0, routes: [{ name: 'OrderSuccess' }] });
+      } else {
+        Alert.alert('Order Failed', data.error || 'Something went wrong.');
+      }
+    };
+
+    if (paymentMethod === 'COD') {
+      await placeOrder();
+      return;
+    }
+
+    // Handle Razorpay flow
+    try {
+      const orderRes = await fetch(`${BASE_URL}/api/payments/create-order`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: total }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok) throw new Error(orderData.error || 'Failed to create Razorpay order');
+
+      const options = {
+        description: 'Calcutta Fresh Foods Payment',
+        image: 'https://yourdomain.com/logo.png',
+        currency: orderData.currency,
+        key: RAZORPAY_KEY_ID,
+        amount: orderData.amount,
+        name: 'Calcutta Fresh Foods',
+        order_id: orderData.order_id,
+        prefill: {
+          email: 'user@example.com',
+          contact: selectedAddress.phone,
+          name: selectedAddress.name,
+        },
+        theme: { color: '#81991f' },
+        method: {
+          netbanking: true,
+          card: true,
+          upi: true,
+        },
+      };
+
+      RazorpayCheckout.open(options)
+        .then(async (razorpayResponse) => {
+          // ✅ Step 1: Record the payment
+          await fetch(`${BASE_URL}/api/payments`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              order_id: orderData.order_id,
+              amount: orderData.amount / 100,
+              payment_method: paymentMethod,
+              payment_status: 'Success',
+            }),
+          });
+
+          // ✅ Step 2: Place the order
+          await placeOrder();
+        })
+        .catch((error) => {
+          console.warn('Razorpay error:', error);
+          Alert.alert('Payment Failed', error.description || 'Transaction cancelled.');
+        });
+    } catch (err) {
+      console.error('Payment Init Error:', err);
+      Alert.alert('Error', err.message || 'Something went wrong.');
+    }
+  };
 
 
   return (
@@ -411,45 +451,45 @@ const handleConfirmOrder = async () => {
           <View style={styles.leftColumn}>
             <Text style={styles.sectionTitle}>Select Address</Text>
             {addresses.map((addr) => (
-  <View key={addr.address_id} style={[styles.selectBtn, selectedAddress?.address_id === addr.address_id && styles.selectBtnActive]}>
-    <TouchableOpacity onPress={() => setSelectedAddress(addr)}>
-      <Text style={styles.selectBtnText}>
-        {addr.name} - {addr.address_line1},{addr.address_line2},{addr.landmark},{addr.floor_no}, {addr.city}, {addr.pincode}
-      </Text>
-    </TouchableOpacity>
+              <View key={addr.address_id} style={[styles.selectBtn, selectedAddress?.address_id === addr.address_id && styles.selectBtnActive]}>
+                <TouchableOpacity onPress={() => setSelectedAddress(addr)}>
+                  <Text style={styles.selectBtnText}>
+                    {addr.name} - {addr.address_line1},{addr.address_line2},{addr.landmark},{addr.floor_no}, {addr.city}, {addr.pincode}
+                  </Text>
+                </TouchableOpacity>
 
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
-      <TouchableOpacity
-        onPress={() => {
-          setNewAddress({
-            name: addr.name,
-            phone: addr.phone,
-            address_line1: addr.address_line1,
-            address_line2: addr.address_line2,
-            floor_no: addr.floor_no,
-            landmark: addr.landmark,
-            city: addr.city,
-            state: addr.state,
-            pincode: addr.pincode,
-          });
-          setEditingAddressId(addr.address_id);
-          setModalVisible(true);
-        }}
-      >
-        <Text style={{ color: 'blue' }}>Edit</Text>
-      </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setNewAddress({
+                        name: addr.name,
+                        phone: addr.phone,
+                        address_line1: addr.address_line1,
+                        address_line2: addr.address_line2,
+                        floor_no: addr.floor_no,
+                        landmark: addr.landmark,
+                        city: addr.city,
+                        state: addr.state,
+                        pincode: addr.pincode,
+                      });
+                      setEditingAddressId(addr.address_id);
+                      setModalVisible(true);
+                    }}
+                  >
+                    <Text style={{ color: 'blue' }}>Edit</Text>
+                  </TouchableOpacity>
 
-      {!addr.is_default && (
-        <TouchableOpacity onPress={() => handleSetDefault(addr.address_id)}>
-          <Text style={{ color: 'green' }}>Set as Default</Text>
-        </TouchableOpacity>
-      )}
-      {addr.is_default && (
-        <Text style={{ color: 'orange' }}>★ Default</Text>
-      )}
-    </View>
-  </View>
-))}
+                  {!addr.is_default && (
+                    <TouchableOpacity onPress={() => handleSetDefault(addr.address_id)}>
+                      <Text style={{ color: 'green' }}>Set as Default</Text>
+                    </TouchableOpacity>
+                  )}
+                  {addr.is_default && (
+                    <Text style={{ color: 'orange' }}>★ Default</Text>
+                  )}
+                </View>
+              </View>
+            ))}
 
 
             <TouchableOpacity
@@ -463,20 +503,35 @@ const handleConfirmOrder = async () => {
 
             <Text style={styles.sectionTitle}>Select Delivery Date</Text>
             <Calendar
-  minDate={new Date().toISOString().split('T')[0]}
-  markedDates={{
-    ...getDisabledDates(),
-    [deliveryDate]: { selected: true, selectedColor: '#81991f' },
-  }}
-  onDayPress={(day) => setDeliveryDate(day.dateString)}
-  disableAllTouchEventsForDisabledDays={true}
-/>
+              minDate={new Date().toISOString().split('T')[0]}
+              markingType="custom"
+              markedDates={{
+                ...getDisabledDates(),
+                ...getMondayHighlights(),
+                [deliveryDate]: {
+                  selected: true,
+                  selectedColor: '#81991f',
+                  customStyles: {
+                    container: { backgroundColor: '#81991f' },
+                    text: { color: 'white' },
+                  },
+                },
+              }}
+              onDayPress={(day) => {
+                if (getValidDeliveryDates().includes(day.dateString)) {
+                  setDeliveryDate(day.dateString);
+                }
+              }}
+              disableAllTouchEventsForDisabledDays={true}
+            />
+
+
 
             {new Date(deliveryDate).getDay() === 1 && (
-  <Text style={{ color: 'red', marginTop: 8, fontWeight: 'bold' }}>
-    Our Outlets are Closed on Mondays
-  </Text>
-)}
+              <Text style={{ color: 'red', marginTop: 8, fontWeight: 'bold' }}>
+                Our Outlets are Closed on Mondays
+              </Text>
+            )}
 
             {/* Delivery Time */}
             <Text style={styles.sectionTitle}>Select Delivery Time</Text>
