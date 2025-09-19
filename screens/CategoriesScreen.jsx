@@ -5,23 +5,23 @@ import styles from '../styles/CategoriesStyles';
 const categories = [
   {
     name: 'Exclusive Fish & Meat',
-    image: 'https://calcuttafreshfoods.com/wp-content/uploads/2022/08/POmfret.jpg',
+    image: require('../images/POmfret.jpg'),
   },
   {
     name: 'Fish & Seafood',
-    image: 'https://calcuttafreshfoods.com/wp-content/uploads/2022/08/hilsha.jpg',
+    image: require('../images/Hilsha.jpg'),
   },
   {
     name: 'Mutton',
-    image: 'https://calcuttafreshfoods.com/wp-content/uploads/2022/08/Mutton-Keemas.jpg',
+    image: require('../images/Mutton-Keemas.jpg'),
   },
   {
     name: 'Poultry',
-    image: 'https://calcuttafreshfoods.com/wp-content/uploads/2022/08/Boneless-breasts.jpeg',
+    image: require('../images/Boneless-breasts.jpeg'),
   },
   {
     name: 'Steak & Fillets',
-    image: 'https://calcuttafreshfoods.com/wp-content/uploads/2022/12/Baked-Fish-Fillets.jpg',
+    image: require('../images/Baked-Fish-Fillets.jpg'),
   },
 ];
 
@@ -29,17 +29,21 @@ const CategoriesScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.heading}>Shop by Category</Text>
+
       <View style={styles.grid}>
         {categories.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={styles.card}
-            onPress={() => navigation.navigate('Home', {
-              screen: 'CategoryDetailScreen',
-              params: { category: item.name }
-            })}
+            activeOpacity={0.8}
+            onPress={() =>
+              navigation.navigate('Home', {
+                screen: 'CategoryDetailScreen',
+                params: { category: item.name },
+              })
+            }
           >
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <Image source={item.image} style={styles.image} resizeMode="cover" />
             <View style={styles.overlay}>
               <Text style={styles.categoryText}>{item.name}</Text>
             </View>

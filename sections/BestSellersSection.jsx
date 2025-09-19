@@ -1,3 +1,5 @@
+// ✅ components/BestSellersSection.js
+
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -5,8 +7,8 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  ActivityIndicator,
-  StyleSheet,
+  Animated,
+  ActivityIndicator
 } from 'react-native';
 import { API_BASE_URL } from '@env';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +21,9 @@ const BestSellersSection = () => {
   const [loading, setLoading] = useState(true);
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [slideAnim] = useState(new Animated.Value(100));
 
   const fetchBestSellers = async () => {
     try {
@@ -37,81 +42,69 @@ const BestSellersSection = () => {
     fetchBestSellers();
   }, []);
 
+  const triggerPopup = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    setTimeout(() => {
+      Animated.timing(slideAnim, {
+        toValue: 100,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        setShowPopup(false);
+      });
+    }, 2500);
+  };
+
+  const calculateCartTotal = (cartObj) =>
+    Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
+
+  const handleIncrement = (id) => {
+    incrementQty(id);
+    setTimeout(() => {
+      const total = calculateCartTotal(cartItems) + 1;
+      triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
+    }, 100);
+  };
+
+  const handleDecrement = (id) => {
+    decrementQty(id);
+    setTimeout(() => {
+      const total = Math.max(calculateCartTotal(cartItems) - 1, 0);
+      triggerPopup(`${total} item${total !== 1 ? 's' : ''} in cart`);
+    }, 100);
+  };
+
   const renderProduct = ({ item }) => {
-    const quantity = cartItems[item.product_id || item.id] || 0;
+    const quantity = cartItems[item.id] || 0;
 
     return (
       <View style={styles.horizontalCard}>
+        <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
         <View style={{ position: 'relative', alignItems: 'center' }}>
-          <Image
-            source={{ uri: item.image || item.image_url }}
-            style={styles.horizontalImage}
-          />
+          <Image source={{ uri: item.image }} style={styles.horizontalImage} />
           {item.sale_price && (
             <View style={styles.ribbonContainer}>
               <Text style={styles.ribbonText}>SALE</Text>
             </View>
           )}
         </View>
-
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ProductDetails', {
-              productId: item.product_id || item.id,
-            })
-          }
-        >
+        
           <Text style={styles.horizontalTitle}>{item.name}</Text>
         </TouchableOpacity>
-
-        <Text
-          style={[
-            styles.horizontalWeight,
-            {
-              color: '#999',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginLeft: 20,
-            },
-          ]}
-        >
-          {item.weight}
-        </Text>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 4,
-          }}
-        >
+        <Text style={[styles.horizontalWeight, { color: '#999',flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginLeft:'20'}]}>{item.weight}</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
           {item.sale_price ? (
             <>
-              <Text
-                style={[
-                  styles.horizontalPrice,
-                  {
-                    textDecorationLine: 'line-through',
-                    color: '#999',
-                    marginRight: 4,
-                  },
-                ]}
-              >
-                ₹{item.price}
-              </Text>
-              <Text
-                style={[
-                  styles.horizontalPrice,
-                  {
-                    color: '#d32f2f',
-                    fontWeight: 'bold',
-                  },
-                ]}
-              >
-                ₹{item.sale_price}
-              </Text>
+              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999',marginRight:'4' }]}>₹{item.price}</Text>
+              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>₹{item.sale_price}</Text>
             </>
           ) : (
             <Text style={styles.horizontalPrice}>₹{item.price}</Text>
@@ -121,18 +114,22 @@ const BestSellersSection = () => {
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => addToCart(item.product_id || item.id)}
+            onPress={() => {
+              addToCart(item.id);
+              const total = calculateCartTotal(cartItems) + 1;
+              triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
+            }}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
             <Text style={styles.addToCartText}>Add to Cart</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => decrementQty(item.product_id || item.id)}>
+            <TouchableOpacity onPress={() => handleDecrement(item.id)}>
               <Ionicons name="remove-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQty(item.product_id || item.id)}>
+            <TouchableOpacity onPress={() => handleIncrement(item.id)}>
               <Ionicons name="add-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
           </View>
@@ -142,32 +139,24 @@ const BestSellersSection = () => {
   };
 
   return (
-    <View style={localStyles.wrapper}>
-      <Text style={styles.topTitle}>💥 Best Sellers</Text>
+    <View style={styles.container}>
+      <Text style={styles.topTitle}>Best Sellers</Text>
       {loading ? (
         <ActivityIndicator size="large" color="#81991f" />
       ) : (
         <FlatList
           data={products}
           renderItem={renderProduct}
-          keyExtractor={(item) =>
-            (item.product_id || item.id).toString()
-          }
+          keyExtractor={(item) => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalList}
         />
       )}
+
+      
     </View>
   );
 };
-
-const localStyles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    position: 'relative',
-    paddingBottom: 20,
-  },
-});
 
 export default BestSellersSection;

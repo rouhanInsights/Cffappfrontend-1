@@ -29,7 +29,7 @@ export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSub
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/api/feedback`, {
+      const res = await fetch(`${API_BASE_URL}/api/feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

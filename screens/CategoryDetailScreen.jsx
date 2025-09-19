@@ -33,7 +33,7 @@ export default function CategoryDetailScreen() {
   const fetchCategoryProducts = async (categoryName) => {
     setLoading(true);
     try {
-      const res = await fetch(`${BASE_URL}/api/products/category?name=${encodeURIComponent(categoryName)}`);
+      const res = await fetch(`${API_BASE_URL}/api/products/category?name=${encodeURIComponent(categoryName)}`);
       const data = await res.json();
       if (res.ok) setProducts(data);
     } catch (err) {

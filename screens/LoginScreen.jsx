@@ -67,7 +67,7 @@ export default function LoginScreen({ navigation }) {
     const body = contact.includes('@') ? { email: contact } : { phone: contact };
 
     try {
-      const response = await fetch(`${BASE_URL}/api/users/send-otp`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -96,8 +96,8 @@ export default function LoginScreen({ navigation }) {
     }
 
     const body = contact.includes('@')
-      ? { email: contact, otp_code: otp }
-      : { phone: contact, otp_code: otp };
+      ? { email: contact, otp: otp }
+      : { phone: contact, otp: otp };
 
     try {
       const response = await fetch(`${BASE_URL}/api/users/verify-otp`, {

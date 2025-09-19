@@ -30,7 +30,7 @@ const SearchScreen = () => {
 
     try {
       setLoading(true);
-      const res = await fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`${API_BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`);
       const data = await res.json();
       if (res.ok) {
         setSearchResults(data);

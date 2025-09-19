@@ -70,7 +70,7 @@ const ProductDetails = ({ route }) => {
   const fetchRelatedItems = async (categoryId, excludeId) => {
     try {
       const res = await fetch(
-        `${BASE_URL}/api/products/related/${categoryId}/${excludeId}`
+        `${API_BASE_URL}/api/products/related/${categoryId}/${excludeId}`
       );
       const data = await res.json();
       if (res.ok) setRelatedItems(data);

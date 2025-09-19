@@ -17,7 +17,7 @@ import { Picker } from '@react-native-picker/picker';
 import { launchImageLibrary } from 'react-native-image-picker';
 import styles from '../styles/EditProfileStyles';
 
-const BASE_URL = API_BASE_URL;
+const BASE_URL =API_BASE_URL;
 
 const getLocalDateString = (date) => {
   const year = date.getFullYear();

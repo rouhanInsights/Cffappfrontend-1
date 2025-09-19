@@ -1,55 +1,54 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-const { width } = Dimensions.get('window');
-const cardSize = (width - 48) / 2;
-
-export default StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: '#f9d3d0',
+    paddingHorizontal: 12,
+    paddingBottom: 20,
+    backgroundColor: '#fff',
   },
   heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#222',
+    fontSize: 20,
+    fontWeight: '700',
+    marginVertical: 15,
     textAlign: 'center',
+    color: '#222',
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    height:1000
   },
   card: {
-    width: cardSize,
-    height: cardSize * 1.1,
-    borderRadius: 16,
-    marginBottom: 16,
+    width: '48%',
+    aspectRatio: 1,
+    borderRadius: 12,
+    marginBottom: 15,
+    backgroundColor: '#f9f9f9',
     overflow: 'hidden',
-    backgroundColor: '#f9d3d0',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 10 },
-    shadowRadius: 6,
-    elevation: 4,
+    elevation: 3, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    paddingVertical: 8,
+    backgroundColor: 'rgba(0,0,0,0.45)',
     alignItems: 'center',
   },
   categoryText: {
+    fontSize: 14,
+    fontWeight: '600',
     color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
     textAlign: 'center',
-    paddingHorizontal: 8,
   },
 });
+
+export default styles;

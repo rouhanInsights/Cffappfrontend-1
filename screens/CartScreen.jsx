@@ -13,7 +13,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import NavBar from '../components/Navbar';
 import styles from '../styles/CartStyles';
 
-const BASE_URL = API_BASE_URL;
+const BASE_URL =API_BASE_URL;
 
 const CartScreen = () => {
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();

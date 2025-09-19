@@ -48,31 +48,31 @@ const CheckoutScreen = () => {
     pincode: '',
   });
 
-  const BASE_URL = API_BASE_URL;
+  const BASE_URL=API_BASE_URL;
 
   const getValidDeliveryDates = () => {
-    const now = new Date();
-    const isAfter9AM = now.getHours() >= 9;
-    const validDates = [];
+  const now = new Date();
+  const validDates = [];
+  let i = 0;
 
-    let i = 0;
-    while (validDates.length < 3) {
-      const date = new Date();
-      date.setDate(now.getDate() + i);
-      const iso = date.toISOString().split('T')[0];
+  while (validDates.length < 3) {
+    const date = new Date();
+    date.setDate(now.getDate() + i);
+    const iso = date.toISOString().split("T")[0];
 
-      const isToday = i === 0;
-      const isMonday = date.getDay() === 1;
+    const isMonday = date.getDay() === 1;
 
-      if (!isMonday && (!isAfter9AM || !isToday)) {
-        validDates.push(iso);
-      }
-
-      i++;
+    // 🚫 exclude Mondays only
+    if (!isMonday) {
+      validDates.push(iso);
     }
 
-    return validDates;
-  };
+    i++;
+  }
+
+  return validDates;
+};
+
 
 
 
@@ -534,21 +534,58 @@ const CheckoutScreen = () => {
             )}
 
             {/* Delivery Time */}
-            <Text style={styles.sectionTitle}>Select Delivery Time</Text>
-            <View style={styles.buttonGroup}>
-              {availableSlots.map((slot) => (
-                <TouchableOpacity
-                  key={slot.slot_id}
-                  style={[
-                    styles.selectBtn,
-                    selectedSlotId === slot.slot_id && styles.selectBtnActive,
-                  ]}
-                  onPress={() => setSelectedSlotId(slot.slot_id)}
-                >
-                  <Text style={styles.selectBtnText}>{slot.slot_details}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+       <Text style={styles.sectionTitle}>Select Delivery Time</Text>
+<View style={styles.buttonGroup}>
+  {availableSlots.map((slot) => {
+    const now = new Date();
+    const isToday = deliveryDate === new Date().toISOString().split("T")[0];
+
+    // ⏰ Extract end time from slot string (e.g., "8:00 AM - 10:00 AM")
+    const parseEndHour = (slotStr) => {
+      try {
+        const parts = slotStr.split("-");
+        if (parts.length < 2) return null;
+        const end = parts[1].trim(); // "10:00 AM"
+        const [time, modifier] = end.split(" "); // ["10:00", "AM"]
+        let [hours, minutes] = time.split(":").map(Number);
+        if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
+        if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
+        return { hours, minutes: minutes || 0 };
+      } catch {
+        return null;
+      }
+    };
+
+    const endTime = parseEndHour(slot.slot_details);
+    let hideThisSlot = false;
+
+    if (isToday && endTime) {
+      // Hide if slot's end time already passed
+      if (
+        now.getHours() > endTime.hours ||
+        (now.getHours() === endTime.hours && now.getMinutes() >= endTime.minutes)
+      ) {
+        hideThisSlot = true;
+      }
+    }
+
+    if (hideThisSlot) return null; // 🚫 completely hide past slots
+
+    return (
+      <TouchableOpacity
+        key={slot.slot_id}
+        style={[
+          styles.selectBtn,
+          selectedSlotId === slot.slot_id && styles.selectBtnActive,
+        ]}
+        onPress={() => setSelectedSlotId(slot.slot_id)}
+      >
+        <Text style={styles.selectBtnText}>{slot.slot_details}</Text>
+      </TouchableOpacity>
+    );
+  })}
+</View>
+
 
             {isAfter9am && (
               <Text style={styles.warningText}>

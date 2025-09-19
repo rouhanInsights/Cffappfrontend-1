@@ -33,7 +33,7 @@ export default function MyOrders() {
   const fetchOrders = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      const res = await fetch(`${BASE_URL}/api/orders/my-orders`, {
+      const res = await fetch(`${API_BASE_URL}/api/orders/my-orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

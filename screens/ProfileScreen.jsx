@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import styles from '../styles/ProfileStyles';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_BASE_URL } from '@env';
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const [userName, setUserName] = useState('');
@@ -17,7 +17,7 @@ export default function ProfileScreen() {
     useCallback(() => {
       const fetchUser = async () => {
         const token = await AsyncStorage.getItem('token');
-        const res = await fetch('http://10.0.2.2:5000/api/users/profile', {
+        const res = await fetch(`${API_BASE_URL}/api/users/profile`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

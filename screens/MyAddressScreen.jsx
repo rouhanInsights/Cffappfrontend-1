@@ -30,11 +30,11 @@ export default function MyAddressScreen() {
     pincode: '',
   });
 
-  const BASE_URL = API_BASE_URL;
+  
 
   const fetchAddresses = async () => {
     const token = await AsyncStorage.getItem('token');
-    const res = await fetch(`${BASE_URL}/api/users/addresses`, {
+    const res = await fetch(`${API_BASE_URL}/api/users/addresses`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
@@ -61,8 +61,8 @@ export default function MyAddressScreen() {
     const token = await AsyncStorage.getItem('token');
     const method = editingId ? 'PUT' : 'POST';
     const url = editingId
-      ? `${BASE_URL}/api/users/addresses/${editingId}`
-      : `${BASE_URL}/api/users/addresses`;
+      ? `${API_BASE_URL}/api/users/addresses/${editingId}`
+      : `${API_BASE_URL}/api/users/addresses`;
 
     const res = await fetch(url, {
       method,
@@ -88,7 +88,7 @@ export default function MyAddressScreen() {
 
   const setDefault = async (id) => {
   const token = await AsyncStorage.getItem('token');
-  const res = await fetch(`${BASE_URL}/api/users/addresses/${id}/default`, {
+  const res = await fetch(`${API_BASE_URL}/api/users/addresses/${id}/default`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -106,7 +106,7 @@ export default function MyAddressScreen() {
 
   const deleteAddress = async (id) => {
     const token = await AsyncStorage.getItem('token');
-    await fetch(`${BASE_URL}/api/users/addresses/${id}`, {
+    await fetch(`${API_BASE_URL}/api/users/addresses/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },
     });

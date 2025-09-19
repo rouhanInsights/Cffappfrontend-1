@@ -112,6 +112,7 @@ const ProductSection = ({ title, products }) => {
       />
 
       {/* ✅ Blinkit-style cart bar at bottom */}
+      
     </View>
   );
 };
