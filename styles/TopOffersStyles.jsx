@@ -61,7 +61,7 @@ horizontalWeight: {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#81991f',
+  backgroundColor: '#006b3d',
   paddingVertical: 6,
   paddingHorizontal: 12,
   borderRadius: 20,

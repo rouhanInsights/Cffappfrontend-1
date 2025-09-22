@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f9d3d0',
+    backgroundColor: '#ffffeeff',
     paddingHorizontal: 4,
  
   },
@@ -199,7 +199,7 @@ horizontalPrice: {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#81991f',
+  backgroundColor: '#006b3d',
   paddingVertical: 6,
   paddingHorizontal: 12,
   borderRadius: 20,

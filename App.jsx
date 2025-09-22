@@ -1,19 +1,17 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
-import RootNavigator from './navigation/RootNavigator'; // ✅ Correct navigation entry
-import MainTabs from './navigation/MainTabs';
+import { AuthProvider } from './contexts/AuthContext';
+import RootNavigator from './navigation/RootNavigator';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
+    <CartProvider>
+      <AuthProvider>
         <NavigationContainer>
           <RootNavigator />
-          
         </NavigationContainer>
-      </CartProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </CartProvider>
   );
 }

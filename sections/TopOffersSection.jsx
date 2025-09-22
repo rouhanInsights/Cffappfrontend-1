@@ -93,9 +93,21 @@ const TopOffersSection = () => {
         <Text style={styles.ribbonText}>SALE</Text>
       </View>
     )}
-    <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
-      <Text style={styles.horizontalTitle}>{item.name}</Text>
-    </TouchableOpacity>
+   <TouchableOpacity
+             onPress={() =>
+               navigation.navigate('ProductDetails', {
+                 product: {
+                   ...item,
+                   product_id: item.id,
+                   image_url: item.image,
+                   product_short_description: item.short_description,
+                   category_id: item.category_id, // ✅ fix the blank image issue
+                 },
+               })
+             }
+           >
+             <Text style={styles.horizontalTitle}>{item.name}</Text>
+           </TouchableOpacity>
         <Text style={[styles.horizontalWeight, { color: '#999',flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginLeft:'20'}]}>{item.weight}</Text>
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
       {item.sale_price ? (

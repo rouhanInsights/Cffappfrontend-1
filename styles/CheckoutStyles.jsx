@@ -105,12 +105,12 @@ export default StyleSheet.create({
   },
 
   selectedPayment: {
-    borderColor: '#2e7d32',
+    borderColor: '#006b3d',
     backgroundColor: '#e8f5e9',
   },
 
   confirmBtn: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#006b3d',
     padding: 14,
     borderRadius: 10,
     marginTop: 24,
@@ -141,7 +141,7 @@ export default StyleSheet.create({
   },
   
   selectBtnActive: {
-    borderColor: '#2e7d32',
+    borderColor: '##006b3d',
     backgroundColor: '#e8f5e9',
   },
   
@@ -151,9 +151,8 @@ export default StyleSheet.create({
   },
   
   selectBtnTextActive: {
-    color: '#2e7d32',
+    color: '#006b3d',
     fontWeight: '600',
   },
   
 });
-

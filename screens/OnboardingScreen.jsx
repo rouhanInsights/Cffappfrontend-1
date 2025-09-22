@@ -3,12 +3,12 @@ import { View, Text, StyleSheet, Image, StatusBar } from 'react-native';
 import { Button } from 'react-native-paper';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource'; // ✅ required
 
-const onboardingImage = resolveAssetSource(require('../images/onboarding.asset.jpg')); // ✅ disable autolinking
+const onboardingImage = resolveAssetSource(require('../images/onboarding.png')); // ✅ disable autolinking
 
 export default function OnboardingScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <StatusBar barStyle="dark-content" backgroundColor="#f5fff8ff" />
       <Image
         source={onboardingImage}
         style={styles.image}
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#2e7d32',
+    color: '#006b3d',
     marginBottom: 10,
     textAlign: 'center',
   },

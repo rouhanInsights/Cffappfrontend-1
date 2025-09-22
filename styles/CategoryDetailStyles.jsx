@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#2e7d32',
+    color: '#006b3d',
     marginVertical: 10,
     marginLeft: 6,
   },
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addButton: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#006b3d',
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 6,

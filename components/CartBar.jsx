@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   cartButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#007e47ff',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 30,

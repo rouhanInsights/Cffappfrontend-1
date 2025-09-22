@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   // Add these to your styles if not already present
 addToCartButton: {
-    backgroundColor: '#8BAD2B',
+    backgroundColor: '#006b3d',
     paddingVertical: 6,
     borderRadius: 4,
     flexDirection: 'row',

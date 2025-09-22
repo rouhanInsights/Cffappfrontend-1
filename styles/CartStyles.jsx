@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   checkoutBtn: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#006b3d',
     padding: 12,
     borderRadius: 8,
     marginTop: 12,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   addToCartButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#006b3d',
     padding: 8,
     borderRadius: 8,
     marginTop: 8,

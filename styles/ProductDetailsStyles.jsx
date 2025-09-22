@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addBtn: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#006b3d',
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,

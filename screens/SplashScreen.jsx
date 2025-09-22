@@ -24,10 +24,10 @@ export default function SplashScreen({ navigation }) {
 
     checkLoginStatus();
   }, []);
-const logoimg=resolveAssetSource(require('../images/logo.asset.png'))
+const logoimg=resolveAssetSource(require('../images/logo.jpg'))
   return (
     <View style={styles.container}>
-      <Image source={logoimg} style={{ width: 300, height: 100 }} />
+      <Image source={logoimg} style={{ width: 350, height: 120 }} />
     </View>
   );
 }
@@ -37,6 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2d6a4f',
+    backgroundColor: '#fdfffeff',
   },
 });

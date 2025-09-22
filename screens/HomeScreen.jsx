@@ -103,9 +103,9 @@ const HomeScreen = () => {
           <ActivityIndicator size="large" color="#2e7d32" style={{ marginTop: 50 }} />
         ) : (
           <>
-            <TopOffersSection products={products.slice(6, 20)} />
+            <TopOffersSection/>
             <ProductSection products={products} />
-            <BestSellersSection products={products} />
+            <BestSellersSection/>
             {Array.isArray(previouslyBought) && previouslyBought.length > 0 && (
               <PreviouslyBoughtSection products={previouslyBought} />
             )}

@@ -151,7 +151,7 @@ export default function EditProfileScreen({ navigation }) {
           style={styles.profileImage}
         />
         <TouchableOpacity onPress={selectImage} style={styles.imagePickerButton}>
-          <Text style={styles.imagePickerText}>Choose Image</Text>
+          {/* <Text style={styles.imagePickerText}>Choose Image</Text> */}
         </TouchableOpacity>
       </View>
 

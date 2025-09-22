@@ -55,7 +55,7 @@ const CheckoutScreen = () => {
   const validDates = [];
   let i = 0;
 
-  while (validDates.length < 3) {
+  while (validDates.length < 4) {
     const date = new Date();
     date.setDate(now.getDate() + i);
     const iso = date.toISOString().split("T")[0];
@@ -326,6 +326,13 @@ const CheckoutScreen = () => {
   };
 
   const handleConfirmOrder = async () => {
+     if (subtotal < 300) {
+    Alert.alert(
+      "Add More Items",
+      "Minimum order value is ₹300 (excluding delivery charges). Please add more items to your cart."
+    );
+    return;
+  }
     const selected = new Date(deliveryDate);
     if (selected.getDay() === 1) {
       Alert.alert('Outlet Closed', 'Our Outlets are Closed on Mondays');

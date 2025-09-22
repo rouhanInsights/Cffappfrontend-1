@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#2e7d32',
+    color: '#006b3d',
     marginBottom: 12,
     textAlign: 'center',
   },
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
 
   saveButton: {
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#006b3d',
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
 
   setDefault: {
-    color: '#2e7d32',
+    color: '#006b3d',
     fontWeight: '600',
     fontSize: 14,
   },
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 24,
     right: 24,
-    backgroundColor: '#2e7d32',
+    backgroundColor: '#006b3d',
     width: 56,
     height: 56,
     borderRadius: 28,
