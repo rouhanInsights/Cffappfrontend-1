@@ -108,7 +108,10 @@ const TopOffersSection = () => {
            >
              <Text style={styles.horizontalTitle}>{item.name}</Text>
            </TouchableOpacity>
-        <Text style={[styles.horizontalWeight, { color: '#999',flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginLeft:'20'}]}>{item.weight}</Text>
+        <Text style={[styles.horizontalWeight, { color: '#999', marginLeft: 20 }]}>
+  {item.weight}
+</Text>
+
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
       {item.sale_price ? (
         <>

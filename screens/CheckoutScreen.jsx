@@ -541,42 +541,50 @@ const CheckoutScreen = () => {
             )}
 
             {/* Delivery Time */}
-       <Text style={styles.sectionTitle}>Select Delivery Time</Text>
+<Text style={styles.sectionTitle}>Select Delivery Time</Text>
 <View style={styles.buttonGroup}>
   {availableSlots.map((slot) => {
     const now = new Date();
-    const isToday = deliveryDate === new Date().toISOString().split("T")[0];
+    const todayISO = new Date().toISOString().split("T")[0];
+    const isToday = deliveryDate === todayISO;
 
-    // ⏰ Extract end time from slot string (e.g., "8:00 AM - 10:00 AM")
-    const parseEndHour = (slotStr) => {
-      try {
-        const parts = slotStr.split("-");
-        if (parts.length < 2) return null;
-        const end = parts[1].trim(); // "10:00 AM"
-        const [time, modifier] = end.split(" "); // ["10:00", "AM"]
+    // Parse slot label like "8:00 AM - 10:00 AM"
+    const parseTimeRange = (slotStr) => {
+      const [start, end] = slotStr.split("-");
+      const parse = (t) => {
+        const [time, modifier] = t.trim().split(" ");
         let [hours, minutes] = time.split(":").map(Number);
         if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
         if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
         return { hours, minutes: minutes || 0 };
-      } catch {
-        return null;
-      }
+      };
+      return { start: parse(start), end: parse(end) };
     };
 
-    const endTime = parseEndHour(slot.slot_details);
+    const { end } = parseTimeRange(slot.slot_details);
     let hideThisSlot = false;
 
-    if (isToday && endTime) {
-      // Hide if slot's end time already passed
-      if (
-        now.getHours() > endTime.hours ||
-        (now.getHours() === endTime.hours && now.getMinutes() >= endTime.minutes)
-      ) {
+    if (isToday) {
+      if (now.getHours() >= 10) {
+        // 🚫 After 10 AM → no same-day slots allowed
         hideThisSlot = true;
+      } else if (now.getHours() >= 6) {
+        // After 6 AM but before 10 AM → only show 10AM–12PM
+        if (!slot.slot_details.includes("10") || !slot.slot_details.includes("12")) {
+          hideThisSlot = true;
+        }
+      } else {
+        // Before 6 AM → hide slots that already ended
+        if (
+          now.getHours() > end.hours ||
+          (now.getHours() === end.hours && now.getMinutes() >= end.minutes)
+        ) {
+          hideThisSlot = true;
+        }
       }
     }
 
-    if (hideThisSlot) return null; // 🚫 completely hide past slots
+    if (hideThisSlot) return null;
 
     return (
       <TouchableOpacity
@@ -593,12 +601,13 @@ const CheckoutScreen = () => {
   })}
 </View>
 
+{/* Show warning if after 9 AM and today selected */}
+            {deliveryDate === new Date().toISOString().split("T")[0] && isAfter9am && (
+  <Text style={styles.warningText}>
+    Orders placed after 9 AM will be delivered the next day.
+  </Text>
+)}
 
-            {isAfter9am && (
-              <Text style={styles.warningText}>
-                Orders placed after 9 AM will be delivered the next day.
-              </Text>
-            )}
           </View>
 
           {/* Order Summary & Payment */}

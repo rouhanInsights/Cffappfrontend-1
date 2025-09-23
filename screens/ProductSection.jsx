@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -12,21 +12,12 @@ import { useCart } from '../contexts/CartContext';
 import styles from '../styles/HomeStyles';
 import { useNavigation } from '@react-navigation/native';
 
-
 const ProductSection = ({ title, products }) => {
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
 
-  const calculateCartTotal = (cartObj) =>
-    Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
-
-  const handleIncrement = (id) => {
-    incrementQty(id);
-  };
-
-  const handleDecrement = (id) => {
-    decrementQty(id);
-  };
+  const handleIncrement = (id) => incrementQty(id);
+  const handleDecrement = (id) => decrementQty(id);
 
   const renderProduct = ({ item }) => {
     const quantity = cartItems[item.product_id] || 0;
@@ -35,24 +26,30 @@ const ProductSection = ({ title, products }) => {
       <View style={styles.horizontalCard}>
         <View style={{ position: 'relative', alignItems: 'center' }}>
           <Image source={{ uri: item.image_url }} style={styles.horizontalImage} />
-
           {item.sale_price && (
             <View style={styles.ribbonContainer}>
               <Text style={styles.ribbonText}>SALE</Text>
             </View>
           )}
         </View>
+
         <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
           <Text style={styles.horizontalTitle}>{item.name}</Text>
         </TouchableOpacity>
-        <Text style={[styles.horizontalWeight, { color: '#999',flexDirection: 'row', alignItems: 'center', justifyContent: 'center',marginLeft:'20'}]}>{item.weight}</Text>
+
+        <Text style={[styles.horizontalWeight, { color: '#999', marginLeft: 20 }]}>
+          {item.weight}
+        </Text>
+
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
           {item.sale_price ? (
             <>
               <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999', marginRight: 4 }]}>
                 ₹{item.price}
               </Text>
-              <Text style={[styles.horizontalPrice, { color: '#d32f2f' }]}>₹{item.sale_price}</Text>
+              <Text style={[styles.horizontalPrice, { color: '#d32f2f' }]}>
+                ₹{item.sale_price}
+              </Text>
             </>
           ) : (
             <Text style={styles.horizontalPrice}>₹{item.price}</Text>
@@ -62,9 +59,7 @@ const ProductSection = ({ title, products }) => {
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => {
-              addToCart(item.product_id);
-            }}
+            onPress={() => addToCart(item.product_id)}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
             <Text style={styles.addToCartText}>Add to Cart</Text>
@@ -89,10 +84,11 @@ const ProductSection = ({ title, products }) => {
       <Text style={styles.topTitle}>All Products</Text>
       <FlatList
         data={[...products.slice(0, 5), { isViewAll: true }]}
-        keyExtractor={(item, index) => {
-          if (item?.isViewAll) return `viewAll-${index}`;
-          return item?.product_id?.toString?.() || `item-${index}`;
-        }}
+        keyExtractor={(item, index) =>
+          item?.isViewAll
+            ? `viewAll-${index}`
+            : (item?.product_id ?? index).toString()
+        }
         renderItem={({ item }) =>
           item.isViewAll ? (
             <TouchableOpacity
@@ -110,9 +106,6 @@ const ProductSection = ({ title, products }) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
       />
-
-      {/* ✅ Blinkit-style cart bar at bottom */}
-      
     </View>
   );
 };
@@ -121,7 +114,7 @@ const localStyles = StyleSheet.create({
   wrapper: {
     flex: 1,
     position: 'relative',
-    paddingBottom: 20, // To prevent cart bar from overlapping FlatList
+    paddingBottom: 20,
   },
 });
 

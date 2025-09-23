@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffeeff',
-    paddingHorizontal: 4,
+    paddingHorizontal: 6,
  
   },
 
@@ -14,9 +14,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 1,
+    marginTop: 4,
   },
 
   headerTitle: {
+    marginTop: 4,
     fontSize: 20,
     fontWeight: 'bold',
   },
@@ -78,6 +80,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 4,
+    alignItems: 'center',
   },
   promoDiscount: {
     fontSize: 14,
@@ -192,7 +195,8 @@ horizontalPrice: {
     color: '#FF4D4D',
   },
   horizontalWeight: {
-  fontSize: 14,       
+  fontSize: 14,  
+  textAlign: 'center'     
   },
  
  addToCartButton: {
@@ -202,7 +206,7 @@ horizontalPrice: {
   backgroundColor: '#006b3d',
   paddingVertical: 6,
   paddingHorizontal: 12,
-  borderRadius: 20,
+  borderRadius: 4,
   marginTop: 6,
   alignSelf: 'center',
   height: 36, // 👈 consistent height

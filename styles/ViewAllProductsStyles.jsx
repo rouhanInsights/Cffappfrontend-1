@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: '600',
+    marginHorizontal: 6,
     marginVertical: 6,
     color: '#1c2b31',
   },

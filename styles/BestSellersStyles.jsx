@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 const BestSellersStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 6,
+    padding: 1,
   },
   heading: {
     fontSize: 20,
@@ -64,7 +64,7 @@ horizontalWeight: {
   backgroundColor: '#006b3d',
   paddingVertical: 6,
   paddingHorizontal: 12,
-  borderRadius: 20,
+  borderRadius: 4,
   marginTop: 6,
   alignSelf: 'center',
   height: 36, // 👈 consistent height

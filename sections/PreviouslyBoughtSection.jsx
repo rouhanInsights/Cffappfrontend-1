@@ -19,45 +19,44 @@ const PreviouslyBoughtSection = ({ products }) => {
     const quantity = cartItems[item.product_id] || 0;
 
     return (
-    <View style={styles.productCard}>
-  <Image source={{ uri: item.image_url }} style={styles.productImage} />
-  <View style={styles.productInfo}>
-    <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('ProductDetails', {
-          productId: item.product_id,
-        })
-      }
-    >
-      <Text style={styles.productName}>{item.name}</Text>
-    </TouchableOpacity>
+      <View style={styles.productCard}>
+        <Image source={{ uri: item.image_url }} style={styles.productImage} />
+        <View style={styles.productInfo}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('ProductDetails', {
+                productId: item.product_id,
+              })
+            }
+          >
+            <Text style={styles.productName}>{item.name}</Text>
+          </TouchableOpacity>
 
-    <Text style={styles.productPrice}>₹{item.sale_price || item.price}</Text>
+          <Text style={styles.productPrice}>₹{item.sale_price || item.price}</Text>
 
-    <View style={{ flex: 1 }} /> {/* pushes button to bottom */}
+          <View style={{ flex: 1 }} />
 
-    {quantity === 0 ? (
-      <TouchableOpacity
-        style={styles.addToCartButton}
-        onPress={() => addToCart(item.product_id)}
-      >
-        <Ionicons name="cart-outline" size={18} color="#fff" />
-        <Text style={styles.addToCartText}>Add to Cart</Text>
-      </TouchableOpacity>
-    ) : (
-      <View style={styles.qtySelector}>
-        <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
-          <Ionicons name="remove-circle-outline" size={22} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.qtyText}>{quantity}</Text>
-        <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-          <Ionicons name="add-circle-outline" size={22} color="#000" />
-        </TouchableOpacity>
+          {quantity === 0 ? (
+            <TouchableOpacity
+              style={styles.addToCartButton}
+              onPress={() => addToCart(item.product_id)}
+            >
+              <Ionicons name="cart-outline" size={18} color="#fff" />
+              <Text style={styles.addToCartText}>Add to Cart</Text>
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.qtySelector}>
+              <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+                <Ionicons name="remove-circle-outline" size={22} color="#000" />
+              </TouchableOpacity>
+              <Text style={styles.qtyText}>{quantity}</Text>
+              <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+                <Ionicons name="add-circle-outline" size={22} color="#000" />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
       </View>
-    )}
-  </View>
-</View>
-
     );
   };
 
@@ -66,7 +65,9 @@ const PreviouslyBoughtSection = ({ products }) => {
       <Text style={styles.sectionTitle}>Previously Bought</Text>
       <FlatList
         data={products}
-        keyExtractor={(item) => item.product_id.toString()}
+        keyExtractor={(item, index) =>
+          (item?.product_id ?? index).toString()
+        }
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}

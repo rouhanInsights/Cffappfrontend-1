@@ -5,7 +5,8 @@ import { StyleSheet } from 'react-native';
 const TopOffersStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 6,
+    padding: 1,
+    marginBottom: 25
   },
   heading: {
     fontSize: 20,
@@ -25,7 +26,7 @@ fontSize: 18,
   borderRadius: 10,
   marginRight: 12,
   width: 160,             // Match compact card
-  padding:0,
+  padding:5,
   shadowColor: '#000',
   shadowOffset: { width: 0, height: 1 },
   shadowOpacity: 0.1,
@@ -55,7 +56,8 @@ horizontalPrice: {
   
 },
 horizontalWeight: {
-  fontSize: 14,       
+  fontSize: 14, 
+   textAlign: 'center'           
   },
   addToCartButton: {
   flexDirection: 'row',
@@ -64,7 +66,7 @@ horizontalWeight: {
   backgroundColor: '#006b3d',
   paddingVertical: 6,
   paddingHorizontal: 12,
-  borderRadius: 20,
+  borderRadius: 4,
   marginTop: 6,
   alignSelf: 'center',
   height: 36, // 👈 consistent height
@@ -90,8 +92,6 @@ qtyText: {
   fontWeight: '600',
   marginHorizontal: 10,
 },
-
- 
     cartContainer: {
     position: 'relative',
     backgroundColor: '#ffffff',

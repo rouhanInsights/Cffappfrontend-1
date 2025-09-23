@@ -1,6 +1,6 @@
 import  { useRef, useEffect, useState } from 'react';
 import { View,  FlatList, Image, ScrollView, Alert } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, Text } from 'react-native-paper';
 import styles from '../styles/LoginStyles';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,17 +10,17 @@ const slides = [
   {
     id: '1',
     title: 'Fresh Meat Delivered',
-    image: resolveAssetSource(require('../images/slider1.asset.jpg')),
+    image: resolveAssetSource(require('../images/slider1.png')),
   },
   {
     id: '2',
     title: 'Quality Fish Daily',
-    image: resolveAssetSource(require('../images/slider2.asset.jpg')),
+    image: resolveAssetSource(require('../images/ordersuccess.png')),
   },
   {
     id: '3',
     title: 'Hygienic & Fast Delivery',
-    image: resolveAssetSource(require('../images/slider3.asset.jpg')),
+    image: resolveAssetSource(require('../images/slider3.png')),
   },
 ];
 
@@ -169,12 +169,14 @@ export default function LoginScreen({ navigation }) {
         scrollEnabled={false}
         renderItem={({ item }) => (
           <View style={styles.slide}>
+              <Text style={styles.title}>Welcome to Calcutta Fresh Foods!</Text>
             <Image source={item.image} style={styles.image} />
           </View>
         )}
       />
 
       <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
         <TextInput
           label="Phone or Email"
           value={contact}

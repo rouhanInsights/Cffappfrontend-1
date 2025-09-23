@@ -18,8 +18,8 @@ const BestSellersSection = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cart = { items: [] }, addToCart, removeFromCart } = useCart();
-
   const navigation = useNavigation();
+
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [slideAnim] = useState(new Animated.Value(100));
@@ -41,27 +41,6 @@ const BestSellersSection = () => {
     fetchBestSellers();
   }, []);
 
-  const triggerPopup = (message) => {
-    setPopupMessage(message);
-    setShowPopup(true);
-
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    setTimeout(() => {
-      Animated.timing(slideAnim, {
-        toValue: 100,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setShowPopup(false);
-      });
-    }, 2500);
-  };
-
   const calculateCartTotal = (cartItems) =>
     cartItems.reduce((sum, item) => sum + (item.quantity ?? 1), 0);
 
@@ -81,7 +60,6 @@ const BestSellersSection = () => {
           )}
         </View>
 
-        {/* ✅ FIX: Map image → image_url during navigation */}
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('ProductDetails', {
@@ -90,7 +68,7 @@ const BestSellersSection = () => {
                 product_id: item.id,
                 image_url: item.image,
                 product_short_description: item.short_description,
-                category_id: item.category_id, // ✅ fix the blank image issue
+                category_id: item.category_id,
               },
             })
           }
@@ -98,46 +76,17 @@ const BestSellersSection = () => {
           <Text style={styles.horizontalTitle}>{item.name}</Text>
         </TouchableOpacity>
 
-        <Text
-          style={[
-            styles.horizontalWeight,
-            {
-              color: '#999',
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginLeft: 20,
-            },
-          ]}
-        >
+        <Text style={[styles.horizontalWeight, { color: '#999', marginLeft: 20 }]}>
           {item.weight}
         </Text>
 
-        {/* Price / Sale Price */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 4,
-          }}
-        >
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
           {item.sale_price ? (
             <>
-              <Text
-                style={[
-                  styles.horizontalPrice,
-                  { textDecorationLine: 'line-through', color: '#999', marginRight: 4 },
-                ]}
-              >
+              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999', marginRight: 4 }]}>
                 ₹{item.price}
               </Text>
-              <Text
-                style={[
-                  styles.horizontalPrice,
-                  { color: '#d32f2f', fontWeight: 'bold' },
-                ]}
-              >
+              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>
                 ₹{item.sale_price}
               </Text>
             </>
@@ -146,7 +95,6 @@ const BestSellersSection = () => {
           )}
         </View>
 
-        {/* Cart Actions */}
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
@@ -158,7 +106,7 @@ const BestSellersSection = () => {
                 image: item.image,
               });
               const total = calculateCartTotal(cart.items) + 1;
-              triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
+              console.log(`${total} items in cart`);
             }}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
@@ -177,7 +125,6 @@ const BestSellersSection = () => {
                   name: item.name,
                   price: item.sale_price || item.price,
                   image: item.image,
-                  
                 })
               }
             >
@@ -198,7 +145,9 @@ const BestSellersSection = () => {
         <FlatList
           data={products}
           renderItem={renderProduct}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) =>
+            (item?.id ?? index).toString()
+          }
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalList}

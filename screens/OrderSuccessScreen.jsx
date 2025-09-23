@@ -12,7 +12,7 @@ const OrderSuccessScreen = () => {
       routes: [{ name: 'Main' }],
     });
   };
- const successImage = resolveAssetSource(require('../images/ordersuccess.asset.jpg'));
+ const successImage = resolveAssetSource(require('../images/ordersuccess.png'));
   return (
     <View style={styles.container}>
       <Ionicons name="checkmark-circle" size={100} color="#2e7d32" />

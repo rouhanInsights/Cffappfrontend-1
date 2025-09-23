@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 10,
+    backgroundColor: '#fff',
   },
   link: {
     marginTop: 10,
