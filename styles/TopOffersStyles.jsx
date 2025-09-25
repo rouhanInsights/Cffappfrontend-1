@@ -32,7 +32,7 @@ fontSize: 18,
   shadowOpacity: 0.1,
   shadowRadius: 2,
   elevation: 2,
-  height:320,
+  height:340,
 },
   
  horizontalImage: {
@@ -133,6 +133,22 @@ qtyText: {
     color: '#fff',
     fontSize: 10,
     fontWeight: 'bold',
+  },
+   viewAllCard: {
+    width: 120,
+    height: 170,
+    marginRight: 10,
+    borderRadius: 10,
+    backgroundColor: '#f2f2f2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+  },
+  viewAllText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 6,
+    color: '#1c2b31', // or '#81991f' for branding
   },
 });
 

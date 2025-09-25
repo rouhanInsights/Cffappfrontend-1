@@ -15,11 +15,10 @@ import styles from '../styles/BestSellersStyles';
 import { useNavigation } from '@react-navigation/native';
 
 const BestSellersSection = () => {
-  const [products, setProducts] = useState([]);
+  const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { cart = { items: [] }, addToCart, removeFromCart } = useCart();
+  const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
-
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [slideAnim] = useState(new Animated.Value(100));
@@ -28,8 +27,12 @@ const BestSellersSection = () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/products/best-sellers`);
       const data = await res.json();
-      if (res.ok) setProducts(data);
-      else console.error('Error fetching best sellers:', data.error);
+      if (res.ok) {
+        const sliced = data.slice(0, 6);
+        setOffers([...sliced, { viewAll: true }]);
+      } else {
+        console.error('Error fetching Best Sellers:', data.error);
+      }
     } catch (err) {
       console.error('Best Sellers Fetch Error:', err);
     } finally {
@@ -41,72 +44,128 @@ const BestSellersSection = () => {
     fetchBestSellers();
   }, []);
 
-  const calculateCartTotal = (cartItems) =>
-    cartItems.reduce((sum, item) => sum + (item.quantity ?? 1), 0);
+  const triggerPopup = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    setTimeout(() => {
+      Animated.timing(slideAnim, {
+        toValue: 100,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        setShowPopup(false);
+      });
+    }, 2500);
+  };
+
+  const calculateCartTotal = (cartObj) =>
+    Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
 
   const renderProduct = ({ item }) => {
-    const quantity =
-      cart.items.find((ci) => ci.id.toString() === item.id.toString())
-        ?.quantity || 0;
+    if (item?.viewAll) {
+      return (
+        <TouchableOpacity
+          style={styles.viewAllCard}
+          onPress={() =>
+            
+            navigation.navigate('ViewAllProducts', {
+              title: 'Best Sellers',
+              products: offers.filter((i) => !i.viewAll),
+            })
+          }
+        >
+          <Text style={styles.viewAllText}>View All</Text>
+          <Ionicons name="chevron-forward-circle" size={28} color="#006b3d" />
+        </TouchableOpacity>
+      );
+    }
+
+    const quantity = cartItems[item.id] || 0;
 
     return (
       <View style={styles.horizontalCard}>
-        <View style={{ position: 'relative', alignItems: 'center' }}>
+        <View>
           <Image source={{ uri: item.image }} style={styles.horizontalImage} />
           {item.sale_price && (
             <View style={styles.ribbonContainer}>
               <Text style={styles.ribbonText}>SALE</Text>
             </View>
           )}
-        </View>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('ProductDetails', {
+                product: {
+                  ...item,
+                  product_id: item.id,
+                  image_url: item.image,
+                  product_short_description: item.short_description,
+                  category_id: item.category_id,
+                },
+              })
+            }
+          >
+            <Text style={styles.horizontalTitle}>{item.name}</Text>
+          </TouchableOpacity>
+          <Text
+            style={[
+              styles.horizontalWeight,
+              { color: '#999', marginLeft: 20 },
+            ]}
+          >
+            {item.weight}
+          </Text>
 
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate('ProductDetails', {
-              product: {
-                ...item,
-                product_id: item.id,
-                image_url: item.image,
-                product_short_description: item.short_description,
-                category_id: item.category_id,
-              },
-            })
-          }
-        >
-          <Text style={styles.horizontalTitle}>{item.name}</Text>
-        </TouchableOpacity>
-
-        <Text style={[styles.horizontalWeight, { color: '#999', marginLeft: 20 }]}>
-          {item.weight}
-        </Text>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
-          {item.sale_price ? (
-            <>
-              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999', marginRight: 4 }]}>
-                ₹{item.price}
-              </Text>
-              <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>
-                ₹{item.sale_price}
-              </Text>
-            </>
-          ) : (
-            <Text style={styles.horizontalPrice}>₹{item.price}</Text>
-          )}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 4,
+            }}
+          >
+            {item.sale_price ? (
+              <>
+                <Text
+                  style={[
+                    styles.horizontalPrice,
+                    {
+                      textDecorationLine: 'line-through',
+                      color: '#999',
+                      marginRight: 4,
+                    },
+                  ]}
+                >
+                  ₹{item.price}
+                </Text>
+                <Text
+                  style={[
+                    styles.horizontalPrice,
+                    { color: '#d32f2f', fontWeight: 'bold' },
+                  ]}
+                >
+                  ₹{item.sale_price}
+                </Text>
+              </>
+            ) : (
+              <Text style={styles.horizontalPrice}>₹{item.price}</Text>
+            )}
+          </View>
         </View>
 
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
             onPress={() => {
-              addToCart({
-                id: item.id.toString(),
-                name: item.name,
-                price: item.sale_price || item.price,
-                image: item.image,
-              });
-              const total = calculateCartTotal(cart.items) + 1;
-              console.log(`${total} items in cart`);
+              addToCart(item.id);
+              const total = calculateCartTotal(cartItems) + 1;
+              triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
             }}
           >
             <Ionicons name="cart-outline" size={20} color="#fff" />
@@ -114,20 +173,11 @@ const BestSellersSection = () => {
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => removeFromCart(item.id.toString())}>
+            <TouchableOpacity onPress={() => handleDecrement(item.id)}>
               <Ionicons name="remove-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity
-              onPress={() =>
-                addToCart({
-                  id: item.id.toString(),
-                  name: item.name,
-                  price: item.sale_price || item.price,
-                  image: item.image,
-                })
-              }
-            >
+            <TouchableOpacity onPress={() => handleIncrement(item.id)}>
               <Ionicons name="add-circle-outline" size={24} color="#000" />
             </TouchableOpacity>
           </View>
@@ -143,10 +193,10 @@ const BestSellersSection = () => {
         <ActivityIndicator size="large" color="#81991f" />
       ) : (
         <FlatList
-          data={products}
+          data={offers}
           renderItem={renderProduct}
           keyExtractor={(item, index) =>
-            (item?.id ?? index).toString()
+            item?.id ? item.id.toString() : `item-${index}`
           }
           horizontal
           showsHorizontalScrollIndicator={false}
