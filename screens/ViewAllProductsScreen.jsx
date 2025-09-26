@@ -1,32 +1,41 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
   FlatList,
   Image,
   TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import styles from "../styles/ViewAllProductsStyles"
-import NavBar from '../components/Navbar';
-const { width } = Dimensions.get('window');
-const CARD_WIDTH = width / 2 - 20;
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import styles from "../styles/ViewAllProductsStyles";
+import NavBar from "../components/Navbar";
+import { useCart } from "../contexts/CartContext";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const ViewAllProductsScreen = ({ route }) => {
   const { products, title } = route.params;
   const navigation = useNavigation();
+  const { addToCart, incrementQty, decrementQty, cartItems } = useCart();
 
   const renderItem = ({ item }) => {
+    const quantity = cartItems[item.product_id] || 0;
+
     return (
-      <TouchableOpacity
-        style={styles.card}
-        onPress={() => navigation.navigate('ProductDetails', { product: item })}
-      >
-        <Image source={{ uri: item.image_url }} style={styles.image} />
+      <View style={styles.card}>
+        {/* Product Image */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() => navigation.navigate("ProductDetails", { product: item })}
+        >
+          <Image source={{ uri: item.image_url }} style={styles.image} />
+        </TouchableOpacity>
+
+        {/* Product Name */}
         <Text style={styles.name} numberOfLines={2}>
           {item.name}
         </Text>
+
+        {/* Price */}
         <View style={styles.priceContainer}>
           {item.sale_price ? (
             <>
@@ -37,24 +46,45 @@ const ViewAllProductsScreen = ({ route }) => {
             <Text style={styles.salePrice}>₹{item.price}</Text>
           )}
         </View>
-      </TouchableOpacity>
+
+        {/* Add to Cart / Qty Selector */}
+        {quantity === 0 ? (
+          <TouchableOpacity
+            style={styles.addBtn}
+            onPress={() => addToCart(item.product_id)}
+          >
+            <Ionicons name="cart-outline" size={18} color="#000" />
+            <Text style={styles.addBtnText}>Add</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.qtySelector}>
+            <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+              <Ionicons name="remove-circle-outline" size={22} color="#e8bc44" />
+            </TouchableOpacity>
+            <Text style={styles.qtyText}>{quantity}</Text>
+            <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+              <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
     );
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#0c0104" }}>
       <NavBar />
-    <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <FlatList
-        data={products}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.product_id.toString()}
-        numColumns={2}
-        contentContainerStyle={styles.grid}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.title}>{title}</Text>
+        <FlatList
+          data={products}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.product_id.toString()}
+          numColumns={2}
+          contentContainerStyle={styles.grid}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
     </View>
   );
 };

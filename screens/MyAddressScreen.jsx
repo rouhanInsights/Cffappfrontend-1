@@ -30,8 +30,6 @@ export default function MyAddressScreen() {
     pincode: '',
   });
 
-  
-
   const fetchAddresses = async () => {
     const token = await AsyncStorage.getItem('token');
     const res = await fetch(`${API_BASE_URL}/api/users/addresses`, {
@@ -87,22 +85,21 @@ export default function MyAddressScreen() {
   };
 
   const setDefault = async (id) => {
-  const token = await AsyncStorage.getItem('token');
-  const res = await fetch(`${API_BASE_URL}/api/users/addresses/${id}/default`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+    const token = await AsyncStorage.getItem('token');
+    const res = await fetch(`${API_BASE_URL}/api/users/addresses/${id}/default`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
-  if (res.ok) {
-    fetchAddresses();
-  } else {
-    const data = await res.json();
-    Alert.alert("Error", data.error || "Failed to set default address");
-  }
-};
-
+    if (res.ok) {
+      fetchAddresses();
+    } else {
+      const data = await res.json();
+      Alert.alert("Error", data.error || "Failed to set default address");
+    }
+  };
 
   const deleteAddress = async (id) => {
     const token = await AsyncStorage.getItem('token');
@@ -116,11 +113,11 @@ export default function MyAddressScreen() {
   const renderAddress = ({ item }) => (
     <View style={styles.card}>
       <Text style={styles.addrName}>{item.name}</Text>
-      <Text>{item.address_line1}, {item.address_line2}</Text>
-      {item.floor_no ? <Text>Floor: {item.floor_no}</Text> : null}
-      {item.landmark ? <Text>Landmark: {item.landmark}</Text> : null}
-      <Text>{item.city}, {item.state}, {item.pincode}</Text>
-      <Text>Phone: {item.phone}</Text>
+      <Text style={styles.addrText}>{item.address_line1}, {item.address_line2}</Text>
+      {item.floor_no ? <Text style={styles.addrText}>Floor: {item.floor_no}</Text> : null}
+      {item.landmark ? <Text style={styles.addrText}>Landmark: {item.landmark}</Text> : null}
+      <Text style={styles.addrText}>{item.city}, {item.state}, {item.pincode}</Text>
+      <Text style={styles.addrText}>Phone: {item.phone}</Text>
 
       <View style={styles.addrActions}>
         {!item.is_default && (
@@ -195,6 +192,7 @@ export default function MyAddressScreen() {
                 <TextInput
                   key={key}
                   placeholder={label}
+                  placeholderTextColor="#d0ccccff"
                   value={newAddress[key]}
                   onChangeText={(val) => setNewAddress({ ...newAddress, [key]: val })}
                   style={optional ? styles.optionalInput : styles.input}
@@ -206,8 +204,8 @@ export default function MyAddressScreen() {
                 <TouchableOpacity style={[styles.saveButton, { flex: 1, marginRight: 6 }]} onPress={handleSave}>
                   <Text style={styles.saveButtonText}>{editingId ? 'Update' : 'Save'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.saveButton, { backgroundColor: '#aaa', flex: 1, marginLeft: 6 }]} onPress={resetForm}>
-                  <Text style={styles.saveButtonText}>Cancel</Text>
+                <TouchableOpacity style={[styles.cancelButton, { flex: 1, marginLeft: 6 }]} onPress={resetForm}>
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
                 </TouchableOpacity>
               </View>
             </ScrollView>

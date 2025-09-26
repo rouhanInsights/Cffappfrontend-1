@@ -1,153 +1,118 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
-    
-    backgroundColor: '#fff',
+    margin: 0,
+    paddingBottom: 80, // space for cart bar
+    backgroundColor: "#0c0104",
   },
   image: {
     width: "100%",
-    height: 300,
-    resizeMode: 'cover',
+    height: 250,
+    resizeMode: "cover",
   },
   detailCard: {
+    backgroundColor: "#000000",
+    borderRadius: 12,
+    margin: 12,
     padding: 16,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    marginTop: -20,
-    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#333',
-    marginBottom: 6,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-    gap: 10,
-  },
-  price: {
     fontSize: 20,
-  },
-  originalPrice: {
-    textDecorationLine: 'line-through',
-    color: '#999',
-  },
-  salePrice: {
-    color: '#d32f2f',
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 8,
   },
   description: {
     fontSize: 14,
-    color: '#555',
-    marginBottom: 12,
+    color: "#ccc",
+    marginTop: 6,
+    lineHeight: 20,
   },
-  badgeContainer: {
-    flexDirection: 'row',
-    gap: 8,
-    marginBottom: 12,
+  priceContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
+  price: { fontSize: 16, fontWeight: "bold", marginRight: 10 },
+  originalPrice: { color: "#999", textDecorationLine: "line-through" },
+  salePrice: { color: "#e8bc44", fontWeight: "bold", fontSize: 18 },
+
+  badgeContainer: { flexDirection: "row", marginVertical: 10 },
   badge: {
-    backgroundColor: '#e0f2f1',
-    borderRadius: 12,
-    paddingVertical: 4,
+    backgroundColor: "#c8102e",
+    borderRadius: 6,
     paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginRight: 8,
   },
-  badgeText: {
-    fontSize: 12,
-    color: '#00796b',
-    fontWeight: '500',
-  },
-  cartActionContainer: {
-    marginVertical: 14,
-    alignItems: 'center',
-  },
+  badgeText: { color: "#fff", fontSize: 12, fontWeight: "600" },
+
+  cartActionContainer: { marginTop: 15, alignItems: "center" },
   addBtn: {
-    backgroundColor: '#006b3d',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e8bc44",
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 8,
-    gap: 8,
+    marginTop: 8,
   },
-  addBtnText: {
-    color: '#fff',
-    fontWeight: '600',
-    justifyContent:'center'
-  },
+  addBtnText: { color: "#000", marginLeft: 6, fontSize: 14, fontWeight: "600" },
   qtySelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#333",
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderColor: "#e8bc44ff",
+    borderWidth: 1.5,
   },
-  qtyText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
+  qtyText: { color: "#fff", marginHorizontal: 12, fontSize: 16, fontWeight: "600" },
+
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#333',
-    marginTop: 24,
-    marginBottom: 12,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    marginTop: 20,
+    marginBottom: 10,
   },
-  relatedCard: {
-    backgroundColor: '#fafafa',
-    borderRadius: 12,
-    marginRight: 12,
+
+  // ✅ Sticky Cart Bar
+  cartBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#111",
     padding: 12,
-    width: 150,
-    elevation: 2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "#333",
   },
-  viewAllCard: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  viewAllText: {
-    color: '#2e7d32',
-    fontWeight: 'bold',
+  cartBarText: {
+    color: "#fff",
     fontSize: 14,
+    fontWeight: "600",
   },
-  relatedImage: {
-    width: '100%',
-    height: 90,
-    borderRadius: 8,
-    marginBottom: 6,
+  cartBarButton: {
+    backgroundColor: "#e8bc44",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
   },
-  relatedName: {
+  cartBarButtonText: {
+    color: "#000",
+    fontWeight: "bold",
     fontSize: 14,
-    fontWeight: '500',
-    color: '#333',
-  },
-  popupContainer: {
-    position: 'absolute',
-    bottom: 100,
-    left: 20,
-    right: 20,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 12,
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-  },
-  popupText: {
-    fontSize: 14,
-    marginBottom: 4,
-    fontWeight: '500',
-  },
-  popupLink: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#2e7d32',
   },
 });
-
-export default styles;

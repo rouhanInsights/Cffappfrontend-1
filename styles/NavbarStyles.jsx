@@ -1,62 +1,53 @@
 import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "#FFd10b",
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+export default StyleSheet.create({
+  gradientWrapper: {
+    paddingTop: 40, // safe area (adjust if needed)
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    elevation: 6, // shadow for Android
     shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
-
-  // Top row: Location + Cart
   topRow: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8,
+    alignItems: "center",
+    marginBottom: 12,
   },
   locationWrapper: {
     flex: 1,
-    marginRight: 10,
   },
   cartContainer: {
-    position: "relative",
-    padding: 6,
+    marginLeft: 12,
   },
   cartBadge: {
     position: "absolute",
-    top: 2,
-    right: 2,
-    backgroundColor: "#16a34a",
+    top: -6,
+    right: -8,
+    backgroundColor: "#fff",
     borderRadius: 10,
-    paddingHorizontal: 5,
+    paddingHorizontal: 6,
     paddingVertical: 2,
   },
   cartBadgeText: {
-    color: "#fff",
     fontSize: 12,
-    fontWeight: "600",
+    fontWeight: "bold",
+    color: "#c8102e",
   },
-
-  // Search row
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#111",
     borderRadius: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 8,
   },
   searchInput: {
     flex: 1,
     marginLeft: 8,
-    fontSize: 14,
-    color: "#333",
+    fontSize: 15,
+    color: "#fff",
   },
 });
-
-export default styles;

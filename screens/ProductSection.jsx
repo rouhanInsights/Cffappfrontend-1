@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -6,13 +6,13 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useCart } from '../contexts/CartContext';
-import styles from '../styles/HomeStyles';
-import { useNavigation } from '@react-navigation/native';
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useCart } from "../contexts/CartContext";
+import styles from "../styles/ProductSectionStyles"; // ✅ new dedicated styles
+import { useNavigation } from "@react-navigation/native";
 
-const ProductSection = ({ title, products }) => {
+const ProductSection = ({ title = "All Products", products }) => {
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
 
@@ -23,55 +23,61 @@ const ProductSection = ({ title, products }) => {
     const quantity = cartItems[item.product_id] || 0;
 
     return (
-      <View style={styles.horizontalCard}>
-        <View style={{ position: 'relative', alignItems: 'center' }}>
-          <Image source={{ uri: item.image_url }} style={styles.horizontalImage} />
-          {item.sale_price && (
-            <View style={styles.ribbonContainer}>
-              <Text style={styles.ribbonText}>SALE</Text>
-            </View>
-          )}
-        </View>
-
-        <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product: item })}>
-          <Text style={styles.horizontalTitle}>{item.name}</Text>
+      <View style={styles.card}>
+        {/* Product Image */}
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("ProductDetails", {
+              product: item,
+            })
+          }
+          activeOpacity={0.8}
+        >
+          <View style={styles.imageWrapper}>
+            <Image source={{ uri: item.image_url }} style={styles.productImage} />
+            {item.sale_price && (
+              <View style={styles.ribbonContainer}>
+                <Text style={styles.ribbonText}>SALE</Text>
+              </View>
+            )}
+          </View>
         </TouchableOpacity>
 
-        <Text style={[styles.horizontalWeight, { color: '#999', marginLeft: 20 }]}>
-          {item.weight}
+        {/* Info */}
+        <Text style={styles.productName} numberOfLines={1}>
+          {item.name}
         </Text>
+        <Text style={styles.productWeight}>{item.weight}</Text>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 4 }}>
+        {/* Price */}
+        <View style={styles.priceRow}>
           {item.sale_price ? (
             <>
-              <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999', marginRight: 4 }]}>
-                ₹{item.price}
-              </Text>
-              <Text style={[styles.horizontalPrice, { color: '#d32f2f' }]}>
-                ₹{item.sale_price}
-              </Text>
+              <Text style={styles.oldPrice}>₹{item.price}</Text>
+              <Text style={styles.salePrice}>₹{item.sale_price}</Text>
             </>
           ) : (
-            <Text style={styles.horizontalPrice}>₹{item.price}</Text>
+            <Text style={styles.price}>₹{item.price}</Text>
           )}
         </View>
 
+        {/* Cart Actions */}
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
             onPress={() => addToCart(item.product_id)}
           >
-            <Ionicons name="cart-outline" size={20} color="#fff" />
-            <Text style={styles.addToCartText}>Add to Cart</Text>
+            <Ionicons name="cart-outline" size={18} color="#000000ff" />
+            <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
             <TouchableOpacity onPress={() => handleDecrement(item.product_id)}>
-              <Ionicons name="remove-circle-outline" size={24} color="#000" />
+              <Ionicons name="remove-circle-outline" size={24} color="#e8bc44ff" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => handleIncrement(item.product_id)}>
-              <Ionicons name="add-circle-outline" size={24} color="#000" />
+              <Ionicons name="add-circle-outline" size={24} color="#e8bc44ff" />
             </TouchableOpacity>
           </View>
         )}
@@ -81,7 +87,7 @@ const ProductSection = ({ title, products }) => {
 
   return (
     <View style={localStyles.wrapper}>
-      <Text style={styles.topTitle}>All Products</Text>
+      <Text style={styles.topTitle}>{title}</Text>
       <FlatList
         data={[...products.slice(0, 5), { isViewAll: true }]}
         keyExtractor={(item, index) =>
@@ -93,10 +99,20 @@ const ProductSection = ({ title, products }) => {
           item.isViewAll ? (
             <TouchableOpacity
               style={styles.viewAllCard}
-              onPress={() => navigation.navigate('ViewAllProducts', { title, products })}
+              onPress={() =>
+                navigation.navigate("ViewAllProducts", {
+                  title,
+                  products,
+                })
+              }
             >
               <Text style={styles.viewAllText}>View All</Text>
-              <Ionicons name="chevron-forward-circle" size={28} color="#006b3d" />
+              <Ionicons
+                name="chevron-forward-circle"
+                size={32}
+                color="#c8102e"
+                style={{ marginTop: 8 }}
+              />
             </TouchableOpacity>
           ) : (
             renderProduct({ item })
@@ -113,7 +129,7 @@ const ProductSection = ({ title, products }) => {
 const localStyles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
     paddingBottom: 20,
   },
 });

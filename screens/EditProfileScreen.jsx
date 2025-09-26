@@ -144,7 +144,9 @@ export default function EditProfileScreen({ navigation }) {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView 
+    style={{ flex: 1, backgroundColor: "#000" }}
+    contentContainerStyle={styles.container}>
       <View style={styles.profileImageWrapper}>
         <Image
           source={{ uri: profileImage || 'https://www.gravatar.com/avatar/?d=mp&s=150' }}
@@ -167,7 +169,14 @@ export default function EditProfileScreen({ navigation }) {
       <TextInput value={phone} onChangeText={setPhone} style={styles.input} placeholder="Enter phone" keyboardType="phone-pad" />
 
       <Text style={styles.label}>Alternate Email</Text>
-      <TextInput value={alternateEmail} onChangeText={setAlternateEmail} style={styles.input} placeholder="Enter alternate email" keyboardType="email-address" />
+<TextInput
+  value={alternateEmail}
+  onChangeText={setAlternateEmail}
+  style={styles.input}
+  placeholder="Enter alternate email"
+  placeholderTextColor="#a8a8a8ff"   // ✅ white placeholder
+  keyboardType="email-address"
+/>
 
       <Text style={styles.label}>Gender</Text>
       <View style={styles.pickerWrapper}>
@@ -184,9 +193,14 @@ export default function EditProfileScreen({ navigation }) {
       </View>
 
       <Text style={styles.label}>Date of Birth</Text>
-      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
-        <Text>{dob || 'Select DOB'}</Text>
-      </TouchableOpacity>
+<TouchableOpacity
+  onPress={() => setShowDatePicker(true)}
+  style={styles.input}
+>
+  <Text style={{ color: dob ? "#ada8a8ff" : "#fff" }}>
+    {dob || "Select DOB"}   {/* ✅ placeholder in white */}
+  </Text>
+</TouchableOpacity>
 
       {showDatePicker && (
         <DateTimePicker

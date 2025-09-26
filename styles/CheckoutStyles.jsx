@@ -1,158 +1,116 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#f9f9f9',
     flex: 1,
-    padding: 16,
+    backgroundColor: "#0c0104", // dark theme
   },
 
   checkoutWrapper: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "column",
+    padding: 12,
   },
 
-  // Left Section
   leftColumn: {
-    width: '100%',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 3,
+    backgroundColor: "#000",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+  },
+
+  rightColumn: {
+    backgroundColor: "#000",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
   },
 
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 10,
-    marginTop: 16,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    marginVertical: 10,
   },
 
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-  },
-
-  input: {
+  // Address & Slot buttons
+  selectBtn: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#555",
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#fff',
+    padding: 10,
+    marginVertical: 6,
+    marginRight: 10,
+    backgroundColor: "#111",
   },
-
-  inputHalf: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#fff',
+  selectBtnActive: {
+    borderColor: "#e8bc44",
+    backgroundColor: "#1a1a1a",
   },
-
-  textArea: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-
-  plainText: {
+  selectBtnText: {
+    color: "#ddd",
     fontSize: 14,
-    marginBottom: 4,
-    color: '#444',
   },
 
-  warningText: {
-    color: 'red',
-    marginTop: 5,
-    fontSize: 13,
+  buttonGroup: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: 10,
   },
 
-  // Right Section
-  rightColumn: {
-    width: '100%',
-    padding: 16,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    elevation: 3,
-  },
-
+  // Order summary items
   cartItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#222",
+  },
+  cartText: {
+    color: "#ffffffff", // light gray for readability
+    fontSize: 14,
+  },
+  cartTextBold: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 14,
   },
 
+  // Payment options
   paymentOption: {
     padding: 12,
-    marginTop: 10,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#444",
     borderRadius: 8,
-    backgroundColor: '#fff',
+    marginVertical: 6,
+    backgroundColor: "#111",
   },
-
   selectedPayment: {
-    borderColor: '#006b3d',
-    backgroundColor: '#e8f5e9',
+    borderColor: "#e8bc44",
+    backgroundColor: "#1a1a1a",
   },
-
-  confirmBtn: {
-    backgroundColor: '#006b3d',
-    padding: 14,
-    borderRadius: 10,
-    marginTop: 24,
-    alignItems: 'center',
-  },
-
-  confirmText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  buttonGroup: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    marginBottom: 12,
-  },
-  
-  selectBtn: {
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
-    marginRight: 10,
-    marginBottom: 10,
-  },
-  
-  selectBtnActive: {
-    borderColor: '##006b3d',
-    backgroundColor: '#e8f5e9',
-  },
-  
-  selectBtnText: {
+  paymentText: {
+    color: "#fff", // white font for payment methods
     fontSize: 14,
-    color: '#333',
   },
-  
-  selectBtnTextActive: {
-    color: '#006b3d',
-    fontWeight: '600',
+
+  // Warning
+  warningText: {
+    color: "#d32f2f",
+    fontWeight: "600",
+    marginTop: 6,
   },
-  
+
+  // Confirm button
+  confirmBtn: {
+    backgroundColor: "#e8bc44",
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 16,
+    alignItems: "center",
+  },
+  confirmText: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
 });

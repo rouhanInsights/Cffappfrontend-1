@@ -1,116 +1,129 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from "react-native";
 
-const styles = StyleSheet.create({
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.45;
+
+export default StyleSheet.create({
   container: {
+    flex: 1,
     padding: 12,
-    paddingBottom: 80, // leave space for cart popup
   },
   heading: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#006b3d',
-    marginVertical: 10,
-    marginLeft: 6,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ffffffff",
+    marginBottom: 12,
+    textAlign: "center",
   },
+
+  // Category filters
   filterButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
+    width: 130,
+    paddingVertical: 6,
     borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    marginHorizontal: 6,
+    borderWidth: 1,
+    borderColor: "#e8bc44",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 8,
+    flexShrink: 0,  
+    
+  },
+
+  filterButtonActive: {
+    backgroundColor: "#e8bc44",
+    
   },
   filterButtonText: {
-    fontSize: 14,
-    color: '#2e7d32',
-    fontWeight: '600',
+    color: "#fff",
+    fontSize: 16,
+     textAlign: "center",
   },
+  filterButtonTextActive: {
+    color: "#000",
+    fontWeight: "bold",
+  },
+
+  // Product cards
   list: {
-    paddingBottom: 120, // avoid being overlapped by popup
+    paddingBottom: 40,
+    justifyContent: "space-between",
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#4a232e",
     borderRadius: 10,
     padding: 10,
-    marginBottom: 12,
-    elevation: 2,
+    margin: 6,
+    width: CARD_WIDTH,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   image: {
     width: "100%",
-    height: 200,
-    borderRadius: 10,
+    height: 120,
+    borderRadius: 8,
     marginBottom: 8,
-     resizeMode: 'contain'
   },
   name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 6,
+  },
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+    gap: 6,
   },
   price: {
     fontSize: 14,
-    marginBottom: 8,
+    color: "#fff",
+    fontWeight: "600",
   },
   strike: {
-    textDecorationLine: 'line-through',
-    color: '#888',
+    fontSize: 12,
+    color: "#aaa",
+    textDecorationLine: "line-through",
   },
   sale: {
-    color: '#d32f2f',
-    fontWeight: 'bold',
+    fontSize: 14,
+    color: "#e8bc44",
+    fontWeight: "bold",
   },
+
   addButton: {
-    backgroundColor: '#006b3d',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e8bc44",
     paddingVertical: 8,
-    paddingHorizontal: 14,
     borderRadius: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 6,
   },
   addButtonText: {
-    color: '#fff',
+    color: "#000",
     marginLeft: 6,
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontWeight: "600",
   },
+
   qtySelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 6,
-    paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "#e8bc44",
+    borderWidth: 1.5,
+    borderRadius: 6,
+    paddingVertical: 4,
+    marginTop: 4,
+    marginBottom: 6,
   },
   qtyText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginHorizontal: 10,
-  },
-  cartPopup: {
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    right: 10,
-    backgroundColor: '#2e7d32',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 12,
-    borderRadius: 8,
-    elevation: 5,
-    zIndex: 100,
-  },
-  cartPopupText: {
-    color: '#fff',
-    fontWeight: '600',
+    marginHorizontal: 12,
     fontSize: 14,
-  },
-  viewCartText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
-    textDecorationLine: 'underline',
+    fontWeight: "600",
+    color: "#fff",
   },
 });
-
-export default styles;

@@ -30,7 +30,7 @@ export default function ProfileScreen() {
     }, [])
   );
 
-  const ProfileItem = ({ icon, label, onPress, iconColor = '#333' }) => (
+  const ProfileItem = ({ icon, label, onPress, iconColor = '#faf2f2ff' }) => (
     <TouchableOpacity style={styles.item} onPress={onPress}>
       <MaterialIcons name={icon} size={24} color={iconColor} />
       <Text style={styles.itemText}>{label}</Text>
@@ -57,7 +57,6 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Account</Text>
         <ProfileItem label="Edit Profile" icon="person" onPress={() => navigation.navigate('EditProfile')} />
         <ProfileItem label="My Addresses" icon="location-on" onPress={() => navigation.navigate('MyAddress')} />
-        <ProfileItem label="Payments" icon="credit-card" />
       </View>
 
       {/* Support Section */}

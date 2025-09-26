@@ -5,19 +5,19 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Modal,
+  Pressable,
 } from "react-native";
 import Geolocation from "@react-native-community/geolocation";
 import { requestMultiple, PERMISSIONS, RESULTS } from "react-native-permissions";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { API_BASE_URL, GOOGLE_MAPS_API_KEY } from "@env";
-import styles from "../styles/LocationSelectorStyles"; // ✅ separate styles file
+import styles from "../styles/LocationSelectorStyles";
 
 const LocationSelector = ({ onLocationChange }) => {
-  const [expanded, setExpanded] = useState(false);
-  const [locationLabel, setLocationLabel] = useState("Location not set");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [locationLabel, setLocationLabel] = useState("Set Delivery Location");
   const [manualPincode, setManualPincode] = useState("");
-
-  const toggleDropdown = () => setExpanded((prev) => !prev);
 
   const requestLocationPermission = async () => {
     try {
@@ -34,16 +34,15 @@ const LocationSelector = ({ onLocationChange }) => {
           async (pos) => {
             const { latitude, longitude } = pos.coords;
             await reverseGeocodeAndCheck(latitude, longitude);
+            setModalVisible(false);
           },
-          (error) => {
-            Alert.alert("Location Error", error.message);
-          },
+          (error) => Alert.alert("Location Error", error.message),
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );
       } else {
         Alert.alert("Permission Required", "Enable location permissions first.");
       }
-    } catch (err) {
+    } catch {
       Alert.alert("Error", "Unable to request location permission.");
     }
   };
@@ -93,7 +92,7 @@ const LocationSelector = ({ onLocationChange }) => {
           setLocationLabel(`${data.area_name || "Area"} • ${pin}`);
           if (onLocationChange) onLocationChange(pin, data.area_name);
         } else {
-          setLocationLabel(`❌ Not deliverable • ${pin}`);
+          setLocationLabel(`Not deliverable • ${pin}`);
         }
       } else {
         Alert.alert("Validation Error", data?.error || "Failed to validate pincode");
@@ -110,49 +109,57 @@ const LocationSelector = ({ onLocationChange }) => {
     }
     setLocationLabel(`Entered Pincode • ${manualPincode}`);
     await validatePincode(manualPincode);
+    setModalVisible(false);
   };
 
   return (
     <View>
       {/* Collapsed bar */}
-      <TouchableOpacity style={styles.bar} onPress={toggleDropdown}>
-        <Ionicons name="location-outline" size={18} color="green" />
+      <TouchableOpacity style={styles.bar} onPress={() => setModalVisible(true)}>
+        <Ionicons name="location-outline" size={18} color="red" />
         <Text style={styles.barText}>{locationLabel}</Text>
-        <Ionicons
-          name={expanded ? "chevron-up" : "chevron-down"}
-          size={16}
-          color="#333"
-        />
+        <Ionicons name="chevron-down" size={16} color="#fff" />
       </TouchableOpacity>
 
-      {/* Expanded dropdown */}
-      {expanded && (
-        <View style={styles.dropdown}>
-          {/* Auto detect */}
-          <TouchableOpacity
-            style={styles.detectBtn}
-            onPress={requestLocationPermission}
-          >
-            <Ionicons name="locate" size={16} color="#000" />
-            <Text style={styles.detectText}>Auto-detect my location</Text>
-          </TouchableOpacity>
+      {/* Bottom Sheet Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Select Delivery Location</Text>
 
-          {/* Manual pin input */}
-          <View style={styles.manualRow}>
-            <TextInput
-              placeholder="Enter 6-digit PIN"
-              keyboardType="number-pad"
-              maxLength={6}
-              value={manualPincode}
-              onChangeText={setManualPincode}
-              style={styles.manualInput}
-            />
-            <TouchableOpacity onPress={onManualCheck} style={styles.checkBtn}>
-              <Text style={styles.checkBtnText}>Check</Text>
+            {/* Auto Detect */}
+            <TouchableOpacity style={styles.detectBtn} onPress={requestLocationPermission}>
+              <Ionicons name="locate" size={18} color="#fff" />
+              <Text style={styles.detectText}>Auto-detect my location</Text>
             </TouchableOpacity>
+
+            {/* Manual Entry */}
+            <View style={styles.manualRow}>
+              <TextInput
+                placeholder="Enter 6-digit PIN"
+                placeholderTextColor="#aaa"
+                keyboardType="number-pad"
+                maxLength={6}
+                value={manualPincode}
+                onChangeText={setManualPincode}
+                style={styles.manualInput}
+              />
+              <TouchableOpacity onPress={onManualCheck} style={styles.checkBtn}>
+                <Text style={styles.checkBtnText}>Check</Text>
+              </TouchableOpacity>
+            </View>
+
+            <Pressable onPress={() => setModalVisible(false)} style={styles.closeBtn}>
+              <Text style={styles.closeBtnText}>Cancel</Text>
+            </Pressable>
           </View>
         </View>
-      )}
+      </Modal>
     </View>
   );
 };

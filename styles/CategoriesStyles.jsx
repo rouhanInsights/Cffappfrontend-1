@@ -1,54 +1,53 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
-    paddingHorizontal: 12,
-    paddingBottom: 20,
-    backgroundColor: '#fff',
+    padding: 16,
+    backgroundColor: "#0c0104", // 🔥 dark background
   },
   heading: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginVertical: 15,
-    textAlign: 'center',
-    color: '#222',
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#fff", // gold heading
+    marginBottom: 25,
+    textAlign: "left",
   },
   grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   card: {
-    width: '48%',
+    width: "48%",
     aspectRatio: 1,
     borderRadius: 12,
-    marginBottom: 15,
-    backgroundColor: '#f9f9f9',
-    overflow: 'hidden',
-    elevation: 3, // Android shadow
-    shadowColor: '#000', // iOS shadow
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
+    overflow: "hidden",
+    marginBottom: 14,
+    backgroundColor: "#1a1a1a",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
-    width: '100%',
+    left: 0,
+    right: 0,
     paddingVertical: 8,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: "rgba(200,16,46,0.8)", // semi-transparent red
+    alignItems: "center",
   },
   categoryText: {
+    color: "#fff",
     fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
   },
 });
-
-export default styles;

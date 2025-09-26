@@ -1,148 +1,139 @@
-import { StyleSheet } from 'react-native';
+// styles/AddressStyles.js
+import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
-    padding: 16,
     flex: 1,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#000", // full black background
+    padding: 16,
+    paddingTop: 40,
   },
 
   sectionTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#006b3d',
+    fontWeight: "bold",
+    color: "#ffffffff", // golden yellow
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: "center",
   },
 
-  form: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginTop: 24,
-    elevation: 2,
-  },
-
-  input: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-    fontSize: 15,
-  },
-
-  optionalInput: {
-    backgroundColor: '#fcfcfc',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-    fontSize: 15,
-    fontStyle: 'italic',
-  },
-
-  saveButton: {
-    backgroundColor: '#006b3d',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 6,
-  },
-
-  saveButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-
+  // Address Card
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: "#4a232e", // maroon card
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 14,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
     elevation: 3,
   },
-
   addrName: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "#fff",
     marginBottom: 4,
-    color: '#333',
   },
-
-  addrDetail: {
+  addrText: {
     fontSize: 14,
-    color: '#555',
+    color: "#ddd",
     marginBottom: 2,
   },
 
   addrActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-
-  setDefault: {
-    color: '#006b3d',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-
-  delete: {
-    color: '#d32f2f',
-    fontWeight: '600',
-    fontSize: 14,
-  },
-
-  defaultTag: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
-    alignSelf: 'flex-start',
-    backgroundColor: '#2e7d32',
-    color: '#fff',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    fontSize: 12,
-    borderRadius: 6,
-    overflow: 'hidden',
+  },
+  setDefault: {
+    color: "#48ec28ff", // green
+    fontWeight: "600",
+    
+  },
+  edit: {
+    color: "#e8e044ff", // golden
+    fontWeight: "600",
+  },
+  delete: {
+    color: "#ff4d4d", // red
+    fontWeight: "600",
+  },
+  defaultTag: {
+    marginTop: 6,
+    color: "#8BAD2B",
+    fontWeight: "bold",
+    fontSize: 14,
   },
 
+  // Floating Add Button
   fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    backgroundColor: '#006b3d',
+    position: "absolute",
+    right: 20,
+    bottom: 30,
+    backgroundColor: "#e8bc44",
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
   },
+
+  // Modal
   modalOverlay: {
-  flex: 1,
-  backgroundColor: 'rgba(0,0,0,0.4)',
-  justifyContent: 'flex-end',
-},
-modalContent: {
-  backgroundColor: '#fff',
-  padding: 20,
-  borderTopLeftRadius: 16,
-  borderTopRightRadius: 16,
-  maxHeight: '90%',
-},
-edit: {
-  color: '#0066cc',
-  fontWeight: '600',
-  marginLeft: 16,
-},
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.7)",
+    justifyContent: "center",
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: "#1a1a1a", // dark modal
+    borderRadius: 12,
+    padding: 20,
+  },
 
+  // Inputs
+  input: {
+    borderWidth: 1,
+    borderColor: "#e8bc44",
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 12,
+    backgroundColor: "#4a232e",
+    color: "#fff",
+  },
+  optionalInput: {
+    borderWidth: 1,
+    borderColor: "#e8bc44",
+    borderRadius: 6,
+    padding: 10,
+    marginBottom: 12,
+    backgroundColor: "#4a232e",
+    color: "#fff",
+
+  },
+
+  // Buttons
+  saveButton: {
+    backgroundColor: "#e8bc44",
+    paddingVertical: 12,
+    borderRadius: 6,
+    alignItems: "center",
+  },
+  saveButtonText: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  cancelButton: {
+    backgroundColor: "#555",
+    paddingVertical: 12,
+    borderRadius: 6,
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
 });
-
-export default styles;

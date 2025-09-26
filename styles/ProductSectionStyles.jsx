@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width * 0.42; // about 2 cards per screen
+const CARD_WIDTH = width * 0.42;
 
 export default StyleSheet.create({
   container: {
@@ -55,7 +55,7 @@ export default StyleSheet.create({
   },
   ribbonText: {
     fontSize: 10,
-    color: "#ffffffff",
+    color: "#fff",
     fontWeight: "bold",
   },
 
@@ -63,7 +63,7 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     marginTop: 8,
-    color: "#ffffffff",
+    color: "#fff",
   },
   productWeight: {
     fontSize: 12,
@@ -79,7 +79,7 @@ export default StyleSheet.create({
   price: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#fff",
   },
   oldPrice: {
     fontSize: 12,
@@ -90,7 +90,7 @@ export default StyleSheet.create({
   salePrice: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#fff",
   },
 
   // Cart
@@ -123,7 +123,7 @@ export default StyleSheet.create({
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#ffffffff",
+    color: "#fff",
   },
 
   // View All Card
@@ -139,6 +139,6 @@ export default StyleSheet.create({
   viewAllText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#edededff",
   },
 });

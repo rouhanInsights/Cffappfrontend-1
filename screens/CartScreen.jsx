@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { API_BASE_URL } from '@env'; // Ensure you have the correct path to your .env file
+import React, { useState, useEffect } from "react";
+import { API_BASE_URL } from "@env";
 import {
   View,
   Text,
   FlatList,
   Image,
   TouchableOpacity,
-} from 'react-native';
-import { useCart } from '../contexts/CartContext';
-import { useNavigation } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import NavBar from '../components/Navbar';
-import styles from '../styles/CartStyles';
+} from "react-native";
+import { useCart } from "../contexts/CartContext";
+import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import NavBar from "../components/Navbar";
+import styles from "../styles/CartStyles";
+import cardStyles from "../styles/TopOffersStyles"; // ✅ reuse product card styles
 
-const BASE_URL =API_BASE_URL;
+const BASE_URL = API_BASE_URL;
 
 const CartScreen = () => {
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
@@ -29,10 +30,10 @@ const CartScreen = () => {
         const data = await res.json();
         if (res.ok) {
           setAllProducts(data);
-          setRandomProducts(getRandomProducts(data, 5)); // Get 5 random products
+          setRandomProducts(getRandomProducts(data, 5));
         }
       } catch (err) {
-        console.error('Failed to fetch products:', err);
+        console.error("Failed to fetch products:", err);
       }
     };
 
@@ -46,7 +47,9 @@ const CartScreen = () => {
 
   const productList = Object.entries(cartItems)
     .map(([productId, qty]) => {
-      const product = allProducts.find(p => p.product_id === parseInt(productId));
+      const product = allProducts.find(
+        (p) => p.product_id === parseInt(productId)
+      );
       if (!product) return null;
       return { ...product, quantity: qty };
     })
@@ -62,18 +65,25 @@ const CartScreen = () => {
       <Image source={{ uri: item.image_url }} style={styles.cartImage} />
       <View style={{ flex: 1, marginLeft: 12 }}>
         <Text style={styles.itemName}>{item.name}</Text>
-        <View style={{ flexDirection: 'row', gap: 8, marginTop: 4 }}>
+        <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
           {item.sale_price ? (
             <>
-              <Text style={{ color: '#888', textDecorationLine: 'line-through' }}>
+              <Text
+                style={{
+                  color: "#888",
+                  textDecorationLine: "line-through",
+                }}
+              >
                 ₹{item.price}
               </Text>
-              <Text style={{ color: '#d32f2f', fontWeight: 'bold' }}>
+              <Text
+                style={{ color: "#e8bc44", fontWeight: "bold" }}
+              >
                 ₹{item.sale_price}
               </Text>
             </>
           ) : (
-            <Text style={{ color: '#333', fontWeight: '600' }}>
+            <Text style={{ color: "#fff", fontWeight: "600" }}>
               ₹{item.price}
             </Text>
           )}
@@ -92,13 +102,15 @@ const CartScreen = () => {
   );
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#0c0104" }}>
       <NavBar />
 
       {productList.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>🛒 Your cart is empty</Text>
-          <Text style={styles.emptySubtext}>Add fresh items to start your order!</Text>
+          <Text style={styles.emptySubtext}>
+            Add fresh items to start your order!
+          </Text>
         </View>
       ) : (
         <FlatList
@@ -109,49 +121,124 @@ const CartScreen = () => {
           ListHeaderComponent={<Text style={styles.title}>My Cart</Text>}
           ListFooterComponent={
             <>
+              {/* ✅ Total & Checkout */}
               <View style={styles.totalSection}>
-                <Text style={styles.totalText}>Total: ₹{totalAmount.toFixed(2)}</Text>
+                <Text style={styles.totalText}>
+                  Total: ₹{totalAmount.toFixed(2)}
+                </Text>
                 <TouchableOpacity
                   style={styles.checkoutBtn}
-                  onPress={() => navigation.navigate('Home', {
-                    screen: 'CheckoutScreen'
-                  })}>
-                  <Text style={styles.checkoutText}>Proceed to Checkout</Text>
+                  onPress={() =>
+                    navigation.navigate("Home", {
+                      screen: "CheckoutScreen",
+                    })
+                  }
+                >
+                  <Text style={styles.checkoutText}>
+                    Proceed to Checkout
+                  </Text>
                 </TouchableOpacity>
               </View>
 
+              {/* ✅ You may also like */}
               {randomProducts.length > 0 && (
                 <>
-                  <Text style={styles.suggestionTitle}>You may also like</Text>
+                  <Text style={styles.suggestionTitle}>
+                    You may also like
+                  </Text>
                   <FlatList
                     data={randomProducts}
-                    keyExtractor={(item) => item.product_id.toString()}
-                    renderItem={({ item }) => (
-                      <View style={styles.suggestionCard}>
-                        <Image source={{ uri: item.image_url }} style={styles.suggestionImage} />
-                        <Text style={styles.suggestionName}>{item.name}</Text>
-                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    {item.sale_price ? (
-                        <>
-                            <Text style={[styles.horizontalPrice, { textDecorationLine: 'line-through', color: '#999' }]}>
+                    keyExtractor={(item) =>
+                      item.product_id.toString()
+                    }
+                    renderItem={({ item }) => {
+                      const quantity = cartItems[item.product_id] || 0;
+                      return (
+                        <View style={cardStyles.card}>
+                          <View style={cardStyles.imageWrapper}>
+                            <Image
+                              source={{ uri: item.image_url }}
+                              style={cardStyles.productImage}
+                            />
+                            {item.sale_price && (
+                              <View style={cardStyles.ribbonContainer}>
+                                <Text style={cardStyles.ribbonText}>
+                                  SALE
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                          <Text
+                            style={cardStyles.productName}
+                            numberOfLines={1}
+                          >
+                            {item.name}
+                          </Text>
+                          <Text style={cardStyles.productWeight}>
+                            {item.weight}
+                          </Text>
+                          <View style={cardStyles.priceRow}>
+                            {item.sale_price ? (
+                              <>
+                                <Text style={cardStyles.oldPrice}>
+                                  ₹{item.price}
+                                </Text>
+                                <Text style={cardStyles.salePrice}>
+                                  ₹{item.sale_price}
+                                </Text>
+                              </>
+                            ) : (
+                              <Text style={cardStyles.price}>
                                 ₹{item.price}
-                            </Text>
-                            <Text style={[styles.horizontalPrice, { color: '#d32f2f', fontWeight: 'bold' }]}>
-                                ₹{item.sale_price}
-                            </Text>
-                        </>
-                    ) : (
-                        <Text style={styles.horizontalPrice}>₹{item.price}</Text>
-                    )}
-                </View>
-                        <TouchableOpacity
-                          style={styles.addToCartButton}
-                          onPress={() => addToCart(item.product_id)}>
-                          <Ionicons name="cart-outline" size={20} color="#fff" />
-                          <Text style={styles.addToCartText}>Add to Cart</Text>
-                        </TouchableOpacity>
-                      </View>
-                    )}
+                              </Text>
+                            )}
+                          </View>
+                          {quantity === 0 ? (
+                            <TouchableOpacity
+                              style={cardStyles.addToCartButton}
+                              onPress={() => addToCart(item.product_id)}
+                            >
+                              <Ionicons
+                                name="cart-outline"
+                                size={18}
+                                color="#000"
+                              />
+                              <Text style={cardStyles.addToCartText}>
+                                Add
+                              </Text>
+                            </TouchableOpacity>
+                          ) : (
+                            <View style={cardStyles.qtySelector}>
+                              <TouchableOpacity
+                                onPress={() =>
+                                  decrementQty(item.product_id)
+                                }
+                              >
+                                <Ionicons
+                                  name="remove-circle-outline"
+                                  size={22}
+                                  color="#e8bc44"
+                                />
+                              </TouchableOpacity>
+                              <Text style={cardStyles.qtyText}>
+                                {quantity}
+                              </Text>
+                              <TouchableOpacity
+                                onPress={() =>
+                                  incrementQty(item.product_id)
+                                }
+                              >
+                                <Ionicons
+                                  name="add-circle-outline"
+                                  size={22}
+                                  color="#e8bc44"
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          )}
+                        </View>
+                      );
+                    }}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.suggestionList}

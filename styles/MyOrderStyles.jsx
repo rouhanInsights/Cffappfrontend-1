@@ -2,13 +2,15 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: "#0c0104",
     paddingHorizontal: 16,
     paddingBottom: 40,
   },
   heading: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#ffffffff',
     marginTop: 16,
     marginBottom: 12,
   },
@@ -16,10 +18,10 @@ export default StyleSheet.create({
     textAlign: 'center',
     marginTop: 50,
     fontSize: 16,
-    color: '#666',
+    color: '#aaa',
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1a1a1a',
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -28,6 +30,8 @@ export default StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: "#c8102e55",
   },
   cardHeader: {
     flexDirection: 'row',
@@ -37,36 +41,36 @@ export default StyleSheet.create({
   orderId: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#333',
+    color: '#e8bc44',
   },
   orderDate: {
     fontSize: 14,
-    color: '#888',
+    color: '#aaa',
   },
   status: {
     marginTop: 4,
     fontSize: 14,
-    color: '#2e7d32',
+    color: '#e8bc44',
     fontWeight: '600',
   },
   paymentInfo: {
     fontSize: 14,
     marginTop: 2,
-    color: '#444',
+    color: '#ddd',
   },
   deliveryInfo: {
     fontSize: 14,
-    color: '#555',
+    color: '#ccc',
     marginTop: 4,
   },
   slotInfo: {
     fontSize: 14,
-    color: '#555',
+    color: '#ccc',
     marginBottom: 8,
   },
   divider: {
     height: 1,
-    backgroundColor: '#eee',
+    backgroundColor: '#333',
     marginVertical: 8,
   },
   itemRow: {
@@ -86,16 +90,16 @@ export default StyleSheet.create({
   itemName: {
     fontWeight: '500',
     fontSize: 14,
-    color: '#222',
+    color: '#fff',
   },
   itemQty: {
     fontSize: 13,
-    color: '#555',
+    color: '#aaa',
   },
   itemPrice: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#000',
+    color: '#e8bc44',
   },
   totalRow: {
     flexDirection: 'row',
@@ -105,14 +109,15 @@ export default StyleSheet.create({
   totalLabel: {
     fontSize: 15,
     fontWeight: '500',
+     color: "#ccc",
   },
   totalAmount: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#8BAD2B',
+    color: '#e8bc44',
   },
   invoiceButton: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#333',
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 6,
@@ -120,24 +125,24 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   invoiceButtonText: {
-    color: '#333',
+    color: '#fff',
     fontWeight: '600',
   },
   feedbackButton: {
-    backgroundColor: '#8BAD2B',
+    backgroundColor: '#e8bc44',
     paddingVertical: 10,
     borderRadius: 6,
     marginTop: 10,
     alignItems: 'center',
   },
   feedbackButtonText: {
-    color: '#fff',
+    color: '#0c0c0cff',
     fontWeight: 'bold',
     fontSize: 15,
   },
   feedbackSubmittedText: {
   marginTop: 10,
-  color: "#2e7d32",
+  color: "#e8bc44",
   fontWeight: "600",
 },
 

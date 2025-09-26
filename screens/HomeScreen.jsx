@@ -29,7 +29,7 @@ const HeroSection = () => {
     <View style={{ margin: 16, borderRadius: 12, overflow: 'hidden' }}>
       <ImageBackground
         source={heroImage}
-        style={{ width: '100%', height: 400, justifyContent: 'flex-end' }}
+        style={{ width: '100%', height: 150, justifyContent: 'flex-end' }}
         resizeMode="cover"
       >
         <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', padding: 16 }}>

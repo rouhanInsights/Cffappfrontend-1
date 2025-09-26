@@ -1,152 +1,144 @@
+import { StyleSheet, Dimensions } from "react-native";
 
-import { StyleSheet } from 'react-native';
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = width * 0.42; // about 2 cards per screen
 
-const BestSellersStyles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 1,
+    marginTop: 25,
+    marginBottom: 20,
   },
-  heading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    marginLeft: 8,
+  topTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#dddbdbff",
+    marginLeft: 12,
+    marginTop: 8,
+    marginBottom: 24,
   },
-  topTitle:{
-fontSize: 18,
-  fontWeight: '600',
-  marginTop: 8,
-  textAlign: 'left',
-  minHeight: 40,
+  horizontalList: {
+    paddingHorizontal: 10,
   },
- horizontalCard: {
-  backgroundColor: '#fff',
-  borderRadius: 10,
-  marginRight: 12,
-  width: 160,             // Match compact card
-  padding:0,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.1,
-  shadowRadius: 2,
-  elevation: 2,
-  height:340,
-},
-  
- horizontalImage: {
-  width: 160,
-  height: 180,
-  borderRadius: 8,
-  resizeMode: 'cover', // ensures good crop
-},
 
-
-horizontalTitle: {
-  fontSize: 14,
-  fontWeight: '600',
-  marginTop: 8,
-  textAlign: 'center',
-  minHeight: 40, // 👈 fixes height for 2 lines
-},
-horizontalPrice: {
-  fontSize: 14,
-  fontWeight: 'bold',
-  
-},
-horizontalWeight: {
-  fontSize: 14,       
-  },
-  addToCartButton: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: '#006b3d',
-  paddingVertical: 6,
-  paddingHorizontal: 12,
-  borderRadius: 4,
-  marginTop: 6,
-  alignSelf: 'center',
-  height: 36, // 👈 consistent height
-},
-  
-  addToCartText: {
-  color: '#fff',
-  fontWeight: '600',
-  marginLeft: 6,
-},
-
-qtySelector: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  width: 100,
-  alignSelf: 'center',
-  marginTop: 6,
-},
-
-qtyText: {
-  fontSize: 16,
-  fontWeight: '600',
-  marginHorizontal: 10,
-},
-    cartContainer: {
-    position: 'relative',
-    backgroundColor: '#ffffff',
-    borderRadius: 14,
-    padding: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    paddingHorizontal: 12,
-  },
-  cartBadge: {
-    position: 'absolute',
-    top: -4,
-    right: -4,
-    backgroundColor: '#FF4D4D',
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cartBadgeText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-  ribbonContainer: {
-    position: 'absolute',
-    top: -4,
-    left: -4,
-    backgroundColor: '#d32f2f',
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    borderTopLeftRadius: 10,
-    borderBottomRightRadius: 10,
-    zIndex: 1,
-  },
-  
-  ribbonText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: 'bold',
-  },
-   viewAllCard: {
-    width: 120,
-    height: 170,
-    marginRight: 10,
+  // Product Card
+  card: {
+    width: CARD_WIDTH,
+    backgroundColor: "#4a232eff", // dark red/blackish background
     borderRadius: 10,
-    backgroundColor: '#f2f2f2',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 2,
+    marginHorizontal: 6,
+    padding: 10,
+    shadowColor: "#572626ff",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  imageWrapper: {
+    position: "relative",
+    alignItems: "center",
+  },
+  productImage: {
+    width: "100%",
+    height: 120,
+    borderRadius: 8,
+    resizeMode: "cover",
+  },
+
+  // SALE ribbon
+  ribbonContainer: {
+    position: "absolute",
+    top: 6,
+    left: 6,
+    backgroundColor: "#c8102e",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  ribbonText: {
+    fontSize: 10,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+
+  productName: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginTop: 8,
+    color: "#fff",
+  },
+  productWeight: {
+    fontSize: 12,
+    color: "#dbdbdbff",
+    marginBottom: 4,
+  },
+
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  price: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  oldPrice: {
+    fontSize: 12,
+    color: "#b8baadff",
+    textDecorationLine: "line-through",
+    marginRight: 6,
+  },
+  salePrice: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+
+  // Cart
+  addToCartButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#e8bc44ff",
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderColor: "#e8bc44ff",
+    borderWidth: 1.5,
+  },
+  addToCartText: {
+    color: "#0b0000ff",
+    fontSize: 13,
+    marginLeft: 4,
+    fontWeight: "600",
+  },
+  qtySelector: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderColor: "#e8bc44ff",
+    borderWidth: 1.5,
+  },
+  qtyText: {
+    marginHorizontal: 12,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
+  },
+
+  // View All Card
+  viewAllCard: {
+    width: CARD_WIDTH,
+    height: 200,
+    backgroundColor: "#4a232eff",
+    borderRadius: 10,
+    marginHorizontal: 6,
+    justifyContent: "center",
+    alignItems: "center",
   },
   viewAllText: {
     fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 6,
-    color: '#1c2b31', // or '#81991f' for branding
+    fontWeight: "bold",
+    color: "#ffffffff",
   },
 });
-
-export default BestSellersStyles;

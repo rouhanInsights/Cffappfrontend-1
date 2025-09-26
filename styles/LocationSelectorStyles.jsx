@@ -1,89 +1,93 @@
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
-  // Collapsed bar
+  // collapsed bar
   bar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    paddingVertical: 10,
+    paddingVertical: 8,
     paddingHorizontal: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 2,
-    marginHorizontal: 12,
-    marginTop: 8,
+    backgroundColor: "#111",
+    borderRadius: 8,
   },
   barText: {
     flex: 1,
     marginLeft: 8,
     fontSize: 14,
-    color: "#222",
+    color: "#fff",
     fontWeight: "500",
   },
 
-  // Dropdown card
-  dropdown: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 14,
-    marginHorizontal: 12,
-    marginTop: 6,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
+  // modal overlay
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#1a1a1a",
+    padding: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 16,
   },
 
-  // Auto-detect button
+  // detect location button
   detectBtn: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#800b11ff",
+    padding: 12,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#16a34a",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    marginBottom: 12,
-    backgroundColor: "#f0fdf4",
+    marginBottom: 16,
   },
   detectText: {
     marginLeft: 8,
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#166534",
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 15,
   },
 
-  // Manual PIN input row
+  // manual pin row
   manualRow: {
     flexDirection: "row",
-    alignItems: "center",
+    marginBottom: 16,
   },
   manualInput: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    backgroundColor: "#222",
+    color: "#fff",
     borderRadius: 8,
-    paddingVertical: 10,
     paddingHorizontal: 12,
-    fontSize: 14,
-    backgroundColor: "#fafafa",
+    marginRight: 8,
+    fontSize: 15,
   },
   checkBtn: {
-    marginLeft: 8,
-    backgroundColor: "#16a34a",
-    paddingVertical: 10,
+    backgroundColor: "#800b11ff",
     paddingHorizontal: 16,
     borderRadius: 8,
+    justifyContent: "center",
   },
   checkBtnText: {
     color: "#fff",
-    fontSize: 14,
     fontWeight: "600",
+    fontSize: 15,
+  },
+
+  // close button
+  closeBtn: {
+    marginTop: 8,
+    padding: 12,
+    alignItems: "center",
+  },
+  closeBtnText: {
+    color: "#aaa",
+    fontSize: 14,
   },
 });
 

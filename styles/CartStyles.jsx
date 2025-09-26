@@ -1,136 +1,105 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
-    padding: 16,
+    paddingBottom: 20,
+    backgroundColor: "#0c0104",
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    margin: 12,
   },
   cartItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#000",
+    marginHorizontal: 12,
+    marginVertical: 6,
+    borderRadius: 10,
     padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-    marginBottom: 12,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    elevation: 2, // Shadow effect for better UX
   },
   cartImage: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     borderRadius: 8,
   },
   itemName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
   },
   qtyControl: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 6,
   },
   qtyBtn: {
-    fontSize: 18,
-    padding: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    color: '#333',
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#e8bc44",
+    marginHorizontal: 8,
   },
   qtyText: {
-    fontSize: 16,
-    marginHorizontal: 12,
-    color: '#333',
-  },
-  totalSection: {
-    padding: 16,
-    backgroundColor: '#f8f8f8',
-    marginTop: 16,
-    borderRadius: 8,
-  },
-  checkoutBtn: {
-    backgroundColor: '#006b3d',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 12,
-    alignItems: 'center',
-  },
-  checkoutText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  suggestionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-    color: '#333',
-  },
-  suggestionList: {
-    paddingHorizontal: 8,
-  },
-  suggestionCard: {
-    width: 200,
-    marginRight: 16,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    padding: 12,
-    elevation: 4,  // Shadow for card-like feel
-  },
-  suggestionImage: {
-    width:180,
-    height: 160,
-    borderRadius: 8,
-  },
-  suggestionName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 8,
-    color: '#333',
-  },
-  suggestionPrice: {
     fontSize: 14,
-    color: '#888',
-    marginTop: 4,
+    color: "#fff",
+    fontWeight: "600",
   },
-  addToCartButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#006b3d',
-    padding: 8,
-    borderRadius: 8,
-    marginTop: 8,
-  },
-  addToCartText: {
-    color: '#fff',
-    marginLeft: 8,
-  },
+
+  // Empty State
   emptyContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 100,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0c0104",
   },
   emptyText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "600",
   },
   emptySubtext: {
-    fontSize: 16,
-    color: '#888',
+    fontSize: 14,
+    color: "#aaa",
+    marginTop: 6,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#333',
-  },
-  totalText:{
-     fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 12,
-    color: '#333'
-  }
-});
 
-export default styles;
+  // Total & Checkout
+  totalSection: {
+    padding: 16,
+    backgroundColor: "#111",
+    borderTopWidth: 1,
+    borderTopColor: "#333",
+  },
+  totalText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 10,
+  },
+  checkoutBtn: {
+    backgroundColor: "#e8bc44",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  checkoutText: {
+    color: "#000",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+
+  // Suggestions
+  suggestionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+    marginHorizontal: 12,
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  suggestionList: {
+    paddingHorizontal: 10,
+  },
+});

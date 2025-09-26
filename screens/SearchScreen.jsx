@@ -1,45 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
   FlatList,
   TouchableOpacity,
-   ActivityIndicator,
+  ActivityIndicator,
   Image,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import styles from '../styles/SearchStyles';
-import { API_BASE_URL } from '@env'; // Ensure you have the correct path to your .env file
-const trendingTags = ['Fish', 'Chicken', 'Mutton',  'Prawns'];
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import styles from "../styles/SearchStyles";
+import { API_BASE_URL } from "@env";
+import { useCart } from "../contexts/CartContext";
+
+const trendingTags = ["Fish", "Chicken", "Mutton", "Prawns"];
 
 const SearchScreen = () => {
   const navigation = useNavigation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { addToCart, incrementQty, decrementQty, cartItems } = useCart();
+
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const BASE_URL = API_BASE_URL;
-
   const handleSearch = async (query) => {
-    if (!query || query.trim() === '') {
+    if (!query || query.trim() === "") {
       setSearchResults([]);
       return;
     }
 
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`);
+      const res = await fetch(
+        `${API_BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`
+      );
       const data = await res.json();
       if (res.ok) {
         setSearchResults(data);
       } else {
-        console.error('Search error:', data.error);
+        console.error("Search error:", data.error);
         setSearchResults([]);
       }
     } catch (err) {
-      console.error('Search fetch failed:', err);
+      console.error("Search fetch failed:", err);
       setSearchResults([]);
     } finally {
       setLoading(false);
@@ -58,28 +62,98 @@ const SearchScreen = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchQuery]);
 
+  const renderItem = ({ item }) => {
+    const quantity = cartItems[item.product_id] || 0;
+
+    return (
+      <View style={styles.resultCard}>
+        {/* Product Image */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={() =>
+            navigation.navigate("ProductDetails", { product: item })
+          }
+        >
+          <Image source={{ uri: item.image_url }} style={styles.resultImage} />
+        </TouchableOpacity>
+
+        {/* Name + Price */}
+        <Text style={styles.itemName} numberOfLines={2}>
+          {item.name}
+        </Text>
+        <Text style={styles.itemPrice}>
+          {item.sale_price ? (
+            <>
+              <Text style={styles.originalPrice}>₹{item.price} </Text>
+              <Text style={styles.salePrice}>₹{item.sale_price}</Text>
+            </>
+          ) : (
+            <>₹{item.price}</>
+          )}
+        </Text>
+
+        {/* Add to Cart / Qty */}
+        {quantity === 0 ? (
+          <TouchableOpacity
+            style={styles.addBtn}
+            onPress={() => addToCart(item.product_id)}
+          >
+            <Ionicons name="cart-outline" size={18} color="#000" />
+            <Text style={styles.addBtnText}>Add</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.qtySelector}>
+            <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+              <Ionicons
+                name="remove-circle-outline"
+                size={22}
+                color="#e8bc44"
+              />
+            </TouchableOpacity>
+            <Text style={styles.qtyText}>{quantity}</Text>
+            <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+              <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
+      {/* Search Bar */}
       <View style={styles.searchRow}>
         <TextInput
           placeholder="Search products..."
+          placeholderTextColor="#aaa"
           value={searchQuery}
           onChangeText={setSearchQuery}
           style={styles.searchInput}
         />
         {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <Ionicons name="close-circle" size={22} color="#999" style={{ marginLeft: 8 }} />
+          <TouchableOpacity onPress={() => setSearchQuery("")}>
+            <Ionicons
+              name="close-circle"
+              size={22}
+              color="#999"
+              style={{ marginLeft: 8 }}
+            />
           </TouchableOpacity>
         )}
       </View>
 
-      {searchQuery.trim() === '' && (
+      {/* Trending */}
+      {searchQuery.trim() === "" && (
         <View style={styles.trendingContainer}>
           <Text style={styles.sectionTitle}>Trending Searches</Text>
           <View style={styles.tagWrapper}>
             {trendingTags.map((tag) => (
-              <TouchableOpacity key={tag} style={styles.tag} onPress={() => setSearchQuery(tag)}>
+              <TouchableOpacity
+                key={tag}
+                style={styles.tag}
+                onPress={() => setSearchQuery(tag)}
+              >
                 <Text style={styles.tagText}>{tag}</Text>
               </TouchableOpacity>
             ))}
@@ -87,28 +161,23 @@ const SearchScreen = () => {
         </View>
       )}
 
-      {loading && <ActivityIndicator color="#2e7d32" style={{ marginTop: 10 }} />}
+      {loading && (
+        <ActivityIndicator color="#e8bc44" style={{ marginTop: 10 }} />
+      )}
 
+      {/* Results */}
       <FlatList
         data={searchResults}
         keyExtractor={(item) => item.product_id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.resultItem}
-            onPress={() => navigation.navigate('ProductDetails', { product: item })}
-          >
-            <Image source={{ uri: item.image_url }} style={styles.resultImage} />
-            <View style={{ flex: 1, marginLeft: 12 }}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemPrice}>₹{item.sale_price || item.price}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
-        ListEmptyComponent={() => (
-          !loading && searchQuery.trim() !== '' && (
-            <Text style={styles.emptyText}>Fetching Products .</Text>
+        renderItem={renderItem}
+        numColumns={2} // grid layout like categories
+        contentContainerStyle={styles.resultsGrid}
+        ListEmptyComponent={() =>
+          !loading &&
+          searchQuery.trim() !== "" && (
+            <Text style={styles.emptyText}>No products found.</Text>
           )
-        )}
+        }
       />
     </View>
   );

@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width * 0.42; // about 2 cards per screen
+const CARD_WIDTH = width * 0.42;
 
 export default StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ export default StyleSheet.create({
   // Product Card
   card: {
     width: CARD_WIDTH,
-    backgroundColor: "#4a232eff",
+    backgroundColor: "#4a232eff", // dark background
     borderRadius: 10,
     marginHorizontal: 6,
     padding: 10,
@@ -55,7 +55,7 @@ export default StyleSheet.create({
   },
   ribbonText: {
     fontSize: 10,
-    color: "#ffffffff",
+    color: "#fff",
     fontWeight: "bold",
   },
 
@@ -63,7 +63,7 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     marginTop: 8,
-    color: "#ffffffff",
+    color: "#fff",
   },
   productWeight: {
     fontSize: 12,
@@ -79,7 +79,7 @@ export default StyleSheet.create({
   price: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#fff",
   },
   oldPrice: {
     fontSize: 12,
@@ -90,7 +90,7 @@ export default StyleSheet.create({
   salePrice: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#fff",
   },
 
   // Cart
@@ -123,22 +123,6 @@ export default StyleSheet.create({
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#ffffffff",
-  },
-
-  // View All Card
-  viewAllCard: {
-    width: CARD_WIDTH,
-    height: 200,
-    backgroundColor: "#4a232eff",
-    borderRadius: 10,
-    marginHorizontal: 6,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  viewAllText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#fff",
   },
 });

@@ -411,7 +411,7 @@ const CheckoutScreen = () => {
           contact: selectedAddress.phone,
           name: selectedAddress.name,
         },
-        theme: { color: '#81991f' },
+        theme: { color: '#a8e07aff' },
         method: {
           netbanking: true,
           card: true,
@@ -483,12 +483,12 @@ const CheckoutScreen = () => {
                       setModalVisible(true);
                     }}
                   >
-                    <Text style={{ color: 'blue' }}>Edit</Text>
+                    <Text style={{ color: '#9cc0ffff' }}>Edit</Text>
                   </TouchableOpacity>
 
                   {!addr.is_default && (
                     <TouchableOpacity onPress={() => handleSetDefault(addr.address_id)}>
-                      <Text style={{ color: 'green' }}>Set as Default</Text>
+                      <Text style={{ color: 'rgba(79, 236, 40, 1)' }}>Set as Default</Text>
                     </TouchableOpacity>
                   )}
                   {addr.is_default && (
@@ -508,37 +508,83 @@ const CheckoutScreen = () => {
 
             {/* Delivery Date */}
 
-            <Text style={styles.sectionTitle}>Select Delivery Date</Text>
-            <Calendar
-              minDate={new Date().toISOString().split('T')[0]}
-              markingType="custom"
-              markedDates={{
-                ...getDisabledDates(),
-                ...getMondayHighlights(),
-                [deliveryDate]: {
-                  selected: true,
-                  selectedColor: '#81991f',
-                  customStyles: {
-                    container: { backgroundColor: '#81991f' },
-                    text: { color: 'white' },
-                  },
-                },
-              }}
-              onDayPress={(day) => {
-                if (getValidDeliveryDates().includes(day.dateString)) {
-                  setDeliveryDate(day.dateString);
-                }
-              }}
-              disableAllTouchEventsForDisabledDays={true}
-            />
+<Text style={styles.sectionTitle}>Select Delivery Date</Text>
+<Calendar
+  theme={{
+    backgroundColor: '#000',
+    calendarBackground: '#000',
+    dayTextColor: '#fff',           // default white for selectable days
+    monthTextColor: '#fff',
+    textSectionTitleColor: '#fff',  // weekdays (Sun, Mon, etc.)
+    arrowColor: '#fff',
+    todayTextColor: '#1E90FF',      // 🔵 today in blue
+  }}
+  minDate={new Date().toISOString().split('T')[0]}
+  markingType="custom"
+  markedDates={{
+    ...getDisabledDates(),          // 🔒 disables everything not in valid dates
+    ...getMondayHighlights(),       // 🔴 red for Mondays
+    [deliveryDate]: {
+      selected: true,
+      customStyles: {
+        container: { backgroundColor: 'yellow' }, // 🟡 selected bg
+        text: { color: 'black', fontWeight: 'bold' },
+      },
+    },
+  }}
+dayComponent={({ date, state, marking }) => {
+  const todayISO = new Date().toISOString().split('T')[0];
+  const validDates = getValidDeliveryDates();
+  const isValid = validDates.includes(date.dateString);
+  const isPast = date.dateString < todayISO;
 
+  let textColor = '#fff';
+  if (isPast || !isValid) textColor = '#888'; // gray for past + invalid
+  if (date.dateString === todayISO) textColor = '#1E90FF'; // blue for today
+  if (marking?.selected) textColor = 'black'; // black when selected
+  if (marking?.customStyles?.text?.color) textColor = marking.customStyles.text.color;
 
+  const isSelected = marking?.selected;
 
-            {new Date(deliveryDate).getDay() === 1 && (
-              <Text style={{ color: 'red', marginTop: 8, fontWeight: 'bold' }}>
-                Our Outlets are Closed on Mondays
-              </Text>
-            )}
+  const handlePress = () => {
+    if (isValid && !isPast) {
+      setDeliveryDate(date.dateString);
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      disabled={!isValid || isPast}
+      onPress={handlePress}
+      style={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        backgroundColor: isSelected ? 'yellow' : 'transparent',
+      }}
+    >
+      <Text style={{ color: textColor, fontWeight: isSelected ? 'bold' : 'normal' }}>
+        {date.day}
+      </Text>
+    </TouchableOpacity>
+  );
+}}
+
+  onDayPress={(day) => {
+    if (getValidDeliveryDates().includes(day.dateString)) {
+      setDeliveryDate(day.dateString);
+    }
+  }}
+  disableAllTouchEventsForDisabledDays={true}
+/>
+
+{new Date(deliveryDate).getDay() === 1 && (
+  <Text style={{ color: 'red', marginTop: 8, fontWeight: 'bold' }}>
+    Our Outlets are Closed on Mondays
+  </Text>
+)}
 
             {/* Delivery Time */}
 <Text style={styles.sectionTitle}>Select Delivery Time</Text>
@@ -614,22 +660,22 @@ const CheckoutScreen = () => {
           <View style={styles.rightColumn}>
             <Text style={styles.sectionTitle}>Order Summary</Text>
             {cartProductList.map((item) => (
-              <View key={item.product_id} style={styles.cartItem}>
-                <Text>{item.name} × {item.quantity}</Text>
-                <Text>₹{item.quantity * item.price}</Text>
+              <View key={item.product_id} style={styles.cartTextBold}>
+                <Text style={styles.cartTextBold}>{item.name} × {item.quantity}</Text>
+                <Text style={styles.cartText}>₹{item.quantity * item.price}</Text>
               </View>
             ))}
             <View style={styles.cartItem}>
-              <Text>Subtotal</Text>
-              <Text>₹{subtotal}</Text>
+              <Text style={styles.cartText}>Subtotal</Text>
+              <Text style={styles.cartText}>₹{subtotal}</Text>
             </View>
             <View style={styles.cartItem}>
-              <Text>Shipping</Text>
+              <Text style={styles.cartText}>Shipping</Text>
               <Text>₹{shippingFee}</Text>
             </View>
             <View style={styles.cartItem}>
-              <Text style={{ fontWeight: '700' }}>Total</Text>
-              <Text style={{ fontWeight: '700' }}>₹{total}</Text>
+              <Text style={styles.cartTextBold}>Total</Text>
+              <Text style={styles.cartTextBold}>₹{total}</Text>
             </View>
 
             <Text style={styles.sectionTitle}>Payment Method</Text>
@@ -642,7 +688,7 @@ const CheckoutScreen = () => {
                   paymentMethod === option.value && styles.selectedPayment,
                 ]}
               >
-                <Text>{option.label}</Text>
+                <Text style={styles.paymentText}>{option.label}</Text>
               </TouchableOpacity>
             ))}
 
@@ -655,9 +701,9 @@ const CheckoutScreen = () => {
 
       {/* Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
-        <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: 'rgba(0,0,0,0.3)' }}>
-          <View style={{ backgroundColor: 'white', borderRadius: 10, padding: 20 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10 }}>Add Address</Text>
+        <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#15122784',  color: '#fff' }}>
+          <View style={{ backgroundColor: '#28282eff', borderRadius: 10, padding: 20 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, color: '#fff'  }}>Add Address</Text>
 
             {[
               { key: 'name', label: 'Name' },
@@ -673,10 +719,11 @@ const CheckoutScreen = () => {
               <TextInput
                 key={key}
                 placeholder={label}
+                placeholderTextColor="#fff"
                 value={newAddress[key]}
                 onChangeText={(val) => setNewAddress(prev => ({ ...prev, [key]: val }))}
                 keyboardType={keyboardType || 'default'}
-                style={{ borderBottomWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 6 }}
+                style={{ borderBottomWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 6, color: '#fff', }}
               />
             ))}
 
@@ -685,7 +732,7 @@ const CheckoutScreen = () => {
                 <Text style={{ color: 'red' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleAddAddress}>
-                <Text style={{ color: 'green' }}>Save</Text>
+                <Text style={{ color: '#68e529ff' }}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>
