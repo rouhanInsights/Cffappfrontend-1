@@ -23,18 +23,25 @@ const BestSellersSection = () => {
   const [popupMessage, setPopupMessage] = useState('');
   const [slideAnim] = useState(new Animated.Value(100));
 
+
   const fetchBestSellers = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/products/best-sellers`);
       const data = await res.json();
       if (res.ok) {
-        const sliced = data.slice(0, 6);
-        setOffers([...sliced, { viewAll: true }]);
+        const sliced = data.slice(0, 6).map((p) => ({
+          ...p,
+          id: p.id ?? p.product_id ?? `prod-${Math.random()}`, // normalize id
+        }));
+        setOffers([
+          ...sliced,
+          { id: "viewall", viewAll: true }, // give View All a stable id
+        ]);
       } else {
-        console.error('Error fetching Best Sellers:', data.error);
+        console.error("Error fetching Best Sellers:", data.error);
       }
     } catch (err) {
-      console.error('Best Sellers Fetch Error:', err);
+      console.error("Best Sellers Fetch Error:", err);
     } finally {
       setLoading(false);
     }
@@ -68,16 +75,35 @@ const BestSellersSection = () => {
   const calculateCartTotal = (cartObj) =>
     Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
 
+  const handleIncrement = (id) => {
+    incrementQty(id);
+    setTimeout(() => {
+      const total = calculateCartTotal(cartItems) + 1;
+      triggerPopup(`${total} item${total > 1 ? 's' : ''} in cart`);
+    }, 100);
+  };
+
+  const handleDecrement = (id) => {
+    decrementQty(id);
+    setTimeout(() => {
+      const total = Math.max(calculateCartTotal(cartItems) - 1, 0);
+      triggerPopup(`${total} item${total !== 1 ? 's' : ''} in cart`);
+    }, 100);
+  };
+
   const renderProduct = ({ item }) => {
     if (item?.viewAll) {
       return (
         <TouchableOpacity
           style={styles.viewAllCard}
           onPress={() =>
-            
             navigation.navigate('ViewAllProducts', {
               title: 'Best Sellers',
-              products: offers.filter((i) => !i.viewAll),
+              products: offers.map((p) => ({
+                ...p,
+                product_id: p.id,
+                image_url: p.image,
+              })),
             })
           }
         >
@@ -195,13 +221,13 @@ const BestSellersSection = () => {
         <FlatList
           data={offers}
           renderItem={renderProduct}
-          keyExtractor={(item, index) =>
-            item?.id ? item.id.toString() : `item-${index}`
-          }
+          keyExtractor={(item, index) => String(item.id ?? index)} // always string
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalList}
         />
+
+
       )}
     </View>
   );

@@ -23,7 +23,7 @@ const TopOffersSection = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [slideAnim] = useState(new Animated.Value(100));
-
+ 
   const fetchTopOffers = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/products/top-offers`);

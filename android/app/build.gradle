@@ -83,8 +83,8 @@ android {
         applicationId "com.calcuttafreshfoods"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "3.0.1"
+        versionCode 5
+        versionName "5.0.0"
     }
     signingConfigs {
     release {
@@ -100,8 +100,8 @@ android {
 buildTypes {
     release {
         signingConfig signingConfigs.release
-        minifyEnabled true
-        shrinkResources true
+        minifyEnabled false
+        shrinkResources false
         proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
     }
 }
