@@ -131,7 +131,7 @@ const TopOffersSection = () => {
             <Image source={{ uri: item.image }} style={styles.productImage} />
             {item.sale_price && (
               <View style={styles.ribbonContainer}>
-                <Text style={styles.ribbonText}>SALE</Text>
+                <Text style={styles.ribbonText}>{item.discount}% OFF</Text>
               </View>
             )}
           </View>

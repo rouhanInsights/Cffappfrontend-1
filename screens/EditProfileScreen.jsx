@@ -152,9 +152,9 @@ export default function EditProfileScreen({ navigation }) {
           source={{ uri: profileImage || 'https://www.gravatar.com/avatar/?d=mp&s=150' }}
           style={styles.profileImage}
         />
-        <TouchableOpacity onPress={selectImage} style={styles.imagePickerButton}>
+        {/* <TouchableOpacity onPress={selectImage} style={styles.imagePickerButton}> */}
           {/* <Text style={styles.imagePickerText}>Choose Image</Text> */}
-        </TouchableOpacity>
+        {/* </TouchableOpacity> */}
       </View>
 
       <Text style={styles.title}>Edit Profile</Text>
@@ -178,19 +178,7 @@ export default function EditProfileScreen({ navigation }) {
   keyboardType="email-address"
 />
 
-      <Text style={styles.label}>Gender</Text>
-      <View style={styles.pickerWrapper}>
-        <Picker
-          selectedValue={gender}
-          onValueChange={(value) => setGender(value)}
-          style={styles.picker}
-        >
-          <Picker.Item label="Select Gender" value="" />
-          <Picker.Item label="Male" value="Male" />
-          <Picker.Item label="Female" value="Female" />
-          <Picker.Item label="Other" value="Other" />
-        </Picker>
-      </View>
+     
 
       <Text style={styles.label}>Date of Birth</Text>
 <TouchableOpacity

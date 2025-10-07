@@ -9,7 +9,7 @@ const OrderSuccessScreen = () => {
   const handleGoToOrders = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Main' }],
+      routes: [{ name: 'MyOrders' }],
     });
   };
  const successImage = resolveAssetSource(require('../images/ordersuccess.png'));
@@ -26,7 +26,7 @@ const OrderSuccessScreen = () => {
       />
 
       <TouchableOpacity style={styles.button} onPress={handleGoToOrders}>
-        <Text style={styles.buttonText}>Return to Home</Text>
+        <Text style={styles.buttonText}>Go to My Orders</Text>
       </TouchableOpacity>
     </View>
   );

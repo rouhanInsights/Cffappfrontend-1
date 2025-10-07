@@ -286,44 +286,44 @@ const CheckoutScreen = () => {
   const shippingFee = 30;
   const total = subtotal + shippingFee;
 
-  const placeOrderAfterPayment = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      const orderPayload = {
-        total,
-        address: `${selectedAddress.address_line1}, ${selectedAddress.city} - ${selectedAddress.pincode}`,
-        address_id: selectedAddress.address_id,
-        slot_id: selectedSlotId,
-        slot_date: deliveryDate,
-        payment_method: paymentMethod,
-        items: cartProductList.map((item) => ({
-          id: item.product_id,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-      };
+  // const placeOrderAfterPayment = async () => {
+  //   try {
+  //     const token = await AsyncStorage.getItem('token');
+  //     const orderPayload = {
+  //       total,
+  //       address: `${selectedAddress.address_line1}, ${selectedAddress.city} - ${selectedAddress.pincode}`,
+  //       address_id: selectedAddress.address_id,
+  //       slot_id: selectedSlotId,
+  //       slot_date: deliveryDate,
+  //       payment_method: paymentMethod,
+  //       items: cartProductList.map((item) => ({
+  //         id: item.product_id,
+  //         quantity: item.quantity,
+  //         price: item.price,
+  //       })),
+  //     };
 
-      const res = await fetch(`${BASE_URL}/api/orders`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderPayload),
-      });
+  //     const res = await fetch(`${BASE_URL}/api/orders`, {
+  //       method: 'POST',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(orderPayload),
+  //     });
 
-      const data = await res.json();
-      if (res.ok) {
-        clearCart();
-        navigation.reset({ index: 0, routes: [{ name: 'OrderSuccess' }] });
-      } else {
-        Alert.alert('Order Failed', data.error || 'Something went wrong.');
-      }
-    } catch (error) {
-      console.error('Order error:', error);
-      Alert.alert('Error', 'Something went wrong.');
-    }
-  };
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       clearCart();
+  //       navigation.reset({ index: 0, routes: [{ name: 'OrderSuccess' }] });
+  //     } else {
+  //       Alert.alert('Order Failed', data.error || 'Something went wrong.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Order error:', error);
+  //     Alert.alert('Error', 'Something went wrong.');
+  //   }
+  // };
 
   const handleConfirmOrder = async () => {
      if (subtotal < 300) {

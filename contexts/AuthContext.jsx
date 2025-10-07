@@ -1,23 +1,43 @@
-import React, { createContext, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const AuthContext = createContext();
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
+  const [userId, setUserId] = useState(null); // ✅ store userId separately
 
-  const login = async (token) => {
+  // ✅ When app starts, load saved token and userId
+  useEffect(() => {
+    const loadAuth = async () => {
+      const storedToken = await AsyncStorage.getItem("userToken");
+      const storedUserId = await AsyncStorage.getItem("userId");
+      if (storedToken) setUserToken(storedToken);
+      if (storedUserId) setUserId(storedUserId);
+    };
+    loadAuth();
+  }, []);
+
+  // ✅ Login now saves both token and userId
+  const login = async (token, id) => {
     setUserToken(token);
-    await AsyncStorage.setItem('userToken', token);
+    setUserId(id);
+    await AsyncStorage.setItem("userToken", token);
+    await AsyncStorage.setItem("userId", id.toString());
   };
 
+  // ✅ Logout clears both token and userId
   const logout = async () => {
     setUserToken(null);
-    await AsyncStorage.removeItem('userToken');
+    setUserId(null);
+    await AsyncStorage.removeItem("userToken");
+    await AsyncStorage.removeItem("userId");
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, login, logout }}>
+    <AuthContext.Provider value={{ userToken, userId, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

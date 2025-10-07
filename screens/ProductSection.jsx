@@ -37,7 +37,7 @@ const ProductSection = ({ title = "All Products", products }) => {
             <Image source={{ uri: item.image_url }} style={styles.productImage} />
             {item.sale_price && (
               <View style={styles.ribbonContainer}>
-                <Text style={styles.ribbonText}>SALE</Text>
+                <Text style={styles.ribbonText}>{Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF</Text>
               </View>
             )}
           </View>

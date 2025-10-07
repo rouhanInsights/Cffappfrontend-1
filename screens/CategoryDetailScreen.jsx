@@ -15,7 +15,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import NavBar from "../components/Navbar";
 import ShimmerPlaceHolder from "react-native-shimmer-placeholder";
 import LinearGradient from "react-native-linear-gradient";
-
+import CartBar from "../components/CartBar";
 const BASE_URL = API_BASE_URL;
 
 const ALL_CATEGORIES = [
@@ -31,6 +31,7 @@ export default function CategoryDetailScreen() {
   const navigation = useNavigation();
   const { addToCart, incrementQty, decrementQty, cartItems } = useCart();
   const initialCategory = route.params?.category || ALL_CATEGORIES[0];
+  const [showCartBar, setShowCartBar] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [products, setProducts] = useState([]);
@@ -87,27 +88,34 @@ export default function CategoryDetailScreen() {
         </View>
 
         {quantity === 0 ? (
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => addToCart(item.product_id)}
-          >
-            <Ionicons name="cart-outline" size={18} color="#000" />
-            <Text style={styles.addButtonText}>Add to Cart</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
-              <Ionicons name="remove-circle-outline" size={22} color="#e8bc44" />
-            </TouchableOpacity>
-            <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-              <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
-            </TouchableOpacity>
-          </View>
-        )}
+  <TouchableOpacity
+    style={styles.addButton}
+    onPress={() => {
+      addToCart(
+         item.product_id
+        
+      );
+      setShowCartBar(true); // 👈 show CartBar after adding
+    }}
+  >
+    <Ionicons name="cart-outline" size={18} color="#000" />
+    <Text style={styles.addButtonText}>Add to Cart</Text>
+  </TouchableOpacity>
+) : (
+  <View style={styles.qtySelector}>
+    <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+      <Ionicons name="remove-circle-outline" size={22} color="#e8bc44" />
+    </TouchableOpacity>
+    <Text style={styles.qtyText}>{quantity}</Text>
+    <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+      <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
+    </TouchableOpacity>
+  </View>
+)}
       </View>
     );
   };
+  const totalItems = Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
 
   return (
     <View style={{ flex: 1, backgroundColor: "#0c0104" }}>
@@ -185,6 +193,13 @@ export default function CategoryDetailScreen() {
           />
         )}
       </View>
+      <CartBar
+  visible={showCartBar}
+  itemCount={totalItems}   // ✅ pass item count
+  onClose={() => setShowCartBar(false)}
+/>
+
+
     </View>
   );
 }

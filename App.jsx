@@ -6,12 +6,14 @@ import RootNavigator from './navigation/RootNavigator';
 
 export default function App() {
   return (
-    <CartProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <CartProvider>
+
         <NavigationContainer>
           <RootNavigator />
         </NavigationContainer>
-      </AuthProvider>
-    </CartProvider>
+
+      </CartProvider>
+    </AuthProvider>
   );
 }
