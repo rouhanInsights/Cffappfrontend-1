@@ -172,7 +172,7 @@ const BestSellersSection = () => {
               triggerPopup(`${total} item${total > 1 ? "s" : ""} in cart`);
             }}
           >
-            <Ionicons name="cart-outline" size={18} color="#0b0000ff" />
+            <Ionicons name="cart-outline" size={18} color="#ffffffff" />
             <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
@@ -181,7 +181,7 @@ const BestSellersSection = () => {
               <Ionicons
                 name="remove-circle-outline"
                 size={24}
-                color="#e8bc44ff"
+                color="#006B3D"
               />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
@@ -189,7 +189,7 @@ const BestSellersSection = () => {
               <Ionicons
                 name="add-circle-outline"
                 size={24}
-                color="#e8bc44ff"
+                color="#006B3D"
               />
             </TouchableOpacity>
           </View>

@@ -3,12 +3,12 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#0c0104", // 🔥 dark background
+    backgroundColor: "#fdfdfdff", // 🔥 dark background
   },
   heading: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#fff", // gold heading
+    color: "#121111ff", // gold heading
     marginBottom: 25,
     textAlign: "left",
   },
@@ -41,7 +41,7 @@ export default StyleSheet.create({
     right: 0,
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: "rgba(200,16,46,0.8)", // semi-transparent red
+    backgroundColor: "rgba(3, 124, 51, 0.8)", // semi-transparent red
     alignItems: "center",
   },
   categoryText: {

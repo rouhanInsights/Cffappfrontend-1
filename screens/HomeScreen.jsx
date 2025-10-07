@@ -32,7 +32,7 @@ const HeroSection = () => {
         style={{ width: '100%', height: 150, justifyContent: 'flex-end' }}
         resizeMode="cover"
       >
-        <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', padding: 16 }}>
+        <View style={{ backgroundColor: '#00000066', padding: 16 }}>
           <Text style={{ fontSize: 22, fontWeight: 'bold', color: '#fff' }}>
             Get Fresh Meat & Fish Delivered to Your Door
           </Text>

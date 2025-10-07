@@ -30,7 +30,7 @@ export default function ProfileScreen() {
     }, [])
   );
 
-  const ProfileItem = ({ icon, label, onPress, iconColor = '#faf2f2ff' }) => (
+  const ProfileItem = ({ icon, label, onPress, iconColor = '#000000ff' }) => (
     <TouchableOpacity style={styles.item} onPress={onPress}>
       <MaterialIcons name={icon} size={24} color={iconColor} />
       <Text style={styles.itemText}>{label}</Text>

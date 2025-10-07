@@ -3,22 +3,26 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     paddingBottom: 20,
-    backgroundColor: "#0c0104",
+    backgroundColor: "#efefefff",
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#070707ff",
     margin: 12,
   },
   cartItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#000",
+    backgroundColor: "#fdfdfdff",
     marginHorizontal: 12,
     marginVertical: 6,
     borderRadius: 10,
     padding: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   cartImage: {
     width: 70,
@@ -28,7 +32,7 @@ export default StyleSheet.create({
   itemName: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
   },
   qtyControl: {
     flexDirection: "row",
@@ -38,12 +42,12 @@ export default StyleSheet.create({
   qtyBtn: {
     fontSize: 22,
     fontWeight: "bold",
-    color: "#e8bc44",
+    color: "#006b3d",
     marginHorizontal: 8,
   },
   qtyText: {
     fontSize: 14,
-    color: "#fff",
+    color: "#000000ff",
     fontWeight: "600",
   },
 
@@ -52,11 +56,11 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#0c0104",
+    backgroundColor: "#ffffffff",
   },
   emptyText: {
     fontSize: 18,
-    color: "#fff",
+    color: "#000000ff",
     fontWeight: "600",
   },
   emptySubtext: {
@@ -68,24 +72,25 @@ export default StyleSheet.create({
   // Total & Checkout
   totalSection: {
     padding: 16,
-    backgroundColor: "#111",
+    backgroundColor: "#fdfdfdff",
     borderTopWidth: 1,
-    borderTopColor: "#333",
+    borderTopColor: "#eeededff",
+    marginTop: 6,
   },
   totalText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
     marginBottom: 10,
   },
   checkoutBtn: {
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
   },
   checkoutText: {
-    color: "#000",
+    color: "#ffffffff",
     fontWeight: "bold",
     fontSize: 15,
   },
@@ -94,7 +99,7 @@ export default StyleSheet.create({
   suggestionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000000ff",
     marginHorizontal: 12,
     marginTop: 20,
     marginBottom: 10,

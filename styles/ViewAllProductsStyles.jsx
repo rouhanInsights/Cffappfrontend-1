@@ -11,7 +11,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#080808ff",
     marginBottom: 12,
     textAlign: "center",
   },
@@ -19,7 +19,7 @@ export default StyleSheet.create({
     paddingBottom: 40,
   },
   card: {
-    backgroundColor: "#4a232e",
+    backgroundColor: "#fdfdfdff",
     borderRadius: 12,
     padding: 10,
     margin: 6,
@@ -27,7 +27,7 @@ export default StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 5,
   },
   image: {
     width: "100%",
@@ -38,7 +38,7 @@ export default StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
     marginBottom: 4,
   },
   priceContainer: {
@@ -49,24 +49,24 @@ export default StyleSheet.create({
   },
   originalPrice: {
     fontSize: 12,
-    color: "#aaa",
+    color: "#676666ff",
     textDecorationLine: "line-through",
   },
   salePrice: {
     fontSize: 14,
-    color: "#e8bc44",
+    color: "#09b71dff",
     fontWeight: "bold",
   },
   addBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     paddingVertical: 6,
     borderRadius: 6,
   },
   addBtnText: {
-    color: "#000",
+    color: "#fbfbfbff",
     marginLeft: 6,
     fontSize: 13,
     fontWeight: "600",
@@ -75,7 +75,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#e8bc44",
+    borderColor: "#006b3d",
     borderWidth: 1.5,
     borderRadius: 6,
     paddingVertical: 4,
@@ -85,6 +85,6 @@ export default StyleSheet.create({
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
   },
 });

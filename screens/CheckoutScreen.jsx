@@ -483,16 +483,16 @@ const CheckoutScreen = () => {
                       setModalVisible(true);
                     }}
                   >
-                    <Text style={{ color: '#9cc0ffff' }}>Edit</Text>
+                    <Text style={{ color: '#2267e0ff' }}>Edit</Text>
                   </TouchableOpacity>
 
                   {!addr.is_default && (
                     <TouchableOpacity onPress={() => handleSetDefault(addr.address_id)}>
-                      <Text style={{ color: 'rgba(79, 236, 40, 1)' }}>Set as Default</Text>
+                      <Text style={{ color: 'rgba(36, 180, 0, 1)' }}>Set as Default</Text>
                     </TouchableOpacity>
                   )}
                   {addr.is_default && (
-                    <Text style={{ color: 'orange' }}>★ Default</Text>
+                    <Text style={{ color: '#f6b800ff' }}>★ Default</Text>
                   )}
                 </View>
               </View>
@@ -509,79 +509,102 @@ const CheckoutScreen = () => {
             {/* Delivery Date */}
 
 <Text style={styles.sectionTitle}>Select Delivery Date</Text>
-<Calendar
-  theme={{
-    backgroundColor: '#000',
-    calendarBackground: '#000',
-    dayTextColor: '#fff',           // default white for selectable days
-    monthTextColor: '#fff',
-    textSectionTitleColor: '#fff',  // weekdays (Sun, Mon, etc.)
-    arrowColor: '#fff',
-    todayTextColor: '#1E90FF',      // 🔵 today in blue
+
+<View
+  style={{
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    padding: 8,
+    elevation: 3,
   }}
-  minDate={new Date().toISOString().split('T')[0]}
-  markingType="custom"
-  markedDates={{
-    ...getDisabledDates(),          // 🔒 disables everything not in valid dates
-    ...getMondayHighlights(),       // 🔴 red for Mondays
-    [deliveryDate]: {
-      selected: true,
-      customStyles: {
-        container: { backgroundColor: 'yellow' }, // 🟡 selected bg
-        text: { color: 'black', fontWeight: 'bold' },
+>
+  <Calendar
+    style={{
+      backgroundColor: "#ffffff", // ✅ white wrapper background
+      borderRadius: 8,
+    }}
+    theme={{
+      backgroundColor: "#ffffff",
+      calendarBackground: "#ffffff",
+      textSectionTitleColor: "#000000",
+      dayTextColor: "#000000",
+      monthTextColor: "#000000",
+      arrowColor: "#006b3d",
+      todayTextColor: "#1E90FF",
+      selectedDayBackgroundColor: "#006b3d",
+      selectedDayTextColor: "#ffffff",
+      textDisabledColor: "#c1c1c1",
+    }}
+    minDate={new Date().toISOString().split("T")[0]}
+    markingType="custom"
+    markedDates={{
+      ...getDisabledDates(),
+      ...getMondayHighlights(),
+      [deliveryDate]: {
+        selected: true,
+        customStyles: {
+          container: {
+            backgroundColor: "#006b3d",
+            borderRadius: 20,
+          },
+          text: {
+            color: "#ffffff",
+            fontWeight: "bold",
+          },
+        },
       },
-    },
-  }}
-dayComponent={({ date, state, marking }) => {
-  const todayISO = new Date().toISOString().split('T')[0];
-  const validDates = getValidDeliveryDates();
-  const isValid = validDates.includes(date.dateString);
-  const isPast = date.dateString < todayISO;
+    }}
+    dayComponent={({ date, state, marking }) => {
+      const todayISO = new Date().toISOString().split("T")[0];
+      const validDates = getValidDeliveryDates();
+      const isValid = validDates.includes(date.dateString);
+      const isPast = date.dateString < todayISO;
+      const isSelected = marking?.selected;
 
-  let textColor = '#fff';
-  if (isPast || !isValid) textColor = '#888'; // gray for past + invalid
-  if (date.dateString === todayISO) textColor = '#1E90FF'; // blue for today
-  if (marking?.selected) textColor = 'black'; // black when selected
-  if (marking?.customStyles?.text?.color) textColor = marking.customStyles.text.color;
+      const handlePress = () => {
+        if (isValid && !isPast) setDeliveryDate(date.dateString);
+      };
 
-  const isSelected = marking?.selected;
-
-  const handlePress = () => {
-    if (isValid && !isPast) {
-      setDeliveryDate(date.dateString);
-    }
-  };
-
-  return (
-    <TouchableOpacity
-      disabled={!isValid || isPast}
-      onPress={handlePress}
-      style={{
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 40,
-        width: 40,
-        borderRadius: 20,
-        backgroundColor: isSelected ? 'yellow' : 'transparent',
-      }}
-    >
-      <Text style={{ color: textColor, fontWeight: isSelected ? 'bold' : 'normal' }}>
-        {date.day}
-      </Text>
-    </TouchableOpacity>
-  );
-}}
-
-  onDayPress={(day) => {
-    if (getValidDeliveryDates().includes(day.dateString)) {
-      setDeliveryDate(day.dateString);
-    }
-  }}
-  disableAllTouchEventsForDisabledDays={true}
-/>
+      return (
+        <TouchableOpacity
+          disabled={!isValid || isPast}
+          onPress={handlePress}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            height: 42,
+            width: 42,
+            borderRadius: 21,
+            margin: 1,
+            backgroundColor: isSelected ? "#006b3d" : "#ffffff", // ✅ white for all, green when selected
+          }}
+        >
+          <Text
+            style={{
+              color: isSelected
+                ? "#ffffff"
+                : isValid
+                ? "#000000"
+                : "#b0b0b0",
+              fontWeight: isSelected ? "bold" : "normal",
+            }}
+          >
+            {date.day}
+          </Text>
+        </TouchableOpacity>
+      );
+    }}
+    onDayPress={(day) => {
+      if (getValidDeliveryDates().includes(day.dateString)) {
+        setDeliveryDate(day.dateString);
+      }
+    }}
+    disableAllTouchEventsForDisabledDays={true}
+  />
+</View>
 
 {new Date(deliveryDate).getDay() === 1 && (
-  <Text style={{ color: 'red', marginTop: 8, fontWeight: 'bold' }}>
+  <Text style={{ color: "red", marginTop: 8, fontWeight: "bold" }}>
     Our Outlets are Closed on Mondays
   </Text>
 )}
@@ -701,9 +724,9 @@ dayComponent={({ date, state, marking }) => {
 
       {/* Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
-        <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#15122784',  color: '#fff' }}>
-          <View style={{ backgroundColor: '#28282eff', borderRadius: 10, padding: 20 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, color: '#fff'  }}>Add Address</Text>
+        <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#20202025',  color: '#020202ff' }}>
+          <View style={{ backgroundColor: '#f7f7f7ff', borderRadius: 10, padding: 20 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, color: '#000000ff'  }}>Add Address</Text>
 
             {[
               { key: 'name', label: 'Name' },
@@ -719,11 +742,11 @@ dayComponent={({ date, state, marking }) => {
               <TextInput
                 key={key}
                 placeholder={label}
-                placeholderTextColor="#fff"
+                placeholderTextColor="#4b4b4bff"
                 value={newAddress[key]}
                 onChangeText={(val) => setNewAddress(prev => ({ ...prev, [key]: val }))}
                 keyboardType={keyboardType || 'default'}
-                style={{ borderBottomWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 6, color: '#fff', }}
+                style={{ borderBottomWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 6, color: '#000000ff', }}
               />
             ))}
 
@@ -732,7 +755,7 @@ dayComponent={({ date, state, marking }) => {
                 <Text style={{ color: 'red' }}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleAddAddress}>
-                <Text style={{ color: '#68e529ff' }}>Save</Text>
+                <Text style={{ color: '#00aa03ff' }}>Save</Text>
               </TouchableOpacity>
             </View>
           </View>

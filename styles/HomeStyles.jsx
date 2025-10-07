@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0d0d0d', // black background
+    backgroundColor: "#efefefff", // black background
   },
   scrollContainer: {
     flex: 1,
@@ -16,7 +16,7 @@ export default StyleSheet.create({
     margin: 16,
     borderRadius: 12,
     overflow: 'hidden',
-    shadowColor: '#000',
+    shadowColor: '#000000ff',
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
@@ -43,6 +43,6 @@ export default StyleSheet.create({
   heroSubtitle: {
     fontSize: 16,
     marginTop: 8,
-    color: '#f5f5f5',
+    color: '#1c1c1cff',
   },
 });

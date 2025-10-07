@@ -3,9 +3,8 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#0c0104", // dark base
+    backgroundColor: "#efefef",
   },
-
   profileImageWrapper: {
     alignItems: "center",
     marginBottom: 20,
@@ -15,63 +14,59 @@ export default StyleSheet.create({
     height: 110,
     borderRadius: 55,
     borderWidth: 3,
-    borderColor: "#e8bc44",
+    borderColor: "#006b3d",
   },
   imagePickerButton: {
-    marginTop: -30,
-    marginLeft: 70,
-    backgroundColor: "#e8bc44",
+    position: "absolute",
+    bottom: 0,
+    right: 130,
+    backgroundColor: "#5AA812",
     width: 36,
     height: 36,
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
+    elevation: 4,
   },
-
+  imagePickerText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#000",
     marginBottom: 16,
     textAlign: "center",
   },
-
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#ffffffff",
+    color: "#000",
     marginTop: 10,
     marginBottom: 4,
   },
   input: {
-    backgroundColor: "#4a232e",
+    backgroundColor: "#fff",
     borderRadius: 8,
     padding: 12,
-    color: "#fff",
-    borderWidth: 1,
-    borderColor: "#e8bc44",
+    color: "#000",
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  pickerWrapper: {
-    backgroundColor: "#4a232e",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#e8bc44",
-    marginBottom: 10,
-  },
-  picker: {
-    color: "#fff",
-  },
-
   saveButton: {
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     paddingVertical: 14,
     borderRadius: 8,
     marginTop: 20,
     alignItems: "center",
   },
   saveButtonText: {
-    color: "#000",
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
   },

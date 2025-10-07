@@ -13,7 +13,7 @@ const categories = [
 
 const CategoriesScreen = ({ navigation }) => {
   return (
-    <View style={{ flex: 1, backgroundColor: "#0c0104" }}> 
+    <View style={{ flex: 1, backgroundColor: "#fdfdfdff" }}> 
       {/* ✅ NavBar placed on top */}
       <NavBar />
 

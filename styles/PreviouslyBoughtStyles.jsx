@@ -11,26 +11,26 @@ export default StyleSheet.create({
   topTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#dddbdbff",
+    color: "#1b1b1bff",
     marginLeft: 12,
     marginTop: 8,
-    marginBottom: 24,
+    marginBottom: 12,
   },
   horizontalList: {
     paddingHorizontal: 10,
   },
 
   // Product Card
-  card: {
+card: {
     width: CARD_WIDTH,
-    backgroundColor: "#4a232eff", // dark background
+    backgroundColor: "#fdfdfdff",
     borderRadius: 10,
     marginHorizontal: 6,
     padding: 10,
-    shadowColor: "#572626ff",
-    shadowOpacity: 0.1,
+    shadowColor: "#090b09ff",
+    shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 5,
   },
   imageWrapper: {
     position: "relative",
@@ -42,6 +42,7 @@ export default StyleSheet.create({
     borderRadius: 8,
     resizeMode: "cover",
   },
+
 
   // SALE ribbon
   ribbonContainer: {
@@ -55,7 +56,7 @@ export default StyleSheet.create({
   },
   ribbonText: {
     fontSize: 10,
-    color: "#fff",
+    color: "#ffffffff",
     fontWeight: "bold",
   },
 
@@ -63,11 +64,11 @@ export default StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     marginTop: 8,
-    color: "#fff",
+    color: "#000000ff",
   },
   productWeight: {
     fontSize: 12,
-    color: "#dbdbdbff",
+    color: "#555555ff",
     marginBottom: 4,
   },
 
@@ -79,33 +80,33 @@ export default StyleSheet.create({
   price: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#313131ff",
   },
   oldPrice: {
     fontSize: 12,
-    color: "#b8baadff",
+    color: "#929292ff",
     textDecorationLine: "line-through",
     marginRight: 6,
   },
   salePrice: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#09b71dff",
   },
 
   // Cart
-  addToCartButton: {
+   addToCartButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e8bc44ff",
+    backgroundColor: "#006b3d",
     paddingVertical: 6,
     borderRadius: 6,
-    borderColor: "#e8bc44ff",
+    borderColor: "#006b3d",
     borderWidth: 1.5,
   },
   addToCartText: {
-    color: "#0b0000ff",
+    color: "#ffffffff",
     fontSize: 13,
     marginLeft: 4,
     fontWeight: "600",
@@ -116,13 +117,14 @@ export default StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 6,
     borderRadius: 6,
-    borderColor: "#e8bc44ff",
+    borderColor: "#006B3D",
     borderWidth: 1.5,
   },
   qtyText: {
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
   },
+
 });

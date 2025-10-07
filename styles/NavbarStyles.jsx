@@ -6,7 +6,7 @@ export default StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 12,
     elevation: 6, // shadow for Android
-    shadowColor: "#000",
+    shadowColor: "#f7eeeeff",
     shadowOpacity: 0.3,
     shadowRadius: 5,
   },
@@ -34,12 +34,12 @@ export default StyleSheet.create({
   cartBadgeText: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#c8102e",
+    color: "#f80000ff",
   },
   searchWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#111",
+    backgroundColor: "#f3f0f0ff",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,

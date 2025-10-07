@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0c0104", // dark theme
+    backgroundColor: "#efefef", // light theme
   },
 
   checkoutWrapper: {
@@ -12,14 +12,14 @@ export default StyleSheet.create({
   },
 
   leftColumn: {
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 12,
     marginBottom: 16,
   },
 
   rightColumn: {
-    backgroundColor: "#000",
+    backgroundColor: "#ffffffff",
     borderRadius: 10,
     padding: 12,
     marginBottom: 16,
@@ -28,26 +28,27 @@ export default StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000000ff",
     marginVertical: 10,
   },
 
   // Address & Slot buttons
   selectBtn: {
     borderWidth: 1,
-    borderColor: "#555",
+    borderColor: "#aeaeaeff",
     borderRadius: 8,
     padding: 10,
     marginVertical: 6,
     marginRight: 10,
-    backgroundColor: "#111",
+    backgroundColor: "#fefefeff",
   },
   selectBtnActive: {
-    borderColor: "#e8bc44",
-    backgroundColor: "#1a1a1a",
+    borderColor: "#006b3d",
+    borderWidth: 2,
+    backgroundColor: "#eaffedff",
   },
   selectBtnText: {
-    color: "#ddd",
+    color: "#1f1f1fff",
     fontSize: 14,
   },
 
@@ -63,14 +64,14 @@ export default StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#222",
+    borderBottomColor: "#dbdbdbff",
   },
   cartText: {
-    color: "#ffffffff", // light gray for readability
+    color: "#000000ff", // light gray for readability
     fontSize: 14,
   },
   cartTextBold: {
-    color: "#fff",
+    color: "#000000ff",
     fontWeight: "700",
     fontSize: 14,
   },
@@ -78,18 +79,17 @@ export default StyleSheet.create({
   // Payment options
   paymentOption: {
     padding: 12,
-    borderWidth: 1,
-    borderColor: "#444",
     borderRadius: 8,
     marginVertical: 6,
-    backgroundColor: "#111",
+    backgroundColor: "#e2e2e2ff",
   },
   selectedPayment: {
-    borderColor: "#e8bc44",
-    backgroundColor: "#1a1a1a",
+    borderColor: "#006b3d",
+    borderWidth: 2,
+    backgroundColor: "#eaffedff",
   },
   paymentText: {
-    color: "#fff", // white font for payment methods
+    color: "#000000ff", // white font for payment methods
     fontSize: 14,
   },
 
@@ -102,14 +102,14 @@ export default StyleSheet.create({
 
   // Confirm button
   confirmBtn: {
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     paddingVertical: 12,
     borderRadius: 8,
     marginTop: 16,
     alignItems: "center",
   },
   confirmText: {
-    color: "#000",
+    color: "#ffffffff",
     fontWeight: "bold",
     fontSize: 15,
   },

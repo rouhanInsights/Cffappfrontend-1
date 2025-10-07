@@ -167,7 +167,7 @@ export default function MyAddressScreen() {
           setShowModal(true);
         }}
       >
-        <AntDesign name="plus" size={24} color="#fff" />
+        <AntDesign name="plus" size={24} color="#ffffffff" />
       </TouchableOpacity>
 
       <Modal visible={showModal} animationType="slide" transparent={true}>
@@ -192,7 +192,7 @@ export default function MyAddressScreen() {
                 <TextInput
                   key={key}
                   placeholder={label}
-                  placeholderTextColor="#d0ccccff"
+                  placeholderTextColor="#4d4d4dff"
                   value={newAddress[key]}
                   onChangeText={(val) => setNewAddress({ ...newAddress, [key]: val })}
                   style={optional ? styles.optionalInput : styles.input}

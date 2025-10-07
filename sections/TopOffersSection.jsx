@@ -165,17 +165,17 @@ const TopOffersSection = () => {
               triggerPopup(`${total} item${total > 1 ? "s" : ""} in cart`);
             }}
           >
-            <Ionicons name="cart-outline" size={20} color="#000000ff" />
+            <Ionicons name="cart-outline" size={20} color="#ffffffff" />
             <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
             <TouchableOpacity onPress={() => handleDecrement(item.id)}>
-              <Ionicons name="remove-circle-outline" size={24} color="#e8bc44ff" />
+              <Ionicons name="remove-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => handleIncrement(item.id)}>
-              <Ionicons name="add-circle-outline" size={24} color="#e8bc44ff" />
+              <Ionicons name="add-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
           </View>
         )}
@@ -189,7 +189,7 @@ const TopOffersSection = () => {
     <View style={styles.container}>
       <Text style={styles.topTitle}>Top Offers</Text>
       {loading ? (
-        <ActivityIndicator size="large" color="#c8102e" />
+        <ActivityIndicator size="large" color="#10c83eff" />
       ) : (
         <FlatList
           data={topFiveWithViewAll}

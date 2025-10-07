@@ -98,7 +98,7 @@ const SearchScreen = () => {
             style={styles.addBtn}
             onPress={() => addToCart(item.product_id)}
           >
-            <Ionicons name="cart-outline" size={18} color="#000" />
+            <Ionicons name="cart-outline" size={18} color="#ffffffff" />
             <Text style={styles.addBtnText}>Add</Text>
           </TouchableOpacity>
         ) : (
@@ -107,12 +107,12 @@ const SearchScreen = () => {
               <Ionicons
                 name="remove-circle-outline"
                 size={22}
-                color="#e8bc44"
+                color="#006b3d"
               />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-              <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
+              <Ionicons name="add-circle-outline" size={22} color="#006b3d" />
             </TouchableOpacity>
           </View>
         )}
@@ -126,7 +126,7 @@ const SearchScreen = () => {
       <View style={styles.searchRow}>
         <TextInput
           placeholder="Search products..."
-          placeholderTextColor="#aaa"
+          placeholderTextColor="#7a7979ff"
           value={searchQuery}
           onChangeText={setSearchQuery}
           style={styles.searchInput}
@@ -162,7 +162,7 @@ const SearchScreen = () => {
       )}
 
       {loading && (
-        <ActivityIndicator color="#e8bc44" style={{ marginTop: 10 }} />
+        <ActivityIndicator color="#09b71dff" style={{ marginTop: 10 }} />
       )}
 
       {/* Results */}

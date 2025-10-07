@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", // full black background
+    backgroundColor: "#efefefff", // light background
     padding: 16,
     paddingTop: 40,
   },
@@ -12,31 +12,31 @@ export default StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#ffffffff", // golden yellow
+    color: "#000000ff", // golden yellow
     marginBottom: 12,
     textAlign: "center",
   },
 
   // Address Card
   card: {
-    backgroundColor: "#4a232e", // maroon card
+    backgroundColor: "#fdfdfdff", // light background
     borderRadius: 10,
     padding: 14,
     marginBottom: 14,
     shadowColor: "#000",
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 5,
   },
   addrName: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000000ff",
     marginBottom: 4,
   },
   addrText: {
     fontSize: 14,
-    color: "#ddd",
+    color: "#3f3f3fff",
     marginBottom: 2,
   },
 
@@ -46,12 +46,12 @@ export default StyleSheet.create({
     marginTop: 10,
   },
   setDefault: {
-    color: "#48ec28ff", // green
+    color: "#39c31dff", // green
     fontWeight: "600",
     
   },
   edit: {
-    color: "#e8e044ff", // golden
+    color: "#4470e8ff", // golden
     fontWeight: "600",
   },
   delete: {
@@ -60,7 +60,7 @@ export default StyleSheet.create({
   },
   defaultTag: {
     marginTop: 6,
-    color: "#8BAD2B",
+    color: "#2bad52ff",
     fontWeight: "bold",
     fontSize: 14,
   },
@@ -70,7 +70,7 @@ export default StyleSheet.create({
     position: "absolute",
     right: 20,
     bottom: 30,
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#32bf0fff",
     width: 56,
     height: 56,
     borderRadius: 28,
@@ -82,12 +82,12 @@ export default StyleSheet.create({
   // Modal
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.24)",
     justifyContent: "center",
     padding: 20,
   },
   modalContent: {
-    backgroundColor: "#1a1a1a", // dark modal
+    backgroundColor: "#efefefff", // dark modal
     borderRadius: 12,
     padding: 20,
   },
@@ -95,44 +95,44 @@ export default StyleSheet.create({
   // Inputs
   input: {
     borderWidth: 1,
-    borderColor: "#e8bc44",
+    borderColor: "#ebfce2ff",
     borderRadius: 6,
     padding: 10,
     marginBottom: 12,
-    backgroundColor: "#4a232e",
-    color: "#fff",
+    backgroundColor: "#e3e3e3ff",
+    color: "#000000ff",
   },
   optionalInput: {
     borderWidth: 1,
-    borderColor: "#e8bc44",
+    borderColor: "#ebfce2ff",
     borderRadius: 6,
     padding: 10,
     marginBottom: 12,
-    backgroundColor: "#4a232e",
-    color: "#fff",
+    backgroundColor: "#e3e3e3ff",
+    color: "#000000ff",
 
   },
 
   // Buttons
   saveButton: {
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#13a206ff",
     paddingVertical: 12,
     borderRadius: 6,
     alignItems: "center",
   },
   saveButtonText: {
-    color: "#000",
+    color: "#ffffffff",
     fontWeight: "bold",
     fontSize: 15,
   },
   cancelButton: {
-    backgroundColor: "#555",
+    backgroundColor: "#abababff",
     paddingVertical: 12,
     borderRadius: 6,
     alignItems: "center",
   },
   cancelButtonText: {
-    color: "#fff",
+    color: "#000000ff",
     fontWeight: "bold",
     fontSize: 15,
   },

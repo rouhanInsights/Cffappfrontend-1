@@ -76,11 +76,11 @@ const PreviouslyBoughtSection = ({ products }) => {
         ) : (
           <View style={styles.qtySelector}>
             <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
-              <Ionicons name="remove-circle-outline" size={24} color="#e8bc44ff" />
+              <Ionicons name="remove-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-              <Ionicons name="add-circle-outline" size={24} color="#e8bc44ff" />
+              <Ionicons name="add-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
           </View>
         )}

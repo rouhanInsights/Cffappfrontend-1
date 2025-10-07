@@ -128,7 +128,7 @@ const ProductDetails = ({ route }) => {
                 style={styles.addBtn}
                 onPress={() => handleAddToCart(product.product_id)}
               >
-                <Ionicons name="cart-outline" size={20} color="#000" />
+                <Ionicons name="cart-outline" size={20} color="#ffffffff" />
                 <Text style={styles.addBtnText}>Add to Cart</Text>
               </TouchableOpacity>
             ) : (
@@ -139,7 +139,7 @@ const ProductDetails = ({ route }) => {
                   <Ionicons
                     name="remove-circle-outline"
                     size={26}
-                    color="#e8bc44"
+                    color="#006b3d"
                   />
                 </TouchableOpacity>
                 <Text style={styles.qtyText}>{quantity}</Text>
@@ -149,7 +149,7 @@ const ProductDetails = ({ route }) => {
                   <Ionicons
                     name="add-circle-outline"
                     size={26}
-                    color="#e8bc44"
+                    color="#006b3d"
                   />
                 </TouchableOpacity>
               </View>
@@ -231,7 +231,7 @@ const ProductDetails = ({ route }) => {
                           style={cardStyles.addToCartButton}
                           onPress={() => handleAddToCart(item.product_id)}
                         >
-                          <Ionicons name="cart-outline" size={18} color="#000" />
+                          <Ionicons name="cart-outline" size={18} color="#ffffffff" />
                           <Text style={cardStyles.addToCartText}>Add</Text>
                         </TouchableOpacity>
                       ) : (
@@ -242,7 +242,7 @@ const ProductDetails = ({ route }) => {
                             <Ionicons
                               name="remove-circle-outline"
                               size={22}
-                              color="#e8bc44"
+                              color="#006b3d"
                             />
                           </TouchableOpacity>
                           <Text style={cardStyles.qtyText}>{relatedQty}</Text>
@@ -252,7 +252,7 @@ const ProductDetails = ({ route }) => {
                             <Ionicons
                               name="add-circle-outline"
                               size={22}
-                              color="#e8bc44"
+                              color="#006b3d"
                             />
                           </TouchableOpacity>
                         </View>

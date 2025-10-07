@@ -92,7 +92,7 @@ export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSub
             value={commentProduct}
             onChangeText={setCommentProduct}
             placeholder="Write about the product"
-            placeholderTextColor="#929292ff" 
+            placeholderTextColor="#333" 
             multiline
           />
 
@@ -113,7 +113,7 @@ export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSub
             value={commentDA}
             onChangeText={setCommentDA}
             placeholder="Write about the delivery agent"
-            placeholderTextColor="#929292ff" 
+            placeholderTextColor="#333" 
             multiline
           />
 

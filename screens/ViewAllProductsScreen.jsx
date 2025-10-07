@@ -53,17 +53,17 @@ const ViewAllProductsScreen = ({ route }) => {
             style={styles.addBtn}
             onPress={() => addToCart(item.product_id)}
           >
-            <Ionicons name="cart-outline" size={18} color="#000" />
+            <Ionicons name="cart-outline" size={18} color="#ffffffff" />
             <Text style={styles.addBtnText}>Add</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
             <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
-              <Ionicons name="remove-circle-outline" size={22} color="#e8bc44" />
+              <Ionicons name="remove-circle-outline" size={22} color="#006B3D" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-              <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
+              <Ionicons name="add-circle-outline" size={22} color="#006B3D" />
             </TouchableOpacity>
           </View>
         )}
@@ -72,7 +72,7 @@ const ViewAllProductsScreen = ({ route }) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0c0104" }}>
+    <View style={{ flex: 1, backgroundColor: "#efefefff" }}>
       <NavBar />
       <View style={styles.container}>
         <Text style={styles.title}>{title}</Text>

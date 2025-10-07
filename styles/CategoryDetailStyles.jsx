@@ -11,7 +11,7 @@ export default StyleSheet.create({
   heading: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#ffffffff",
+    color: "#000000ff",
     marginBottom: 12,
     textAlign: "center",
   },
@@ -22,7 +22,7 @@ export default StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#e8bc44",
+    borderColor: "#006b3d",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 8,
@@ -31,16 +31,16 @@ export default StyleSheet.create({
   },
 
   filterButtonActive: {
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     
   },
   filterButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: "#000000ff",
+    fontSize: 14,
      textAlign: "center",
   },
   filterButtonTextActive: {
-    color: "#000",
+    color: "#ffffffff",
     fontWeight: "bold",
   },
 
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     justifyContent: "space-between",
   },
   card: {
-    backgroundColor: "#4a232e",
+    backgroundColor: "#fdfdfdff",
     borderRadius: 10,
     padding: 10,
     margin: 6,
@@ -58,7 +58,7 @@ export default StyleSheet.create({
     shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 5,
   },
   image: {
     width: "100%",
@@ -69,7 +69,7 @@ export default StyleSheet.create({
   name: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#040404ff",
     marginBottom: 6,
   },
   priceRow: {
@@ -90,7 +90,7 @@ export default StyleSheet.create({
   },
   sale: {
     fontSize: 14,
-    color: "#e8bc44",
+    color: "#09b71dff",
     fontWeight: "bold",
   },
 
@@ -98,12 +98,12 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     paddingVertical: 8,
     borderRadius: 6,
   },
   addButtonText: {
-    color: "#000",
+    color: "#ffffffff",
     marginLeft: 6,
     fontSize: 13,
     fontWeight: "600",
@@ -113,7 +113,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#e8bc44",
+    borderColor: "#006b3d",
     borderWidth: 1.5,
     borderRadius: 6,
     paddingVertical: 4,
@@ -124,6 +124,6 @@ export default StyleSheet.create({
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
   },
 });

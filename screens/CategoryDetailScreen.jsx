@@ -98,17 +98,17 @@ export default function CategoryDetailScreen() {
       setShowCartBar(true); // 👈 show CartBar after adding
     }}
   >
-    <Ionicons name="cart-outline" size={18} color="#000" />
+    <Ionicons name="cart-outline" size={18} color="#ffffffff" />
     <Text style={styles.addButtonText}>Add to Cart</Text>
   </TouchableOpacity>
 ) : (
   <View style={styles.qtySelector}>
     <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
-      <Ionicons name="remove-circle-outline" size={22} color="#e8bc44" />
+      <Ionicons name="remove-circle-outline" size={22} color="#006b3d" />
     </TouchableOpacity>
     <Text style={styles.qtyText}>{quantity}</Text>
     <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-      <Ionicons name="add-circle-outline" size={22} color="#e8bc44" />
+      <Ionicons name="add-circle-outline" size={22} color="#006b3d" />
     </TouchableOpacity>
   </View>
 )}
@@ -118,7 +118,7 @@ export default function CategoryDetailScreen() {
   const totalItems = Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#0c0104" }}>
+    <View style={{ flex: 1, backgroundColor: "#efefefff" }}>
       <NavBar />
 
       <View style={styles.container}>

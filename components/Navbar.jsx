@@ -17,8 +17,8 @@ const NavBar = () => {
   const { getTotalQuantity } = useCart();
 
   return (
-    <LinearGradient
-      colors={["#c8102e", "#000"]} // red to black
+     <LinearGradient
+      colors={["#5aa812ff", "#006b3d"]} // ✅ light green → dark green
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
       style={styles.gradientWrapper}
@@ -59,10 +59,10 @@ const NavBar = () => {
           navigation.navigate("Home", { screen: "SearchScreen" })
         }
       >
-        <Ionicons name="search-outline" size={18} color="#999" />
+        <Ionicons name="search-outline" size={18} color="#2f2f2fff" />
         <TextInput
           placeholder="Search on Calcutta Fresh Foods"
-          placeholderTextColor="#bbb"
+          placeholderTextColor="#343434ff"
           style={styles.searchInput}
           editable={false}
           pointerEvents="none"

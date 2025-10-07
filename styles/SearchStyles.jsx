@@ -6,7 +6,7 @@ const CARD_WIDTH = width * 0.45;
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0c0104", // dark background
+    backgroundColor: "#f6f4f4ff", // dark background
     paddingTop: 40,
     padding: 12,
   },
@@ -15,17 +15,17 @@ export default StyleSheet.create({
   searchRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#ffffffff",
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 6,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: "#e8bc44",
+    borderColor: "#006B3D",
   },
   searchInput: {
     flex: 1,
-    color: "#fff",
+    color: "#000000ff",
     fontSize: 14,
     paddingVertical: 6,
   },
@@ -37,7 +37,7 @@ export default StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#e8bc44",
+    color: "#006B3D",
     marginBottom: 8,
   },
   tagWrapper: {
@@ -46,15 +46,15 @@ export default StyleSheet.create({
     gap: 8,
   },
   tag: {
-    backgroundColor: "#4a232e",
+    backgroundColor: "#006B3D",
     borderRadius: 16,
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderWidth: 1,
-    borderColor: "#e8bc44",
+    borderColor: "#006B3D",
   },
   tagText: {
-    color: "#fff",
+    color: "#ffffffff",
     fontSize: 13,
   },
 
@@ -64,14 +64,14 @@ export default StyleSheet.create({
   },
   resultCard: {
     width: CARD_WIDTH,
-    backgroundColor: "#4a232e",
+    backgroundColor: "#fdfdfdff",
     borderRadius: 10,
     padding: 10,
     margin: 6,
     shadowColor: "#000",
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 5,
   },
   resultImage: {
     width: "100%",
@@ -82,7 +82,7 @@ export default StyleSheet.create({
   itemName: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
     marginBottom: 6,
   },
   itemPrice: {
@@ -98,7 +98,7 @@ export default StyleSheet.create({
   },
   salePrice: {
     fontSize: 14,
-    color: "#e8bc44",
+    color: "#09b71dff",
     fontWeight: "bold",
   },
 
@@ -107,12 +107,12 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#e8bc44",
+    backgroundColor: "#006b3d",
     paddingVertical: 8,
     borderRadius: 6,
   },
   addBtnText: {
-    color: "#000",
+    color: "#ffffffff",
     marginLeft: 6,
     fontSize: 13,
     fontWeight: "600",
@@ -123,7 +123,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#e8bc44",
+    borderColor: "#006b3d",
     borderWidth: 1.5,
     borderRadius: 6,
     paddingVertical: 4,
@@ -133,7 +133,7 @@ export default StyleSheet.create({
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#fff",
+    color: "#000000ff",
   },
 
   // Empty state

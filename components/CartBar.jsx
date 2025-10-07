@@ -15,10 +15,10 @@ const CartBar = ({ itemCount }) => {
         onPress={() => navigation.navigate('Home', { screen: 'CartScreen' })}
         activeOpacity={0.8}
       >
-        <Ionicons name="cart" size={20} color="#0f0505ff" style={{ marginRight: 8 }} />
+        <Ionicons name="cart" size={20} color="#f6f3f3ff" style={{ marginRight: 8 }} />
         <Text style={styles.text}>View Cart</Text>
         <Text style={styles.count}>{itemCount} ITEM{itemCount > 1 ? 'S' : ''}</Text>
-        <Ionicons name="chevron-forward" size={20} color="#000000ff" style={{ marginLeft: 8 }} />
+        <Ionicons name="chevron-forward" size={20} color="#f6f3f3ff" style={{ marginLeft: 8 }} />
       </TouchableOpacity>
     </View>
   );
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   cartButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#e8bc44ff',
+    backgroundColor: '#0f8224ff',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 30,
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   text: {
-    color: '#000000ff',
+    color: '#ffffffff',
     fontWeight: '600',
     fontSize: 16,
   },
   count: {
-    color: '#000000ff',
+    color: '#ffffffff',
     fontWeight: '500',
     fontSize: 14,
     marginLeft: 10,

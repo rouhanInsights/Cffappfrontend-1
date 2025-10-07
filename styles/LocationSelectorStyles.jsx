@@ -7,14 +7,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 12,
-    backgroundColor: "#111",
+    backgroundColor: "#ffffffff",
     borderRadius: 8,
   },
   barText: {
     flex: 1,
     marginLeft: 8,
     fontSize: 14,
-    color: "#fff",
+    color: "#111",
     fontWeight: "500",
   },
 
@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(39, 32, 32, 0.24)",
   },
   modalContent: {
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#ffffffff",
     padding: 20,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#2f2e2eff",
     marginBottom: 16,
   },
 
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   detectBtn: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#800b11ff",
+    backgroundColor: "#006B3D",
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   manualInput: {
     flex: 1,
-    backgroundColor: "#222",
+    backgroundColor: "#e0e0dfff",
     color: "#fff",
     borderRadius: 8,
     paddingHorizontal: 12,
@@ -68,13 +68,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   checkBtn: {
-    backgroundColor: "#800b11ff",
+    backgroundColor: "#006B3D",
     paddingHorizontal: 16,
     borderRadius: 8,
     justifyContent: "center",
   },
   checkBtnText: {
-    color: "#fff",
+    color: "#ffffffff",
     fontWeight: "600",
     fontSize: 15,
   },
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeBtnText: {
-    color: "#aaa",
+    color: "#4b4b4bff",
     fontSize: 14,
   },
 });

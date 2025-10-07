@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0c0104", // dark background
+    backgroundColor: "#efefefff", // dark background
     paddingTop: 40,
     paddingHorizontal: 16,
   },
@@ -13,9 +13,14 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
-    backgroundColor: "#4a232e",
+    backgroundColor: "#f7f7f7ff",
     borderRadius: 12,
     padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
   },
   avatar: {
     width: 70,
@@ -26,27 +31,30 @@ export default StyleSheet.create({
   userName: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#000000ff",
   },
   userPhone: {
     fontSize: 14,
-    color: "#ccc",
+    color: "#000000ff",
     marginTop: 4,
   },
 
   // Sections
   section: {
     marginBottom: 20,
-    backgroundColor: "#1a0d11",
+    backgroundColor: "#f7f7f7ff",
     borderRadius: 10,
     paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: "#4a232e",
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
   },
   sectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "#e8bc44",
+    color: "#006B3D",
     marginBottom: 8,
     marginLeft: 12,
   },
@@ -57,12 +65,10 @@ export default StyleSheet.create({
     alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#2a1a1f",
   },
   itemText: {
     fontSize: 15,
-    color: "#fff",
+    color: "#000000ff",
     marginLeft: 10,
   },
 

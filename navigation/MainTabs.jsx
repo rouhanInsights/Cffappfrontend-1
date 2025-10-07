@@ -15,8 +15,8 @@ export default function MainTabs() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#e8bc44ff", // 🔴 active red
-        tabBarInactiveTintColor: "#c4c4c4ff", // gray inactive
+        tabBarActiveTintColor: "#ffffffff", // 🔴 active red
+        tabBarInactiveTintColor: "#b3b3b3ff", // gray inactive
         tabBarLabelStyle: { fontSize: 12, fontWeight: "600" },
         tabBarStyle: {
           height: 65,
@@ -26,7 +26,7 @@ export default function MainTabs() {
         },
         tabBarBackground: () => (
           <LinearGradient
-            colors={["#000000ff", "#370303ff"]} // 🔴 red → black
+            colors={["#015a33ff", "#015a33ff"]} //
             start={{ x: 0.5, y: 0 }}
             end={{ x: 0.5, y: 1 }}
             style={StyleSheet.absoluteFillObject}
