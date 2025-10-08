@@ -201,6 +201,14 @@ const CartScreen = () => {
                     renderItem={({ item }) => {
                       const quantity = cartItems[item.product_id] || 0;
                       return (
+                        <TouchableOpacity
+                              style={cardStyles.card}
+                              onPress={() =>
+                                navigation.navigate("ProductDetails", {
+                                  productId: item.product_id,
+                                })
+                              }
+                            >
                         <View style={cardStyles.card}>
                           <View style={cardStyles.imageWrapper}>
                             <Image
@@ -209,7 +217,7 @@ const CartScreen = () => {
                             />
                             {item.sale_price && (
                               <View style={cardStyles.ribbonContainer}>
-                                <Text style={cardStyles.ribbonText}>SALE</Text>
+                                <Text style={cardStyles.ribbonText}>{Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF</Text>
                               </View>
                             )}
                           </View>
@@ -280,6 +288,7 @@ const CartScreen = () => {
                             </View>
                           )}
                         </View>
+                        </TouchableOpacity>
                       );
                     }}
                     horizontal

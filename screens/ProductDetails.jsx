@@ -191,7 +191,14 @@ const ProductDetails = ({ route }) => {
                   const relatedQty = cartItems[item.product_id] || 0;
 
                   return (
-                    <View style={cardStyles.card}>
+                    <TouchableOpacity
+                      style={cardStyles.card}
+                      onPress={() =>
+                        navigation.navigate("ProductDetails", {
+                          productId: item.product_id,
+                        })
+                      }
+                    >
                       <View style={cardStyles.imageWrapper}>
                         <Image
                           source={{ uri: item.image_url }}
@@ -199,7 +206,9 @@ const ProductDetails = ({ route }) => {
                         />
                         {item.sale_price && (
                           <View style={cardStyles.ribbonContainer}>
-                            <Text style={cardStyles.ribbonText}>SALE</Text>
+                            <Text style={styles.ribbonText}>
+                              {Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF
+                            </Text>
                           </View>
                         )}
                       </View>
@@ -207,19 +216,13 @@ const ProductDetails = ({ route }) => {
                       <Text style={cardStyles.productName} numberOfLines={1}>
                         {item.name}
                       </Text>
-                      <Text style={cardStyles.productWeight}>
-                        {item.weight}
-                      </Text>
+                      <Text style={cardStyles.productWeight}>{item.weight}</Text>
 
                       <View style={cardStyles.priceRow}>
                         {item.sale_price ? (
                           <>
-                            <Text style={cardStyles.oldPrice}>
-                              ₹{item.price}
-                            </Text>
-                            <Text style={cardStyles.salePrice}>
-                              ₹{item.sale_price}
-                            </Text>
+                            <Text style={cardStyles.oldPrice}>₹{item.price}</Text>
+                            <Text style={cardStyles.salePrice}>₹{item.sale_price}</Text>
                           </>
                         ) : (
                           <Text style={cardStyles.price}>₹{item.price}</Text>
@@ -236,9 +239,7 @@ const ProductDetails = ({ route }) => {
                         </TouchableOpacity>
                       ) : (
                         <View style={cardStyles.qtySelector}>
-                          <TouchableOpacity
-                            onPress={() => decrementQty(item.product_id)}
-                          >
+                          <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
                             <Ionicons
                               name="remove-circle-outline"
                               size={22}
@@ -246,9 +247,7 @@ const ProductDetails = ({ route }) => {
                             />
                           </TouchableOpacity>
                           <Text style={cardStyles.qtyText}>{relatedQty}</Text>
-                          <TouchableOpacity
-                            onPress={() => incrementQty(item.product_id)}
-                          >
+                          <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
                             <Ionicons
                               name="add-circle-outline"
                               size={22}
@@ -257,9 +256,10 @@ const ProductDetails = ({ route }) => {
                           </TouchableOpacity>
                         </View>
                       )}
-                    </View>
+                    </TouchableOpacity>
                   );
                 }}
+
               />
             </>
           )}

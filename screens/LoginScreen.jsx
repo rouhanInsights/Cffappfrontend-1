@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, ScrollView, Alert, Image } from 'react-native';
+import { View, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
 import styles from '../styles/LoginStyles';
 import { CommonActions } from '@react-navigation/native';
@@ -12,8 +12,20 @@ export default function LoginScreen({ navigation }) {
   const [otpSent, setOtpSent] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(false);
   const [countdown, setCountdown] = useState(30);
-
   const BASE_URL = API_BASE_URL;
+
+  // ✅ Skip Login Function
+  const handleSkipLogin = async () => {
+    await AsyncStorage.setItem('guestMode', 'true');
+    await AsyncStorage.removeItem('token');
+    Alert.alert('Guest Mode', 'You are continuing as a guest.');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Main' }],
+      })
+    );
+  };
 
   const sendOtp = async () => {
     if (contact.trim() === '') {
@@ -65,6 +77,7 @@ export default function LoginScreen({ navigation }) {
       const data = await response.json();
       if (response.ok) {
         await AsyncStorage.setItem('token', data.token);
+        await AsyncStorage.setItem('guestMode', 'false'); // ✅ Disable guest
         Alert.alert('Success', 'Login successful');
         navigation.dispatch(
           CommonActions.reset({
@@ -83,12 +96,17 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {/* Skip Button */}
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 50, right: 20, zIndex: 10 }}
+        onPress={handleSkipLogin}
+      >
+        <Text style={{ color: '#18A558', fontWeight: 'bold' }}>Skip</Text>
+      </TouchableOpacity>
+
       {/* Logo */}
       <View style={styles.header}>
-        <Image
-          source={require('../images/logo1.png')}
-          style={styles.logo}
-        />
+        <Image source={require('../images/logo1.png')} style={styles.logo} />
       </View>
 
       {/* Login Form */}

@@ -48,30 +48,44 @@ const CheckoutScreen = () => {
     pincode: '',
   });
 
-  const BASE_URL=API_BASE_URL;
+  const BASE_URL = API_BASE_URL;
+  useEffect(() => {
+  const checkGuest = async () => {
+    const guest = await AsyncStorage.getItem('guestMode');
+    if (guest === 'true') {
+      Alert.alert(
+        'Login Required',
+        'Please log in to proceed with checkout.',
+        [{ text: 'Login', onPress: () => navigation.replace('Auth') }]
+      );
+    }
+  };
+  checkGuest();
+}, []);
+
 
   const getValidDeliveryDates = () => {
-  const now = new Date();
-  const validDates = [];
-  let i = 0;
+    const now = new Date();
+    const validDates = [];
+    let i = 0;
 
-  while (validDates.length < 4) {
-    const date = new Date();
-    date.setDate(now.getDate() + i);
-    const iso = date.toISOString().split("T")[0];
+    while (validDates.length < 4) {
+      const date = new Date();
+      date.setDate(now.getDate() + i);
+      const iso = date.toISOString().split("T")[0];
 
-    const isMonday = date.getDay() === 1;
+      const isMonday = date.getDay() === 1;
 
-    // 🚫 exclude Mondays only
-    if (!isMonday) {
-      validDates.push(iso);
+      // 🚫 exclude Mondays only
+      if (!isMonday) {
+        validDates.push(iso);
+      }
+
+      i++;
     }
 
-    i++;
-  }
-
-  return validDates;
-};
+    return validDates;
+  };
 
 
 
@@ -102,17 +116,22 @@ const CheckoutScreen = () => {
   const highlights = {};
   const today = new Date();
 
-  // Check next 3 months (~90 days)
-  for (let i = 0; i <= 365; i++) {
+  for (let i = 0; i <= 90; i++) { // next 3 months is enough
     const date = new Date();
     date.setDate(today.getDate() + i);
 
-    if (date.getDay() === 1) {
-      const iso = date.toISOString().split('T')[0];
+    if (date.getDay() === 1) { // Monday
+      const iso = date.toISOString().split("T")[0];
       highlights[iso] = {
         customStyles: {
-         
-          text: { color: '#D32F2F' },
+          container: {
+            backgroundColor: "#ffeaea", // light red background
+            borderRadius: 20,
+          },
+          text: {
+            color: "#D32F2F", // red text
+            fontWeight: "bold",
+          },
         },
       };
     }
@@ -166,8 +185,9 @@ const CheckoutScreen = () => {
 
         if (slotRes.ok) {
           setAvailableSlots(slotData);
-          setSelectedSlotId(slotData[0]?.slot_id);
+          setSelectedSlotId(null); // ❌ don’t pre-select
         }
+
 
         if (prodRes.ok) setAllProducts(prodData);
 
@@ -285,64 +305,37 @@ const CheckoutScreen = () => {
   const subtotal = cartProductList.reduce((sum, item) => sum + item.quantity * item.price, 0);
   const shippingFee = 30;
   const total = subtotal + shippingFee;
-
-  // const placeOrderAfterPayment = async () => {
-  //   try {
-  //     const token = await AsyncStorage.getItem('token');
-  //     const orderPayload = {
-  //       total,
-  //       address: `${selectedAddress.address_line1}, ${selectedAddress.city} - ${selectedAddress.pincode}`,
-  //       address_id: selectedAddress.address_id,
-  //       slot_id: selectedSlotId,
-  //       slot_date: deliveryDate,
-  //       payment_method: paymentMethod,
-  //       items: cartProductList.map((item) => ({
-  //         id: item.product_id,
-  //         quantity: item.quantity,
-  //         price: item.price,
-  //       })),
-  //     };
-
-  //     const res = await fetch(`${BASE_URL}/api/orders`, {
-  //       method: 'POST',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(orderPayload),
-  //     });
-
-  //     const data = await res.json();
-  //     if (res.ok) {
-  //       clearCart();
-  //       navigation.reset({ index: 0, routes: [{ name: 'OrderSuccess' }] });
-  //     } else {
-  //       Alert.alert('Order Failed', data.error || 'Something went wrong.');
-  //     }
-  //   } catch (error) {
-  //     console.error('Order error:', error);
-  //     Alert.alert('Error', 'Something went wrong.');
-  //   }
-  // };
-
   const handleConfirmOrder = async () => {
-     if (subtotal < 300) {
-    Alert.alert(
-      "Add More Items",
-      "Minimum order value is ₹300 (excluding delivery charges). Please add more items to your cart."
-    );
-    return;
-  }
+    if (subtotal < 300) {
+      Alert.alert(
+        "Add More Items",
+        "Minimum order value is ₹300 (excluding delivery charges). Please add more items to your cart."
+      );
+      return;
+    }
     const selected = new Date(deliveryDate);
     if (selected.getDay() === 1) {
       Alert.alert('Outlet Closed', 'Our Outlets are Closed on Mondays');
       return;
     }
 
-    if (!selectedAddress || !paymentMethod || !selectedSlotId || !deliveryDate) {
-      Alert.alert('Missing Info', 'Please complete all fields.');
+    if (!selectedAddress) {
+      Alert.alert('Missing Info', 'Please select a delivery address.');
       return;
     }
+    if (!deliveryDate) {
+      Alert.alert('Missing Info', 'Please select a delivery date.');
+      return;
+    }
+    if (!selectedSlotId) {
+      Alert.alert('Missing Info', 'Please select a delivery time slot.');
+      return;
+    }
+    if (!paymentMethod) {
+      Alert.alert('Missing Info', 'Please select a payment method.');
+      return;
+    }
+
 
     const token = await AsyncStorage.getItem('token');
 
@@ -508,174 +501,174 @@ const CheckoutScreen = () => {
 
             {/* Delivery Date */}
 
-<Text style={styles.sectionTitle}>Select Delivery Date</Text>
+            <Text style={styles.sectionTitle}>Select Delivery Date</Text>
 
-<View
-  style={{
-    backgroundColor: "#ffffff",
-    borderRadius: 8,
-    padding: 8,
-    elevation: 3,
-  }}
->
-  <Calendar
-    style={{
-      backgroundColor: "#ffffff", // ✅ white wrapper background
-      borderRadius: 8,
-    }}
-    theme={{
-      backgroundColor: "#ffffff",
-      calendarBackground: "#ffffff",
-      textSectionTitleColor: "#000000",
-      dayTextColor: "#000000",
-      monthTextColor: "#000000",
-      arrowColor: "#006b3d",
-      todayTextColor: "#1E90FF",
-      selectedDayBackgroundColor: "#006b3d",
-      selectedDayTextColor: "#ffffff",
-      textDisabledColor: "#c1c1c1",
-    }}
-    minDate={new Date().toISOString().split("T")[0]}
-    markingType="custom"
-    markedDates={{
-      ...getDisabledDates(),
-      ...getMondayHighlights(),
-      [deliveryDate]: {
-        selected: true,
-        customStyles: {
-          container: {
-            backgroundColor: "#006b3d",
-            borderRadius: 20,
-          },
-          text: {
-            color: "#ffffff",
-            fontWeight: "bold",
-          },
-        },
-      },
-    }}
-    dayComponent={({ date, state, marking }) => {
-      const todayISO = new Date().toISOString().split("T")[0];
-      const validDates = getValidDeliveryDates();
-      const isValid = validDates.includes(date.dateString);
-      const isPast = date.dateString < todayISO;
-      const isSelected = marking?.selected;
+            <View
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: 8,
+                padding: 8,
+                elevation: 3,
+              }}
+            >
+              <Calendar
+                style={{
+                  backgroundColor: "#ffffff", // ✅ white wrapper background
+                  borderRadius: 8,
+                }}
+                theme={{
+                  backgroundColor: "#ffffff",
+                  calendarBackground: "#ffffff",
+                  textSectionTitleColor: "#000000",
+                  dayTextColor: "#000000",
+                  monthTextColor: "#000000",
+                  arrowColor: "#006b3d",
+                  todayTextColor: "#1E90FF",
+                  selectedDayBackgroundColor: "#006b3d",
+                  selectedDayTextColor: "#ffffff",
+                  textDisabledColor: "#c1c1c1",
+                }}
+                minDate={new Date().toISOString().split("T")[0]}
+                markingType="custom"
+                markedDates={{
+                  ...getDisabledDates(),
+                  ...getMondayHighlights(),
+                  [deliveryDate]: {
+                    selected: true,
+                    customStyles: {
+                      container: {
+                        backgroundColor: "#006b3d",
+                        borderRadius: 20,
+                      },
+                      text: {
+                        color: "#ffffff",
+                        fontWeight: "bold",
+                      },
+                    },
+                  },
+                }}
+                dayComponent={({ date, state, marking }) => {
+                  const todayISO = new Date().toISOString().split("T")[0];
+                  const validDates = getValidDeliveryDates();
+                  const isValid = validDates.includes(date.dateString);
+                  const isPast = date.dateString < todayISO;
+                  const isSelected = marking?.selected;
 
-      const handlePress = () => {
-        if (isValid && !isPast) setDeliveryDate(date.dateString);
-      };
+                  const handlePress = () => {
+                    if (isValid && !isPast) setDeliveryDate(date.dateString);
+                  };
 
-      return (
-        <TouchableOpacity
-          disabled={!isValid || isPast}
-          onPress={handlePress}
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            height: 42,
-            width: 42,
-            borderRadius: 21,
-            margin: 1,
-            backgroundColor: isSelected ? "#006b3d" : "#ffffff", // ✅ white for all, green when selected
-          }}
-        >
-          <Text
-            style={{
-              color: isSelected
-                ? "#ffffff"
-                : isValid
-                ? "#000000"
-                : "#b0b0b0",
-              fontWeight: isSelected ? "bold" : "normal",
-            }}
-          >
-            {date.day}
-          </Text>
-        </TouchableOpacity>
-      );
-    }}
-    onDayPress={(day) => {
-      if (getValidDeliveryDates().includes(day.dateString)) {
-        setDeliveryDate(day.dateString);
-      }
-    }}
-    disableAllTouchEventsForDisabledDays={true}
-  />
-</View>
+                  return (
+                    <TouchableOpacity
+                      disabled={!isValid || isPast}
+                      onPress={handlePress}
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: 42,
+                        width: 42,
+                        borderRadius: 21,
+                        margin: 1,
+                        backgroundColor: isSelected ? "#006b3d" : "#ffffff", // ✅ white for all, green when selected
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: isSelected
+                            ? "#ffffff"
+                            : isValid
+                              ? "#000000"
+                              : "#b0b0b0",
+                          fontWeight: isSelected ? "bold" : "normal",
+                        }}
+                      >
+                        {date.day}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                }}
+                onDayPress={(day) => {
+                  if (getValidDeliveryDates().includes(day.dateString)) {
+                    setDeliveryDate(day.dateString);
+                  }
+                }}
+                disableAllTouchEventsForDisabledDays={true}
+              />
+            </View>
 
-{new Date(deliveryDate).getDay() === 1 && (
-  <Text style={{ color: "red", marginTop: 8, fontWeight: "bold" }}>
-    Our Outlets are Closed on Mondays
-  </Text>
-)}
+            {new Date(deliveryDate).getDay() === 1 && (
+              <Text style={{ color: "red", marginTop: 8, fontWeight: "bold" }}>
+                Our Outlets are Closed on Mondays
+              </Text>
+            )}
 
             {/* Delivery Time */}
-<Text style={styles.sectionTitle}>Select Delivery Time</Text>
-<View style={styles.buttonGroup}>
-  {availableSlots.map((slot) => {
-    const now = new Date();
-    const todayISO = new Date().toISOString().split("T")[0];
-    const isToday = deliveryDate === todayISO;
+            <Text style={styles.sectionTitle}>Select Delivery Time</Text>
+            <View style={styles.buttonGroup}>
+              {availableSlots.map((slot) => {
+                const now = new Date();
+                const todayISO = new Date().toISOString().split("T")[0];
+                const isToday = deliveryDate === todayISO;
 
-    // Parse slot label like "8:00 AM - 10:00 AM"
-    const parseTimeRange = (slotStr) => {
-      const [start, end] = slotStr.split("-");
-      const parse = (t) => {
-        const [time, modifier] = t.trim().split(" ");
-        let [hours, minutes] = time.split(":").map(Number);
-        if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
-        if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
-        return { hours, minutes: minutes || 0 };
-      };
-      return { start: parse(start), end: parse(end) };
-    };
+                // Parse slot label like "8:00 AM - 10:00 AM"
+                const parseTimeRange = (slotStr) => {
+                  const [start, end] = slotStr.split("-");
+                  const parse = (t) => {
+                    const [time, modifier] = t.trim().split(" ");
+                    let [hours, minutes] = time.split(":").map(Number);
+                    if (modifier.toUpperCase() === "PM" && hours < 12) hours += 12;
+                    if (modifier.toUpperCase() === "AM" && hours === 12) hours = 0;
+                    return { hours, minutes: minutes || 0 };
+                  };
+                  return { start: parse(start), end: parse(end) };
+                };
 
-    const { end } = parseTimeRange(slot.slot_details);
-    let hideThisSlot = false;
+                const { end } = parseTimeRange(slot.slot_details);
+                let hideThisSlot = false;
 
-    if (isToday) {
-      if (now.getHours() >= 10) {
-        // 🚫 After 10 AM → no same-day slots allowed
-        hideThisSlot = true;
-      } else if (now.getHours() >= 6) {
-        // After 6 AM but before 10 AM → only show 10AM–12PM
-        if (!slot.slot_details.includes("10") || !slot.slot_details.includes("12")) {
-          hideThisSlot = true;
-        }
-      } else {
-        // Before 6 AM → hide slots that already ended
-        if (
-          now.getHours() > end.hours ||
-          (now.getHours() === end.hours && now.getMinutes() >= end.minutes)
-        ) {
-          hideThisSlot = true;
-        }
-      }
-    }
+                if (isToday) {
+                  if (now.getHours() >= 10) {
+                    // 🚫 After 10 AM → no same-day slots allowed
+                    hideThisSlot = true;
+                  } else if (now.getHours() >= 6) {
+                    // After 6 AM but before 10 AM → only show 10AM–12PM
+                    if (!slot.slot_details.includes("10") || !slot.slot_details.includes("12")) {
+                      hideThisSlot = true;
+                    }
+                  } else {
+                    // Before 6 AM → hide slots that already ended
+                    if (
+                      now.getHours() > end.hours ||
+                      (now.getHours() === end.hours && now.getMinutes() >= end.minutes)
+                    ) {
+                      hideThisSlot = true;
+                    }
+                  }
+                }
 
-    if (hideThisSlot) return null;
+                if (hideThisSlot) return null;
 
-    return (
-      <TouchableOpacity
-        key={slot.slot_id}
-        style={[
-          styles.selectBtn,
-          selectedSlotId === slot.slot_id && styles.selectBtnActive,
-        ]}
-        onPress={() => setSelectedSlotId(slot.slot_id)}
-      >
-        <Text style={styles.selectBtnText}>{slot.slot_details}</Text>
-      </TouchableOpacity>
-    );
-  })}
-</View>
+                return (
+                  <TouchableOpacity
+                    key={slot.slot_id}
+                    style={[
+                      styles.selectBtn,
+                      selectedSlotId === slot.slot_id && styles.selectBtnActive,
+                    ]}
+                    onPress={() => setSelectedSlotId(slot.slot_id)}
+                  >
+                    <Text style={styles.selectBtnText}>{slot.slot_details}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
 
-{/* Show warning if after 9 AM and today selected */}
+            {/* Show warning if after 9 AM and today selected */}
             {deliveryDate === new Date().toISOString().split("T")[0] && isAfter9am && (
-  <Text style={styles.warningText}>
-    Orders placed after 9 AM will be delivered the next day.
-  </Text>
-)}
+              <Text style={styles.warningText}>
+                Orders placed after 9 AM will be delivered the next day.
+              </Text>
+            )}
 
           </View>
 
@@ -724,9 +717,9 @@ const CheckoutScreen = () => {
 
       {/* Modal */}
       <Modal visible={modalVisible} animationType="slide" transparent>
-        <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#20202025',  color: '#020202ff' }}>
+        <View style={{ flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#20202025', color: '#020202ff' }}>
           <View style={{ backgroundColor: '#f7f7f7ff', borderRadius: 10, padding: 20 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, color: '#000000ff'  }}>Add Address</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 10, color: '#000000ff' }}>Add Address</Text>
 
             {[
               { key: 'name', label: 'Name' },

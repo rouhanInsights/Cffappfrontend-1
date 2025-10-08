@@ -47,40 +47,72 @@ const LocationSelector = ({ onLocationChange }) => {
     }
   };
 
-  const reverseGeocodeAndCheck = async (lat, lng) => {
-    try {
-      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}&result_type=postal_code|locality&language=en-IN`;
-      const res = await fetch(url);
-      const data = await res.json();
+ const reverseGeocodeAndCheck = async (lat, lng) => {
+  try {
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}&result_type=postal_code|locality|sublocality&language=en-IN`;
+    const res = await fetch(url);
+    const data = await res.json();
 
-      if (data.status !== "OK" || !data.results?.length) {
-        Alert.alert("Error", "Could not fetch address.");
-        return;
-      }
-
-      let postal = "";
-      let locality = "";
-
-      for (const r of data.results) {
-        const comps = r.address_components || [];
-        if (!postal)
-          postal =
-            comps.find((c) => c.types.includes("postal_code"))?.long_name || "";
-        if (!locality)
-          locality =
-            comps.find((c) => c.types.includes("locality"))?.long_name || "";
-      }
-
-      const nice = `${locality || "Current Area"}${postal ? ` • ${postal}` : ""}`;
-      setLocationLabel(nice);
-
-      if (postal) {
-        await validatePincode(postal);
-      }
-    } catch {
-      Alert.alert("Error", "Unable to fetch address details.");
+    if (data.status !== "OK" || !data.results?.length) {
+      Alert.alert("Error", "Could not fetch address.");
+      return;
     }
-  };
+
+    let postal = "";
+    let locality = "";
+    let area = "";
+    let city = "";
+    let state = "";
+
+    // 🔍 Extract more details
+    for (const r of data.results) {
+      const comps = r.address_components || [];
+
+      if (!postal)
+        postal = comps.find((c) => c.types.includes("postal_code"))?.long_name || "";
+
+      if (!area)
+        area =
+          comps.find((c) => c.types.includes("sublocality"))?.long_name ||
+          comps.find((c) => c.types.includes("neighborhood"))?.long_name ||
+          "";
+
+      if (!locality)
+        locality =
+          comps.find((c) => c.types.includes("locality"))?.long_name ||
+          comps.find((c) => c.types.includes("administrative_area_level_2"))?.long_name ||
+          "";
+
+      if (!city)
+        city =
+          comps.find((c) => c.types.includes("administrative_area_level_2"))?.long_name ||
+          "";
+
+      if (!state)
+        state =
+          comps.find((c) => c.types.includes("administrative_area_level_1"))?.long_name ||
+          "";
+    }
+
+    // 🏷️ Build display label like: "Ballygunge, Kolkata – 700019"
+    let locationText = "";
+    if (area && locality) locationText = `${area}, ${locality} – ${postal}`;
+    else if (locality) locationText = `${locality} – ${postal}`;
+    else if (city) locationText = `${city} – ${postal}`;
+    else locationText = `Location – ${postal}`;
+
+    setLocationLabel(locationText);
+
+    // ✅ Validate pincode if found
+    if (postal) {
+      await validatePincode(postal);
+    }
+  } catch (error) {
+    console.error("Reverse geocode error:", error);
+    Alert.alert("Error", "Unable to fetch address details.");
+  }
+};
+
 
   const validatePincode = async (pin) => {
     try {
