@@ -75,6 +75,11 @@ const SearchScreen = () => {
           }
         >
           <Image source={{ uri: item.image_url }} style={styles.resultImage} />
+           {item.sale_price && (
+                                  <View style={styles.ribbonContainer}>
+                                    <Text style={styles.ribbonText}>{Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF</Text>
+                                  </View>
+                                )}
         </TouchableOpacity>
 
         {/* Name + Price */}

@@ -47,85 +47,92 @@ const LocationSelector = ({ onLocationChange }) => {
     }
   };
 
- const reverseGeocodeAndCheck = async (lat, lng) => {
-  try {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}&result_type=postal_code|locality|sublocality&language=en-IN`;
-    const res = await fetch(url);
-    const data = await res.json();
+  const reverseGeocodeAndCheck = async (lat, lng) => {
+    try {
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}&result_type=postal_code|locality|sublocality&language=en-IN`;
+      const res = await fetch(url);
+      const data = await res.json();
 
-    if (data.status !== "OK" || !data.results?.length) {
-      Alert.alert("Error", "Could not fetch address.");
-      return;
+      if (data.status !== "OK" || !data.results?.length) {
+        Alert.alert("Error", "Could not fetch address.");
+        return;
+      }
+
+      let postal = "";
+      let locality = "";
+      let area = "";
+      let city = "";
+      let state = "";
+
+      for (const r of data.results) {
+        const comps = r.address_components || [];
+
+        if (!postal)
+          postal = comps.find((c) => c.types.includes("postal_code"))?.long_name || "";
+
+        if (!area)
+          area =
+            comps.find((c) => c.types.includes("sublocality"))?.long_name ||
+            comps.find((c) => c.types.includes("neighborhood"))?.long_name ||
+            "";
+
+        if (!locality)
+          locality =
+            comps.find((c) => c.types.includes("locality"))?.long_name ||
+            comps.find((c) => c.types.includes("administrative_area_level_2"))?.long_name ||
+            "";
+
+        if (!city)
+          city =
+            comps.find((c) => c.types.includes("administrative_area_level_2"))?.long_name ||
+            "";
+
+        if (!state)
+          state =
+            comps.find((c) => c.types.includes("administrative_area_level_1"))?.long_name ||
+            "";
+      }
+
+      const locationText =
+        area && locality
+          ? `${area}, ${locality} – ${postal}`
+          : locality
+          ? `${locality} – ${postal}`
+          : city
+          ? `${city} – ${postal}`
+          : `Location – ${postal}`;
+
+      setLocationLabel(locationText);
+
+      if (postal) {
+        await validatePincode(postal, area, locality, state);
+      }
+    } catch (error) {
+      console.error("Reverse geocode error:", error);
+      Alert.alert("Error", "Unable to fetch address details.");
     }
+  };
 
-    let postal = "";
-    let locality = "";
-    let area = "";
-    let city = "";
-    let state = "";
-
-    // 🔍 Extract more details
-    for (const r of data.results) {
-      const comps = r.address_components || [];
-
-      if (!postal)
-        postal = comps.find((c) => c.types.includes("postal_code"))?.long_name || "";
-
-      if (!area)
-        area =
-          comps.find((c) => c.types.includes("sublocality"))?.long_name ||
-          comps.find((c) => c.types.includes("neighborhood"))?.long_name ||
-          "";
-
-      if (!locality)
-        locality =
-          comps.find((c) => c.types.includes("locality"))?.long_name ||
-          comps.find((c) => c.types.includes("administrative_area_level_2"))?.long_name ||
-          "";
-
-      if (!city)
-        city =
-          comps.find((c) => c.types.includes("administrative_area_level_2"))?.long_name ||
-          "";
-
-      if (!state)
-        state =
-          comps.find((c) => c.types.includes("administrative_area_level_1"))?.long_name ||
-          "";
-    }
-
-    // 🏷️ Build display label like: "Ballygunge, Kolkata – 700019"
-    let locationText = "";
-    if (area && locality) locationText = `${area}, ${locality} – ${postal}`;
-    else if (locality) locationText = `${locality} – ${postal}`;
-    else if (city) locationText = `${city} – ${postal}`;
-    else locationText = `Location – ${postal}`;
-
-    setLocationLabel(locationText);
-
-    // ✅ Validate pincode if found
-    if (postal) {
-      await validatePincode(postal);
-    }
-  } catch (error) {
-    console.error("Reverse geocode error:", error);
-    Alert.alert("Error", "Unable to fetch address details.");
-  }
-};
-
-
-  const validatePincode = async (pin) => {
+  const validatePincode = async (pin, area, locality, state) => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/location/validate/${pin}`);
       const data = await res.json();
 
       if (res.ok && typeof data?.is_serviceable !== "undefined") {
+        const areaName = data.area_name || area || "Area";
+
         if (data.is_serviceable) {
-          setLocationLabel(`${data.area_name || "Area"} • ${pin}`);
-          if (onLocationChange) onLocationChange(pin, data.area_name);
+          const display = `${areaName}, ${locality || state} • ${pin}`;
+          setLocationLabel(display);
         } else {
-          setLocationLabel(`Not deliverable • ${pin}`);
+          // 🚫 Show area + locality + pincode but mark as not deliverable
+          const display = `${areaName}, ${locality || state} • ${pin} (Not Deliverable)`;
+          setLocationLabel(display);
         }
+
+        // always pass data up for Navbar
+        if (onLocationChange)
+          onLocationChange({ pin, area: areaName, locality, state });
       } else {
         Alert.alert("Validation Error", data?.error || "Failed to validate pincode");
       }
@@ -153,10 +160,10 @@ const LocationSelector = ({ onLocationChange }) => {
         <Ionicons name="chevron-down" size={16} color="#fff" />
       </TouchableOpacity>
 
-      {/* Bottom Sheet Modal */}
+      {/* Modal */}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
@@ -170,7 +177,7 @@ const LocationSelector = ({ onLocationChange }) => {
               <Text style={styles.detectText}>Auto-detect my location</Text>
             </TouchableOpacity>
 
-            {/* Manual Entry */}
+            {/* Manual Pincode */}
             <View style={styles.manualRow}>
               <TextInput
                 placeholder="Enter 6-digit PIN"

@@ -100,7 +100,7 @@ export default function ProfileScreen() {
             onPress={() => navigation.replace('Auth')}
             style={{ backgroundColor: '#18A558', padding: 10, borderRadius: 8 }}
           >
-            <Text style={{ color: '#fff', fontWeight: '600' }}>Login / Signup</Text>
+            <Text style={{ color: '#fff', fontWeight: '600' }}>Login </Text>
           </TouchableOpacity>
         </View>
       )}

@@ -143,4 +143,18 @@ export default StyleSheet.create({
     color: "#aaa",
     fontSize: 14,
   },
+  ribbonContainer: {
+    position: "absolute",
+    top: 6,
+    left: 6,
+    backgroundColor: "#c8102e",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  ribbonText: {
+    fontSize: 10,
+    color: "#ffffffff",
+    fontWeight: "bold",
+  },
 });

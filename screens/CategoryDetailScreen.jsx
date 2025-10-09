@@ -66,6 +66,11 @@ export default function CategoryDetailScreen() {
           onPress={() => navigation.navigate("ProductDetails", { product: item })}
         >
           <Image source={{ uri: item.image_url }} style={styles.image} />
+          {item.sale_price && (
+                        <View style={styles.ribbonContainer}>
+                          <Text style={styles.ribbonText}>{Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF</Text>
+                        </View>
+                      )}
         </TouchableOpacity>
 
         <TouchableOpacity

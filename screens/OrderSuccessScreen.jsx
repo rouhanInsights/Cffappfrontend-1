@@ -7,11 +7,11 @@ const OrderSuccessScreen = () => {
   const navigation = useNavigation();
 
   const handleGoToOrders = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'MyOrders' }],
-    });
-  };
+  navigation.reset({
+    index: 0,
+    routes: [{ name: "Main", params: { screen: "MyOrders" } }],
+  });
+};
  const successImage = resolveAssetSource(require('../images/ordersuccess.png'));
   return (
     <View style={styles.container}>

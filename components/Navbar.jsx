@@ -1,47 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
+  Text,
   TextInput,
   TouchableOpacity,
-  Text,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useCart } from "../contexts/CartContext";
 import LocationSelector from "../components/LocationSelector";
-import LinearGradient from "react-native-linear-gradient"; // ✅ gradient
+import LinearGradient from "react-native-linear-gradient";
 import styles from "../styles/NavbarStyles";
 
 const NavBar = () => {
   const navigation = useNavigation();
   const { getTotalQuantity } = useCart();
 
+  // store location info (from LocationSelector)
+  const [location, setLocation] = useState({
+    pin: "",
+    area: "",
+    locality: "",
+    state: "",
+  });
+
   return (
-     <LinearGradient
-      colors={["#5aa812ff", "#006b3d"]} // ✅ light green → dark green
+    <LinearGradient
+      colors={["#5aa812ff", "#006b3d"]}
       start={{ x: 0.5, y: 0 }}
       end={{ x: 0.5, y: 1 }}
       style={styles.gradientWrapper}
     >
-      {/* Top Row: Location + Cart */}
+      {/* Top Row */}
       <View style={styles.topRow}>
-        {/* Location */}
+        {/* Location Section */}
         <View style={styles.locationWrapper}>
-          <LocationSelector
-            onLocationChange={(pin, area) => {
-              console.log("Selected location:", pin, area);
-            }}
-          />
+          <LocationSelector onLocationChange={setLocation} />
+
+         
         </View>
 
-        {/* Cart */}
+        {/* Cart Button */}
         <TouchableOpacity
           style={styles.cartContainer}
           onPress={() =>
             navigation.navigate("Home", { screen: "CartScreen" })
           }
         >
-          <Ionicons name="cart-outline" size={26} color="#ffffffff" />
+          <Ionicons name="cart-outline" size={26} color="#fff" />
           {getTotalQuantity() > 0 && (
             <View style={styles.cartBadge}>
               <Text style={styles.cartBadgeText}>

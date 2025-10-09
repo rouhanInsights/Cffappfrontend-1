@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, ScrollView, Alert, Image, TouchableOpacity } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
 import styles from '../styles/LoginStyles';
@@ -14,11 +14,30 @@ export default function LoginScreen({ navigation }) {
   const [countdown, setCountdown] = useState(30);
   const BASE_URL = API_BASE_URL;
 
+  // 🕒 Countdown Effect
+  useEffect(() => {
+    let timer;
+    if (resendCooldown) {
+      timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            setResendCooldown(false);
+            return 30; // reset timer for next use
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    // cleanup timer on unmount
+    return () => clearInterval(timer);
+  }, [resendCooldown]);
+
   // ✅ Skip Login Function
   const handleSkipLogin = async () => {
     await AsyncStorage.setItem('guestMode', 'true');
     await AsyncStorage.removeItem('token');
-    Alert.alert('Guest Mode', 'You are continuing as a guest.');
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
@@ -77,7 +96,7 @@ export default function LoginScreen({ navigation }) {
       const data = await response.json();
       if (response.ok) {
         await AsyncStorage.setItem('token', data.token);
-        await AsyncStorage.setItem('guestMode', 'false'); // ✅ Disable guest
+        await AsyncStorage.setItem('guestMode', 'false');
         Alert.alert('Success', 'Login successful');
         navigation.dispatch(
           CommonActions.reset({
@@ -101,7 +120,17 @@ export default function LoginScreen({ navigation }) {
         style={{ position: 'absolute', top: 50, right: 20, zIndex: 10 }}
         onPress={handleSkipLogin}
       >
-        <Text style={{ color: '#18A558', fontWeight: 'bold' }}>Skip</Text>
+        <Text
+          style={{
+            color: '#006B3D',
+            marginRight: 15,
+            marginTop: 40,
+            fontWeight: 'bold',
+            fontSize: 18,
+          }}
+        >
+          SKIP
+        </Text>
       </TouchableOpacity>
 
       {/* Logo */}

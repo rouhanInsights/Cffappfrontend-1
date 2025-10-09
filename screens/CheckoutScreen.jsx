@@ -55,7 +55,7 @@ const CheckoutScreen = () => {
     if (guest === 'true') {
       Alert.alert(
         'Login Required',
-        'Please log in to proceed with checkout.',
+        'Please log in to proceed .',
         [{ text: 'Login', onPress: () => navigation.replace('Auth') }]
       );
     }

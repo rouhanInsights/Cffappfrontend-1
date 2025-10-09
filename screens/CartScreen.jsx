@@ -202,95 +202,64 @@ const CartScreen = () => {
                       const quantity = cartItems[item.product_id] || 0;
                       return (
                         <TouchableOpacity
-                              style={cardStyles.card}
-                              onPress={() =>
-                                navigation.navigate("ProductDetails", {
-                                  productId: item.product_id,
-                                })
-                              }
-                            >
-                        <View style={cardStyles.card}>
-                          <View style={cardStyles.imageWrapper}>
-                            <Image
-                              source={{ uri: item.image_url }}
-                              style={cardStyles.productImage}
-                            />
+                          style={styles.card}
+                          onPress={() =>
+                            navigation.navigate("ProductDetails", {
+                              productId: item.product_id,
+                            })
+                          }
+                        >
+                          <View style={styles.imageWrapper}>
+                            <Image source={{ uri: item.image_url }} style={styles.productImage} />
                             {item.sale_price && (
-                              <View style={cardStyles.ribbonContainer}>
-                                <Text style={cardStyles.ribbonText}>{Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF</Text>
+                              <View style={styles.ribbonContainer}>
+                                <Text style={styles.ribbonText}>
+                                  {Math.round(((item.price - item.sale_price) / item.price) * 100)}%
+                                  OFF
+                                </Text>
                               </View>
                             )}
                           </View>
-                          <Text
-                            style={cardStyles.productName}
-                            numberOfLines={1}
-                          >
+
+                          <Text style={styles.productName} numberOfLines={1}>
                             {item.name}
                           </Text>
-                          <Text style={cardStyles.productWeight}>
-                            {item.weight}
-                          </Text>
-                          <View style={cardStyles.priceRow}>
+                          <Text style={styles.productWeight}>{item.weight}</Text>
+
+                          <View style={styles.priceRow}>
                             {item.sale_price ? (
                               <>
-                                <Text style={cardStyles.oldPrice}>
-                                  ₹{item.price}
-                                </Text>
-                                <Text style={cardStyles.salePrice}>
-                                  ₹{item.sale_price}
-                                </Text>
+                                <Text style={styles.oldPrice}>₹{item.price}</Text>
+                                <Text style={styles.salePrice}>₹{item.sale_price}</Text>
                               </>
                             ) : (
-                              <Text style={cardStyles.price}>
-                                ₹{item.price}
-                              </Text>
+                              <Text style={styles.price}>₹{item.price}</Text>
                             )}
                           </View>
+
                           {quantity === 0 ? (
                             <TouchableOpacity
-                              style={cardStyles.addToCartButton}
+                              style={styles.addToCartButton}
                               onPress={() => addToCart(item.product_id)}
                             >
-                              <Ionicons
-                                name="cart-outline"
-                                size={18}
-                                color="#ffffffff"
-                              />
-                              <Text style={cardStyles.addToCartText}>Add</Text>
+                              <Ionicons name="cart-outline" size={18} color="#fff" />
+                              <Text style={styles.addToCartText}>Add</Text>
                             </TouchableOpacity>
                           ) : (
-                            <View style={cardStyles.qtySelector}>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  decrementQty(item.product_id)
-                                }
-                              >
-                                <Ionicons
-                                  name="remove-circle-outline"
-                                  size={22}
-                                  color="#006b3d"
-                                />
+                            <View style={styles.qtySelector}>
+                              <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+                                <Ionicons name="remove-circle-outline" size={22} color="#006b3d" />
                               </TouchableOpacity>
-                              <Text style={cardStyles.qtyText}>
-                                {quantity}
-                              </Text>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  incrementQty(item.product_id)
-                                }
-                              >
-                                <Ionicons
-                                  name="add-circle-outline"
-                                  size={22}
-                                  color="#006b3d"
-                                />
+                              <Text style={styles.qtyText}>{quantity}</Text>
+                              <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+                                <Ionicons name="add-circle-outline" size={22} color="#006b3d" />
                               </TouchableOpacity>
                             </View>
                           )}
-                        </View>
                         </TouchableOpacity>
                       );
                     }}
+
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.suggestionList}

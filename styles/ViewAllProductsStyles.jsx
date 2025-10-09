@@ -87,4 +87,18 @@ export default StyleSheet.create({
     fontWeight: "600",
     color: "#000000ff",
   },
+   ribbonContainer: {
+    position: "absolute",
+    top: 6,
+    left: 6,
+    backgroundColor: "#c8102e",
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  ribbonText: {
+    fontSize: 10,
+    color: "#ffffffff",
+    fontWeight: "bold",
+  },
 });

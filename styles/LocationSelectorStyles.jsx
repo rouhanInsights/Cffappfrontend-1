@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   manualInput: {
     flex: 1,
     backgroundColor: "#e0e0dfff",
-    color: "#fff",
+    color: "#060606ff",
     borderRadius: 8,
     paddingHorizontal: 12,
     marginRight: 8,

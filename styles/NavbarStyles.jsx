@@ -50,4 +50,17 @@ export default StyleSheet.create({
     fontSize: 15,
     color: "#fff",
   },
+  locationTextWrapper: {
+  marginLeft: 8,
+},
+locationArea: {
+  color: "#fff",
+  fontSize: 14,
+  fontWeight: "600",
+},
+locationPin: {
+  color: "#e0e0e0",
+  fontSize: 12,
+},
+
 });

@@ -13,7 +13,7 @@ export default function SplashScreen({ navigation }) {
           if (token) {
             navigation.replace('Main'); // ✅ already logged in
           } else {
-            navigation.replace('Onboarding'); // ❌ show onboarding/login
+            navigation.replace('Auth'); // ❌ show onboarding/login
           }
         }, 2000);
       } catch (err) {
