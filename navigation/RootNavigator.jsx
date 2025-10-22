@@ -32,7 +32,7 @@ export default function RootNavigator() {
         component={CartScreen}  // add the screen here
         options={{ title: 'Cart' }}
       />
-       <Stack.Screen name="Checkout" component={CheckoutScreen} />
+       {/* <Stack.Screen name="Checkout" component={CheckoutScreen} /> */}
        <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ title: 'Edit Profile' }} />
        <Stack.Screen name="ProductDetails" component={ProductDetails} />
        <Stack.Screen name="MyAddress" component={MyAddressScreen} />

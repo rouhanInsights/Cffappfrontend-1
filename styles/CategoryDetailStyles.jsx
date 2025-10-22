@@ -1,143 +1,210 @@
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width * 0.45;
+const CARD_WIDTH = width * 0.44;
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
+    backgroundColor: "#F8F9FA",
+    paddingHorizontal: 12,
+    paddingTop: 8,
   },
+
+  // Heading
   heading: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#000000ff",
+    fontWeight: "700",
+    color: "#212121",
     marginBottom: 12,
     textAlign: "center",
+    letterSpacing: 0.4,
   },
 
   // Category filters
   filterButton: {
-    width: 130,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#006b3d",
+    minWidth: 120,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 25,
+    borderWidth: 1.5,
+    borderColor: "#006B3D",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 8,
-    flexShrink: 0,  
-    
+    marginRight: 10,
+    backgroundColor: "#fff",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
   },
-
   filterButtonActive: {
-    backgroundColor: "#006b3d",
-    
+    backgroundColor: "#006B3D",
+    borderColor: "#006B3D",
+    elevation: 4,
   },
   filterButtonText: {
-    color: "#000000ff",
+    color: "#444",
     fontSize: 14,
-     textAlign: "center",
+    fontWeight: "500",
+    textAlign: "center",
   },
   filterButtonTextActive: {
-    color: "#ffffffff",
-    fontWeight: "bold",
+    color: "#fff",
+    fontWeight: "700",
   },
 
-  // Product cards
+  // Product grid
   list: {
-    paddingBottom: 40,
+    paddingBottom: 70,
     justifyContent: "space-between",
   },
+
   card: {
-    backgroundColor: "#fdfdfdff",
-    borderRadius: 10,
+    backgroundColor: "#fff",
+    borderRadius: 12,
     padding: 10,
     margin: 6,
     width: CARD_WIDTH,
     shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 6,
   },
-  image: {
+
+  imageWrapper: {
+    position: "relative",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+
+  productImage: {
     width: "100%",
     height: 120,
-    borderRadius: 8,
-    marginBottom: 8,
+    borderRadius: 10,
+    resizeMode: "cover",
   },
+
   name: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#040404ff",
-    marginBottom: 6,
+    color: "#1A1A1A",
+    marginTop: 6,
   },
+
+  productWeight: {
+    fontSize: 12,
+    color: "#757575",
+    marginTop: 2,
+  },
+
+  // Price Row
   priceRow: {
     flexDirection: "row",
     alignItems: "center",
+    marginTop: 6,
     marginBottom: 8,
     gap: 6,
   },
   price: {
     fontSize: 14,
-    color: "#fff",
-    fontWeight: "600",
+    color: "#1A1A1A",
+    fontWeight: "700",
   },
   strike: {
     fontSize: 12,
-    color: "#aaa",
+    color: "#9E9E9E",
     textDecorationLine: "line-through",
   },
   sale: {
     fontSize: 14,
-    color: "#09b71dff",
-    fontWeight: "bold",
+    color: "#00A86B",
+    fontWeight: "700",
   },
 
-  addButton: {
+  // Add to cart button
+  addToCartButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#006b3d",
+    backgroundColor: "#006B3D",
     paddingVertical: 8,
-    borderRadius: 6,
+    borderRadius: 8,
+    elevation: 2,
   },
-  addButtonText: {
-    color: "#ffffffff",
+  addToCartText: {
+    color: "#fff",
     marginLeft: 6,
     fontSize: 13,
     fontWeight: "600",
   },
 
+  // Disabled button (Out of stock)
+  disabledButton: {
+    backgroundColor: "#C7C7C7",
+  },
+  disabledText: {
+    color: "#eee",
+    marginLeft: 6,
+    fontWeight: "600",
+  },
+
+  // Quantity Selector
   qtySelector: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#006b3d",
+    borderColor: "#006B3D",
     borderWidth: 1.5,
-    borderRadius: 6,
+    borderRadius: 8,
     paddingVertical: 4,
     marginTop: 4,
-    marginBottom: 6,
   },
   qtyText: {
     marginHorizontal: 12,
     fontSize: 14,
     fontWeight: "600",
-    color: "#000000ff",
+    color: "#212121",
   },
+
+  // Discount Ribbon
   ribbonContainer: {
     position: "absolute",
-    top: 6,
-    left: 6,
-    backgroundColor: "#c8102e",
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    top: 8,
+    left: 8,
+    backgroundColor: "#C8102E",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderTopLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    elevation: 3,
   },
   ribbonText: {
     fontSize: 10,
-    color: "#ffffffff",
+    color: "#fff",
+    fontWeight: "700",
+  },
+
+  // Out of Stock Overlay
+  outOfStockOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  outOfStockText: {
+    color: "#fff",
     fontWeight: "bold",
+    backgroundColor: "rgba(200,16,46,0.9)",
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    fontSize: 12,
+    elevation: 3,
   },
 });

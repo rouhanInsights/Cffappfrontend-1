@@ -77,41 +77,71 @@ export default function LoginScreen({ navigation }) {
   };
 
   const verifyOtp = async () => {
-    if (otp.trim() === '') {
-      Alert.alert('Error', 'Enter OTP');
-      return;
-    }
+  if (otp.trim() === '') {
+    Alert.alert('Error', 'Enter OTP');
+    return;
+  }
 
-    const body = contact.includes('@')
-      ? { email: contact, otp }
-      : { phone: contact, otp };
+  const body = contact.includes('@')
+    ? { email: contact, otp }
+    : { phone: contact, otp };
 
-    try {
-      const response = await fetch(`${BASE_URL}/api/users/verify-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        await AsyncStorage.setItem('token', data.token);
-        await AsyncStorage.setItem('guestMode', 'false');
-        Alert.alert('Success', 'Login successful');
+    const data = await response.json();
+    if (response.ok) {
+      await AsyncStorage.setItem('token', data.token);
+      await AsyncStorage.setItem('guestMode', 'false');
+
+      Alert.alert('Success', 'Login successful');
+
+      // ✅ check redirect target
+      const redirectAfterLogin = await AsyncStorage.getItem('redirectAfterLogin');
+      if (redirectAfterLogin === 'Checkout') {
+        await AsyncStorage.removeItem('redirectAfterLogin');
+        navigation.dispatch(
+    CommonActions.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'Main',
+          state: {
+            index: 0, // 👈 selects the Home tab
+            routes: [
+              {
+                name: 'Home', // this matches your tab name
+                state: {
+                  routes: [{ name: 'CheckoutScreen' }], // 👈 open Checkout inside HomeStack
+                },
+              },
+            ],
+          },
+        },
+      ],
+    })
+  );
+      } else {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: 'Main' }],
+            routes: [{ name: 'Main' }], // normal flow
           })
         );
-      } else {
-        Alert.alert('Error', data.error || 'Invalid OTP');
       }
-    } catch (err) {
-      console.error('Verify OTP Error:', err);
-      Alert.alert('Error', 'Network error');
+    } else {
+      Alert.alert('Error', data.error || 'Invalid OTP');
     }
-  };
+  } catch (err) {
+    console.error('Verify OTP Error:', err);
+    Alert.alert('Error', 'Network error');
+  }
+};
+
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>

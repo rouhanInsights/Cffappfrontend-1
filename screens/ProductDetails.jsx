@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -20,18 +20,15 @@ const ProductDetails = ({ route }) => {
   const { product: initialProduct, productId } = route.params;
   const [product, setProduct] = useState(initialProduct || null);
   const [relatedItems, setRelatedItems] = useState([]);
-
   const { addToCart, incrementQty, decrementQty, cartItems } = useCart();
   const navigation = useNavigation();
 
-  const quantity = product ? cartItems[product.product_id] || 0 : 0;
+  const quantity = product ? cartItems[product.product_id?.toString()] || 0 : 0;
 
   const getTotalItems = () =>
     Object.values(cartItems).reduce((sum, qty) => sum + qty, 0);
 
-  const handleAddToCart = (productId) => {
-    addToCart(productId);
-  };
+  const handleAddToCart = (productId) => addToCart(productId.toString());
 
   const fetchProductById = async () => {
     try {
@@ -57,9 +54,7 @@ const ProductDetails = ({ route }) => {
   };
 
   useEffect(() => {
-    if (!initialProduct && productId) {
-      fetchProductById();
-    }
+    if (!initialProduct && productId) fetchProductById();
   }, [productId]);
 
   useEffect(() => {
@@ -76,12 +71,50 @@ const ProductDetails = ({ route }) => {
     );
   }
 
+  // ✅ Normalize stock availability check
+  const isOutOfStock =
+    product.product_stock_available === false ||
+    product.product_stock_available === 0 ||
+    product.product_stock_available === "false" ||
+    product.product_stock_available === null ||
+    product.product_stock_available === undefined;
+
   const totalItems = getTotalItems();
 
   return (
     <View style={{ flex: 1, backgroundColor: "#0c0104" }}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Image source={{ uri: product.image_url }} style={styles.image} />
+        {/* Product Image with overlay */}
+        <View style={{ position: "relative" }}>
+          <Image source={{ uri: product.image_url }} style={styles.image} />
+          {isOutOfStock && (
+            <View
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(0,0,0,0.4)",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  backgroundColor: "rgba(200,16,46,0.9)",
+                  paddingVertical: 6,
+                  paddingHorizontal: 12,
+                  borderRadius: 8,
+                  fontWeight: "bold",
+                }}
+              >
+                Out of Stock
+              </Text>
+            </View>
+          )}
+        </View>
 
         {/* Main Detail Card */}
         <View style={styles.detailCard}>
@@ -123,18 +156,28 @@ const ProductDetails = ({ route }) => {
 
           {/* Add/Qty */}
           <View style={styles.cartActionContainer}>
-            {quantity === 0 ? (
+            {isOutOfStock ? (
+              <TouchableOpacity
+                style={[styles.addBtn, { backgroundColor: "#ccc" }]}
+                disabled
+              >
+                <Ionicons name="cart-outline" size={20} color="#fff" />
+                <Text style={[styles.addBtnText, { color: "#eee" }]}>
+                  Out of Stock
+                </Text>
+              </TouchableOpacity>
+            ) : quantity === 0 ? (
               <TouchableOpacity
                 style={styles.addBtn}
                 onPress={() => handleAddToCart(product.product_id)}
               >
-                <Ionicons name="cart-outline" size={20} color="#ffffffff" />
+                <Ionicons name="cart-outline" size={20} color="#fff" />
                 <Text style={styles.addBtnText}>Add to Cart</Text>
               </TouchableOpacity>
             ) : (
               <View style={styles.qtySelector}>
                 <TouchableOpacity
-                  onPress={() => decrementQty(product.product_id)}
+                  onPress={() => decrementQty(product.product_id.toString())}
                 >
                   <Ionicons
                     name="remove-circle-outline"
@@ -144,7 +187,7 @@ const ProductDetails = ({ route }) => {
                 </TouchableOpacity>
                 <Text style={styles.qtyText}>{quantity}</Text>
                 <TouchableOpacity
-                  onPress={() => incrementQty(product.product_id)}
+                  onPress={() => incrementQty(product.product_id.toString())}
                 >
                   <Ionicons
                     name="add-circle-outline"
@@ -167,7 +210,7 @@ const ProductDetails = ({ route }) => {
                     : relatedItems
                 }
                 keyExtractor={(item, index) =>
-                  item.viewAll ? "view-all" : item.product_id.toString()
+                  item.viewAll ? `viewall-${index}` : item.product_id.toString()
                 }
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -188,32 +231,78 @@ const ProductDetails = ({ route }) => {
                     );
                   }
 
-                  const relatedQty = cartItems[item.product_id] || 0;
+                  const relatedKey = item.product_id.toString();
+                  const relatedQty = cartItems[relatedKey] || 0;
+                  const relatedOut =
+                    item.product_stock_available === false ||
+                    item.product_stock_available === 0 ||
+                    item.product_stock_available === "false" ||
+                    item.product_stock_available === null ||
+                    item.product_stock_available === undefined;
 
                   return (
-                    <TouchableOpacity
-                      style={cardStyles.card}
-                      onPress={() =>
-                        navigation.navigate("ProductDetails", {
-                          productId: item.product_id,
-                        })
-                      }
-                    >
-                      <View style={cardStyles.imageWrapper}>
-                        <Image
-                          source={{ uri: item.image_url }}
-                          style={cardStyles.productImage}
-                        />
-                        {item.sale_price && (
-                          <View style={cardStyles.ribbonContainer}>
-                            <Text style={styles.ribbonText}>
-                              {Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF
-                            </Text>
-                          </View>
-                        )}
-                      </View>
+                    <View style={cardStyles.card}>
+                      <TouchableOpacity
+                        activeOpacity={0.85}
+                        onPress={() =>
+                          navigation.navigate("ProductDetails", {
+                            productId: item.product_id,
+                          })
+                        }
+                      >
+                        <View style={{ position: "relative" }}>
+                          <Image
+                            source={{ uri: item.image_url }}
+                            style={cardStyles.productImage}
+                          />
+                          {item.sale_price && (
+                            <View style={cardStyles.ribbonContainer}>
+                              <Text style={styles.ribbonText}>
+                                {Math.round(
+                                  ((item.price - item.sale_price) /
+                                    item.price) *
+                                    100
+                                )}
+                                % OFF
+                              </Text>
+                            </View>
+                          )}
+                          {relatedOut && (
+                            <View
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                backgroundColor: "rgba(0,0,0,0.4)",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                borderRadius: 8,
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  color: "#fff",
+                                  backgroundColor: "rgba(200,16,46,0.9)",
+                                  paddingVertical: 4,
+                                  paddingHorizontal: 10,
+                                  borderRadius: 6,
+                                  fontSize: 12,
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                Out of Stock
+                              </Text>
+                            </View>
+                          )}
+                        </View>
+                      </TouchableOpacity>
 
-                      <Text style={cardStyles.productName} numberOfLines={1}>
+                      <Text
+                        style={cardStyles.productName}
+                        numberOfLines={1}
+                      >
                         {item.name}
                       </Text>
                       <Text style={cardStyles.productWeight}>{item.weight}</Text>
@@ -221,25 +310,39 @@ const ProductDetails = ({ route }) => {
                       <View style={cardStyles.priceRow}>
                         {item.sale_price ? (
                           <>
-                            <Text style={cardStyles.oldPrice}>₹{item.price}</Text>
-                            <Text style={cardStyles.salePrice}>₹{item.sale_price}</Text>
+                            <Text style={cardStyles.oldPrice}>
+                              ₹{item.price}
+                            </Text>
+                            <Text style={cardStyles.salePrice}>
+                              ₹{item.sale_price}
+                            </Text>
                           </>
                         ) : (
                           <Text style={cardStyles.price}>₹{item.price}</Text>
                         )}
                       </View>
 
-                      {relatedQty === 0 ? (
+                      {relatedOut ? (
+                        <TouchableOpacity
+                          style={[cardStyles.addToCartButton, { backgroundColor: "#ccc" }]}
+                          disabled
+                        >
+                          <Ionicons name="cart-outline" size={18} color="#fff" />
+                          <Text style={{ color: "#eee", marginLeft: 4 }}>
+                            Out of Stock
+                          </Text>
+                        </TouchableOpacity>
+                      ) : relatedQty === 0 ? (
                         <TouchableOpacity
                           style={cardStyles.addToCartButton}
-                          onPress={() => handleAddToCart(item.product_id)}
+                          onPress={() => handleAddToCart(relatedKey)}
                         >
-                          <Ionicons name="cart-outline" size={18} color="#ffffffff" />
+                          <Ionicons name="cart-outline" size={18} color="#fff" />
                           <Text style={cardStyles.addToCartText}>Add</Text>
                         </TouchableOpacity>
                       ) : (
                         <View style={cardStyles.qtySelector}>
-                          <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+                          <TouchableOpacity onPress={() => decrementQty(relatedKey)}>
                             <Ionicons
                               name="remove-circle-outline"
                               size={22}
@@ -247,7 +350,7 @@ const ProductDetails = ({ route }) => {
                             />
                           </TouchableOpacity>
                           <Text style={cardStyles.qtyText}>{relatedQty}</Text>
-                          <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+                          <TouchableOpacity onPress={() => incrementQty(relatedKey)}>
                             <Ionicons
                               name="add-circle-outline"
                               size={22}
@@ -256,10 +359,9 @@ const ProductDetails = ({ route }) => {
                           </TouchableOpacity>
                         </View>
                       )}
-                    </TouchableOpacity>
+                    </View>
                   );
                 }}
-
               />
             </>
           )}

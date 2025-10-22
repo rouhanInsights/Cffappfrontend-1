@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useCart } from "../contexts/CartContext";
-import styles from "../styles/ProductSectionStyles"; // ✅ new dedicated styles
+import styles from "../styles/ProductSectionStyles";
 import { useNavigation } from "@react-navigation/native";
 
 const ProductSection = ({ title = "All Products", products }) => {
@@ -21,23 +21,42 @@ const ProductSection = ({ title = "All Products", products }) => {
 
   const renderProduct = ({ item }) => {
     const quantity = cartItems[item.product_id] || 0;
+    const isOutOfStock = item.product_stock_available === false;
 
     return (
       <View style={styles.card}>
         {/* Product Image */}
         <TouchableOpacity
-          onPress={() =>
+         onPress={() =>
             navigation.navigate("ProductDetails", {
-              product: item,
+              product: {
+                ...item,
+                product_id: item.product_id,
+                image_url: item.image,
+                product_short_description: item.short_description,
+                category_id: item.category_id,
+                product_stock_available: item.product_stock_available,
+              },
             })
           }
           activeOpacity={0.8}
         >
           <View style={styles.imageWrapper}>
             <Image source={{ uri: item.image_url }} style={styles.productImage} />
+
+            {/* Discount Ribbon */}
             {item.sale_price && (
               <View style={styles.ribbonContainer}>
-                <Text style={styles.ribbonText}>{Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF</Text>
+                <Text style={styles.ribbonText}>
+                  {Math.round(((item.price - item.sale_price) / item.price) * 100)}% OFF
+                </Text>
+              </View>
+            )}
+
+            {/* Out of Stock Overlay */}
+            {isOutOfStock && (
+              <View style={styles.outOfStockOverlay}>
+                <Text style={styles.outOfStockText}>Out of Stock</Text>
               </View>
             )}
           </View>
@@ -62,12 +81,20 @@ const ProductSection = ({ title = "All Products", products }) => {
         </View>
 
         {/* Cart Actions */}
-        {quantity === 0 ? (
+        {isOutOfStock ? (
+          <TouchableOpacity
+            style={[styles.addToCartButton, styles.disabledButton]}
+            disabled={true}
+          >
+            <Ionicons name="cart-outline" size={18} color="#fff" />
+            <Text style={styles.disabledText}>Add</Text>
+          </TouchableOpacity>
+        ) : quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
             onPress={() => addToCart(item.product_id)}
           >
-            <Ionicons name="cart-outline" size={18} color="#ffffffff" />
+            <Ionicons name="cart-outline" size={18} color="#fff" />
             <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
@@ -86,7 +113,7 @@ const ProductSection = ({ title = "All Products", products }) => {
   };
 
   return (
-    <View style={localStyles.wrapper}>
+    <View style={styles.wrapper}>
       <Text style={styles.topTitle}>{title}</Text>
       <FlatList
         data={[...products.slice(0, 5), { isViewAll: true }]}
@@ -126,12 +153,7 @@ const ProductSection = ({ title = "All Products", products }) => {
   );
 };
 
-const localStyles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    position: "relative",
-    paddingBottom: 20,
-  },
-});
+
+ 
 
 export default ProductSection;

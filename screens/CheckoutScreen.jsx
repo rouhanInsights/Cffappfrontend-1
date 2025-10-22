@@ -49,19 +49,26 @@ const CheckoutScreen = () => {
   });
 
   const BASE_URL = API_BASE_URL;
-  useEffect(() => {
+ useEffect(() => {
   const checkGuest = async () => {
-    const guest = await AsyncStorage.getItem('guestMode');
-    if (guest === 'true') {
+    const guest = await AsyncStorage.getItem("guestMode");
+    if (guest === "true") {
+      await AsyncStorage.setItem("redirectAfterLogin", "Checkout"); // ✅ store redirect target
       Alert.alert(
-        'Login Required',
-        'Please log in to proceed .',
-        [{ text: 'Login', onPress: () => navigation.replace('Auth') }]
+        "Login Required",
+        "Please log in to proceed.",
+        [
+          {
+            text: "Login",
+            onPress: () => navigation.replace("Auth"),
+          },
+        ]
       );
     }
   };
   checkGuest();
 }, []);
+
 
 
   const getValidDeliveryDates = () => {
@@ -150,7 +157,7 @@ const CheckoutScreen = () => {
 
   const paymentOptions = [
     { value: 'COD', label: 'Cash on Delivery' },
-    { value: 'Pay Online', label: 'Pay Online' },
+    // { value: 'Pay Online', label: 'Pay Online' },
 
   ];
 

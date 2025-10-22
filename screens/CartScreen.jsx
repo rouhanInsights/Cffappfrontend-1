@@ -55,8 +55,8 @@ const CartScreen = () => {
   const productList = Object.entries(cartItems)
     .map(([productId, qty]) => {
       const product = allProducts.find(
-        (p) => p.product_id === parseInt(productId)
-      );
+  (p) => p.product_id?.toString() === productId
+);
       if (!product) return null;
       return { ...product, quantity: qty };
     })

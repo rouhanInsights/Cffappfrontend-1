@@ -1,14 +1,21 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import { useInAppUpdate } from '../hooks/useInAppUpdate'; // ✅ import the hook
+
 export default function SplashScreen({ navigation }) {
+  const { UpdatePrompt, checking } = useInAppUpdate({
+    updateType: 'flexible', // or 'immediate' if you want force update
+    checkOnMount: true,
+  });
+
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const token = await AsyncStorage.getItem('token');
 
-        // Delay for logo visibility (2s), then navigate
+        // Wait a bit for logo visibility
         setTimeout(() => {
           if (token) {
             navigation.replace('Main'); // ✅ already logged in
@@ -22,12 +29,21 @@ export default function SplashScreen({ navigation }) {
       }
     };
 
-    checkLoginStatus();
-  }, []);
-const logoimg=resolveAssetSource(require('../images/logo.jpg'))
+    // ⛔ only navigate if no update prompt is shown
+    if (!checking) checkLoginStatus();
+  }, [checking]);
+
+  const logoimg = resolveAssetSource(require('../images/logo.jpg'));
+
   return (
     <View style={styles.container}>
       <Image source={logoimg} style={{ width: 350, height: 120 }} />
+      {checking && (
+        <ActivityIndicator size="large" color="#006B3D" style={{ marginTop: 20 }} />
+      )}
+
+      {/* ✅ render update prompt modal if needed */}
+      <UpdatePrompt />
     </View>
   );
 }

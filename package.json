@@ -31,6 +31,7 @@
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-image-picker": "^8.2.1",
+    "react-native-in-app-update": "^1.0.1",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-paper": "^5.13.5",
     "react-native-permissions": "^5.4.2",
@@ -40,7 +41,8 @@
     "react-native-screens": "^4.10.0",
     "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-skeleton-placeholder": "^5.2.4",
-    "react-native-vector-icons": "^10.2.0"
+    "react-native-vector-icons": "^10.2.0",
+    "react-native-version-check": "^3.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

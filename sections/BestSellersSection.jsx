@@ -5,7 +5,6 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
-  Animated,
   ActivityIndicator,
 } from "react-native";
 import { API_BASE_URL } from "@env";
@@ -14,26 +13,21 @@ import { useCart } from "../contexts/CartContext";
 import styles from "../styles/BestSellersStyles";
 import { useNavigation } from "@react-navigation/native";
 
+const REFRESH_INTERVAL = 3000; // 🔁 refresh every 3 seconds
+
 const BestSellersSection = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
 
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
-  const [slideAnim] = useState(new Animated.Value(100));
-
+  // ✅ Fetch Best Sellers
   const fetchBestSellers = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/api/products/best-sellers`);
       const data = await res.json();
       if (res.ok) {
-        const sliced = data.slice(0, 6).map((p) => ({
-          ...p,
-          id: p.id ?? p.product_id ?? `prod-${Math.random()}`,
-        }));
-        setOffers([...sliced, { id: "viewall", viewAll: true }]);
+        setOffers(data);
       } else {
         console.error("Error fetching Best Sellers:", data.error);
       }
@@ -44,49 +38,15 @@ const BestSellersSection = () => {
     }
   };
 
+  // ✅ Initial fetch + periodic refresh every 3s
   useEffect(() => {
     fetchBestSellers();
+    const interval = setInterval(fetchBestSellers, REFRESH_INTERVAL);
+    return () => clearInterval(interval);
   }, []);
 
-  const triggerPopup = (message) => {
-    setPopupMessage(message);
-    setShowPopup(true);
-
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    setTimeout(() => {
-      Animated.timing(slideAnim, {
-        toValue: 100,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        setShowPopup(false);
-      });
-    }, 2500);
-  };
-
-  const calculateCartTotal = (cartObj) =>
-    Object.values(cartObj).reduce((sum, qty) => sum + qty, 0);
-
-  const handleIncrement = (id) => {
-    incrementQty(id);
-    setTimeout(() => {
-      const total = calculateCartTotal(cartItems) + 1;
-      triggerPopup(`${total} item${total > 1 ? "s" : ""} in cart`);
-    }, 100);
-  };
-
-  const handleDecrement = (id) => {
-    decrementQty(id);
-    setTimeout(() => {
-      const total = Math.max(calculateCartTotal(cartItems) - 1, 0);
-      triggerPopup(`${total} item${total !== 1 ? "s" : ""} in cart`);
-    }, 100);
-  };
+  const handleIncrement = (id) => incrementQty(String(id));
+  const handleDecrement = (id) => decrementQty(String(id));
 
   const renderProduct = ({ item }) => {
     if (item.viewAll) {
@@ -115,17 +75,20 @@ const BestSellersSection = () => {
       );
     }
 
-    const quantity = cartItems[item.id] || 0;
+    const productKey = String(item.id);
+    const quantity = cartItems[productKey] || 0;
+    const isOutOfStock =
+      item.product_stock_available === false ||
+      item.stock_quantity <= 0;
 
     return (
       <View style={styles.card}>
-        {/* Product Image */}
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("ProductDetails", {
               product: {
                 ...item,
-                product_id: item.id,
+                product_id: productKey,
                 image_url: item.image,
                 product_short_description: item.short_description,
                 category_id: item.category_id,
@@ -138,19 +101,27 @@ const BestSellersSection = () => {
             <Image source={{ uri: item.image }} style={styles.productImage} />
             {item.sale_price && (
               <View style={styles.ribbonContainer}>
-                <Text style={styles.ribbonText}>{item.discount}% OFF</Text>
+                <Text style={styles.ribbonText}>
+                  {Math.round(
+                    ((item.price - item.sale_price) / item.price) * 100
+                  )}
+                  % OFF
+                </Text>
+              </View>
+            )}
+            {isOutOfStock && (
+              <View style={styles.outOfStockOverlay}>
+                <Text style={styles.outOfStockText}>Out of Stock</Text>
               </View>
             )}
           </View>
         </TouchableOpacity>
 
-        {/* Product Info */}
         <Text style={styles.productName} numberOfLines={1}>
           {item.name}
         </Text>
         <Text style={styles.productWeight}>{item.weight}</Text>
 
-        {/* Price */}
         <View style={styles.priceRow}>
           {item.sale_price ? (
             <>
@@ -162,17 +133,20 @@ const BestSellersSection = () => {
           )}
         </View>
 
-        {/* Cart Actions */}
-        {quantity === 0 ? (
+        {isOutOfStock ? (
+          <TouchableOpacity
+            style={[styles.addToCartButton, styles.disabledButton]}
+            disabled
+          >
+            <Ionicons name="cart-outline" size={18} color="#fff" />
+            <Text style={styles.disabledText}>Out of Stock</Text>
+          </TouchableOpacity>
+        ) : quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => {
-              addToCart(item.id);
-              const total = calculateCartTotal(cartItems) + 1;
-              triggerPopup(`${total} item${total > 1 ? "s" : ""} in cart`);
-            }}
+            onPress={() => addToCart(String(item.id))}
           >
-            <Ionicons name="cart-outline" size={18} color="#ffffffff" />
+            <Ionicons name="cart-outline" size={18} color="#fff" />
             <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
@@ -186,11 +160,7 @@ const BestSellersSection = () => {
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity onPress={() => handleIncrement(item.id)}>
-              <Ionicons
-                name="add-circle-outline"
-                size={24}
-                color="#006B3D"
-              />
+              <Ionicons name="add-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
           </View>
         )}
@@ -198,17 +168,21 @@ const BestSellersSection = () => {
     );
   };
 
+  const topFiveWithViewAll = [...offers.slice(0, 5), { viewAll: true }];
+
   return (
     <View style={styles.container}>
       <Text style={styles.topTitle}>Best Sellers</Text>
       {loading ? (
-        <ActivityIndicator size="large" color="#c8102e" />
+        <ActivityIndicator size="large" color="#10c83e" />
       ) : (
         <FlatList
-          data={offers}
+          data={topFiveWithViewAll}
           renderItem={renderProduct}
           keyExtractor={(item, index) =>
-            item?.viewAll ? `viewAll-${index}` : item?.id?.toString() || `bs-${index}`
+            item?.viewAll
+              ? `viewAll-${index}`
+              : item?.id?.toString() || `offer-${index}`
           }
           horizontal
           showsHorizontalScrollIndicator={false}

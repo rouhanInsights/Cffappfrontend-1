@@ -157,4 +157,38 @@ export default StyleSheet.create({
     color: "#ffffffff",
     fontWeight: "bold",
   },
+    imageWrapper: {
+    position: "relative",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  outOfStockOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0,0,0,0.45)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  outOfStockText: {
+    color: "#fff",
+    fontWeight: "bold",
+    backgroundColor: "rgba(200,16,46,0.9)",
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    fontSize: 12,
+  },
+  disabledButton: {
+    backgroundColor: "#ccc",
+  },
+  disabledText: {
+    color: "#eee",
+    marginLeft: 6,
+    fontWeight: "600",
+  },
+
 });
