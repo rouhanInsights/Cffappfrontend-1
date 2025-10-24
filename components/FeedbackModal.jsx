@@ -10,62 +10,78 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_BASE_URL } from "@env";
-import styles from "../styles/FeedbackModalStyles"; // ⬅️ import styles
+import styles from "../styles/FeedbackModalStyles";
 
 const BASE_URL = API_BASE_URL;
 
-export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSubmitted }) {
+export default function FeedbackModal({
+  visible,
+  onClose,
+  orderId,
+  onFeedbackSubmitted,
+}) {
   const [ratingProduct, setRatingProduct] = useState(0);
   const [ratingDA, setRatingDA] = useState(0);
   const [commentProduct, setCommentProduct] = useState("");
   const [commentDA, setCommentDA] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    const token = await AsyncStorage.getItem("token");
-
-    if (!ratingProduct || !ratingDA || !commentProduct || !commentDA) {
-      Alert.alert("Validation", "Please provide ratings and comments for both.");
+    if (!ratingProduct || !ratingDA || !commentProduct.trim() || !commentDA.trim()) {
+      Alert.alert("Validation", "Please provide ratings and comments for both sections.");
       return;
     }
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/feedback`, {
+      setSubmitting(true);
+      const token = await AsyncStorage.getItem("userToken");
+      if (!token) {
+        Alert.alert("Error", "Please log in to submit feedback.");
+        setSubmitting(false);
+        return;
+      }
+
+      const payload = {
+        order_id: orderId,
+        rating_product: ratingProduct,
+        comment_product: commentProduct.trim(),
+        rating_da: ratingDA,
+        comment_da: commentDA.trim(),
+      };
+
+      const res = await fetch(`${BASE_URL}/api/feedback`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          order_id: orderId,
-          rating_product: ratingProduct,
-          comment_product: commentProduct,
-          rating_da: ratingDA,
-          comment_da: commentDA,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      if (res.ok) {
-        Alert.alert("Success", "Feedback submitted.");
+      const data = await res.json();
 
-        // Reset form
+      if (res.ok) {
+        Alert.alert("Success", "Thank you for your feedback!");
+
+        // ✅ Reset form
         setRatingProduct(0);
         setRatingDA(0);
         setCommentProduct("");
         setCommentDA("");
 
-        // Trigger parent update
-        if (onFeedbackSubmitted) {
-          onFeedbackSubmitted(orderId);
-        }
+        // ✅ Notify parent
+        if (onFeedbackSubmitted) onFeedbackSubmitted(orderId);
 
-        // Close modal
         onClose();
       } else {
-        throw new Error("Submit failed");
+        console.error("Feedback Error:", data);
+        Alert.alert("Error", data.error || "Failed to submit feedback.");
       }
     } catch (err) {
-      console.error("Feedback error:", err);
-      Alert.alert("Error", "Could not submit feedback");
+      console.error("Feedback Submit Error:", err);
+      Alert.alert("Error", "Something went wrong while submitting feedback.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -73,8 +89,9 @@ export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSub
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onClose}>
       <View style={styles.overlay}>
         <View style={styles.box}>
-          <Text style={styles.title}>Feedback</Text>
+          <Text style={styles.title}>Leave Feedback</Text>
 
+          {/* Product Rating */}
           <Text style={styles.label}>Product Rating:</Text>
           <View style={styles.starRow}>
             {[1, 2, 3, 4, 5].map((val) => (
@@ -87,15 +104,17 @@ export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSub
               </TouchableOpacity>
             ))}
           </View>
+
           <TextInput
             style={styles.input}
             value={commentProduct}
             onChangeText={setCommentProduct}
             placeholder="Write about the product"
-            placeholderTextColor="#333" 
+            placeholderTextColor="#666"
             multiline
           />
 
+          {/* Delivery Agent Rating */}
           <Text style={styles.label}>Delivery Agent Rating:</Text>
           <View style={styles.starRow}>
             {[1, 2, 3, 4, 5].map((val) => (
@@ -108,20 +127,33 @@ export default function FeedbackModal({ visible, onClose, orderId, onFeedbackSub
               </TouchableOpacity>
             ))}
           </View>
+
           <TextInput
             style={styles.input}
             value={commentDA}
             onChangeText={setCommentDA}
             placeholder="Write about the delivery agent"
-            placeholderTextColor="#333" 
+            placeholderTextColor="#666"
             multiline
           />
 
+          {/* Buttons */}
           <View style={styles.actions}>
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
-              <Text style={styles.submitText}>Submit</Text>
+            <TouchableOpacity
+              style={[styles.submitBtn, submitting && { opacity: 0.6 }]}
+              onPress={handleSubmit}
+              disabled={submitting}
+            >
+              <Text style={styles.submitText}>
+                {submitting ? "Submitting..." : "Submit"}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
+            <TouchableOpacity
+              style={styles.cancelBtn}
+              onPress={() => {
+                if (!submitting) onClose();
+              }}
+            >
               <Text style={styles.cancelText}>Cancel</Text>
             </TouchableOpacity>
           </View>

@@ -13,7 +13,7 @@ import { useCart } from "../contexts/CartContext";
 import styles from "../styles/TopOffersStyles";
 import { useNavigation } from "@react-navigation/native";
 
-const REFRESH_INTERVAL = 3000; // 🔁 refresh every 3 seconds
+const REFRESH_INTERVAL = 60000; // 🔁 refresh every 3 seconds
 
 const TopOffersSection = () => {
   const [offers, setOffers] = useState([]);
@@ -76,10 +76,10 @@ const TopOffersSection = () => {
     }
 
     const productKey = String(item.id);
-    const quantity = cartItems[productKey] || 0;
-    const isOutOfStock =
-      item.product_stock_available === false ||
-      item.stock_quantity <= 0;
+  const quantity = cartItems[item.id]?.quantity || 0;
+
+    const isOutOfStock = item.in_stock === false;
+
 
     return (
       <View style={styles.card}>
@@ -144,14 +144,21 @@ const TopOffersSection = () => {
         ) : quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => addToCart(String(item.id))}
+            onPress={() =>
+              addToCart({
+                id: String(item.id),
+                name: item.name,
+                price: item.sale_price || item.price,
+                image: item.image,
+              })
+            }
           >
             <Ionicons name="cart-outline" size={18} color="#fff" />
             <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => handleDecrement(item.id)}>
+            <TouchableOpacity onPress={() => handleDecrement(productKey)}>
               <Ionicons
                 name="remove-circle-outline"
                 size={24}
@@ -159,7 +166,7 @@ const TopOffersSection = () => {
               />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => handleIncrement(item.id)}>
+            <TouchableOpacity onPress={() => handleIncrement(productKey)}>
               <Ionicons name="add-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
           </View>

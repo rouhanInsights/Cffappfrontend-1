@@ -22,37 +22,34 @@ export default StyleSheet.create({
   },
 
   // Category filters
-  filterButton: {
-    minWidth: 120,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 25,
-    borderWidth: 1.5,
-    borderColor: "#006B3D",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
-    backgroundColor: "#fff",
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-  },
-  filterButtonActive: {
-    backgroundColor: "#006B3D",
-    borderColor: "#006B3D",
-    elevation: 4,
-  },
-  filterButtonText: {
-    color: "#444",
-    fontSize: 14,
-    fontWeight: "500",
-    textAlign: "center",
-  },
-  filterButtonTextActive: {
-    color: "#fff",
-    fontWeight: "700",
-  },
+filterButton: {
+  borderWidth: 1,
+  borderColor: "#006B3D",
+  borderRadius: 20,
+  paddingHorizontal: 18, // ✅ was too small before
+  paddingVertical: 6,
+  marginRight: 10,
+  backgroundColor: "#fff",
+  flexShrink: 0, // ✅ prevents squishing
+  alignSelf: "flex-start",
+},
+
+filterButtonActive: {
+  backgroundColor: "#006B3D",
+  borderColor: "#006B3D",
+},
+
+filterButtonText: {
+  color: "#006B3D",
+  fontSize: 15,
+  textAlign: "center",
+  textTransform: "capitalize",
+},
+
+filterButtonTextActive: {
+  color: "#fff",
+  fontWeight: "600",
+},
 
   // Product grid
   list: {

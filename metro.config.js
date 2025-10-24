@@ -7,13 +7,29 @@ const exclusionList = require("metro-config/src/defaults/exclusionList");
  *
  * @type {import('@react-native/metro-config').MetroConfig}
  */
+const defaultConfig = getDefaultConfig(__dirname);
+
 const config = {
   resolver: {
-    // 🚫 Ignore the duplicate React Native copy inside react-native-in-app-update
+    // 🚫 Ignore duplicate React Native inside react-native-in-app-update
     blockList: exclusionList([
       /node_modules\/react-native-in-app-update\/node_modules\/react-native\/.*/,
     ]),
+
+    // ✅ Add support for web images and vector types
+    assetExts: [
+      ...defaultConfig.resolver.assetExts,
+      "png",
+      "jpg",
+      "jpeg",
+      "gif",
+      "webp",
+      "svg",
+    ],
+  },
+  transformer: {
+    ...defaultConfig.transformer,
   },
 };
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = mergeConfig(defaultConfig, config);

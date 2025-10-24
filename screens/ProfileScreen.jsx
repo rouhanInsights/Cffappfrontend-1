@@ -26,7 +26,8 @@ export default function ProfileScreen() {
           return;
         }
 
-        const token = await AsyncStorage.getItem('token');
+        const token = await AsyncStorage.getItem('userToken');
+
         if (!token) return;
 
         const res = await fetch(`${API_BASE_URL}/api/users/profile`, {

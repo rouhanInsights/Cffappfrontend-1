@@ -74,42 +74,81 @@ export default function EditProfileSection({ navigation }) {
     });
   };
 
-  const handleSave = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) return Alert.alert("Error", "Not authenticated");
-
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("email", email);
-      formData.append("phone", phone);
-      formData.append("alt_email", alternateEmail);
-      formData.append("gender", gender);
-      formData.append("dob", dob);
-      if (imageFile) formData.append("profile_image", imageFile);
-
-      const res = await fetch(`${BASE_URL}/api/users/profile`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-      const data = await res.json();
-      if (res.ok) {
-        Alert.alert("Success", "Profile updated successfully.");
-        navigation?.goBack?.();
-      } else {
-        Alert.alert("Error", data.error || "Failed to update profile");
-      }
-    } catch (err) {
-      console.error("Update Profile Error:", err);
-      Alert.alert("Error", "Something went wrong");
+ const handleSave = async () => {
+  try {
+    const token = await AsyncStorage.getItem("userToken");
+    if (!token) {
+      Alert.alert("Error", "Not authenticated");
+      return;
     }
-  };
+
+    let uploadedImageUrl = profileImage;
+
+    // ✅ Step 1: If user selected a new image (not already a URL)
+    if (imageFile && !profileImage.startsWith("http")) {
+      const formData = new FormData();
+      formData.append("file", {
+        uri: imageFile.uri,
+        name: imageFile.name,
+        type: imageFile.type,
+      });
+      formData.append("upload_preset", "cff_profile_uploads"); // change to your Cloudinary preset
+      formData.append("cloud_name", "your_cloud_name_here");   // or upload endpoint for Lightsail
+
+      const uploadRes = await fetch(
+        "https://api.cloudinary.com/v1_1/your_cloud_name_here/image/upload",
+        { method: "POST", body: formData }
+      );
+
+      const uploadData = await uploadRes.json();
+      if (uploadRes.ok) {
+        uploadedImageUrl = uploadData.secure_url;
+      } else {
+        Alert.alert("Error", "Image upload failed");
+        return;
+      }
+    }
+
+    // ✅ Step 2: Send JSON to backend (what your Express expects)
+    const body = {
+      name,
+      email,
+      phone,
+      alt_email: alternateEmail,
+      gender,
+      dob,
+      profile_image_url: uploadedImageUrl || null,
+    };
+
+    const res = await fetch(`${BASE_URL}/api/users/profile`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json", // ✅ send as JSON
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      Alert.alert("Success", "Profile updated successfully!");
+      navigation?.goBack?.();
+    } else {
+      Alert.alert("Error", data.error || "Failed to update profile");
+    }
+  } catch (err) {
+    console.error("❌ Update Profile Error:", err);
+    Alert.alert("Error", "Something went wrong while updating your profile.");
+  }
+};
+
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = await AsyncStorage.getItem("token");
+        const token = await AsyncStorage.getItem("userToken");
+
         if (!token) return;
 
         const res = await fetch(`${BASE_URL}/api/users/profile`, {
@@ -146,9 +185,9 @@ export default function EditProfileSection({ navigation }) {
           }}
           style={styles.profileImage}
         />
-        <TouchableOpacity onPress={selectImage} style={styles.imagePickerButton}>
-          <Text style={styles.imagePickerText}>+</Text>
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={selectImage} style={styles.imagePickerButton}> */}
+          {/* <Text style={styles.imagePickerText}>+</Text>
+        </TouchableOpacity> */}
       </View>
 
       <Text style={styles.title}>Edit Profile</Text>

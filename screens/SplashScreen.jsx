@@ -1,48 +1,60 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Image, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
-import { useInAppUpdate } from '../hooks/useInAppUpdate'; // ✅ import the hook
+import React, { useEffect } from "react";
+import { View, StyleSheet, Image, ActivityIndicator } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import resolveAssetSource from "react-native/Libraries/Image/resolveAssetSource";
+import { useInAppUpdate } from "../hooks/useInAppUpdate"; // ✅ in-app update hook
 
 export default function SplashScreen({ navigation }) {
   const { UpdatePrompt, checking } = useInAppUpdate({
-    updateType: 'flexible', // or 'immediate' if you want force update
+    updateType: "flexible", // can switch to "immediate" for force update
     checkOnMount: true,
   });
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const token = await AsyncStorage.getItem('token');
+        const token = await AsyncStorage.getItem("userToken"); // ✅ fixed key
+        const guestMode = await AsyncStorage.getItem("guestMode");
 
-        // Wait a bit for logo visibility
+        console.log("🟢 Splash check:", { token, guestMode });
+
+        // Add a small delay to show logo visibly
         setTimeout(() => {
           if (token) {
-            navigation.replace('Main'); // ✅ already logged in
+            console.log("✅ Authenticated user found, opening Main");
+            navigation.replace("Main"); // logged-in user
+          } else if (guestMode === "true") {
+            console.log("🟡 Guest mode enabled, opening Main");
+            navigation.replace("Main"); // allow guest browsing
           } else {
-            navigation.replace('Auth'); // ❌ show onboarding/login
+            console.log("🔴 No token, opening Auth flow");
+            navigation.replace("Auth"); // login/onboarding
           }
-        }, 2000);
+        }, 1800);
       } catch (err) {
-        console.error('Auto-login error:', err);
-        navigation.replace('Onboarding'); // fallback on error
+        console.error("Auto-login error:", err);
+        navigation.replace("Auth");
       }
     };
 
-    // ⛔ only navigate if no update prompt is shown
+    // Only run after update check completes
     if (!checking) checkLoginStatus();
   }, [checking]);
 
-  const logoimg = resolveAssetSource(require('../images/logo.jpg'));
+  const logoimg = resolveAssetSource(require("../images/logo.jpg"));
 
   return (
     <View style={styles.container}>
       <Image source={logoimg} style={{ width: 350, height: 120 }} />
       {checking && (
-        <ActivityIndicator size="large" color="#006B3D" style={{ marginTop: 20 }} />
+        <ActivityIndicator
+          size="large"
+          color="#006B3D"
+          style={{ marginTop: 20 }}
+        />
       )}
 
-      {/* ✅ render update prompt modal if needed */}
+      {/* ✅ Render update prompt modal if needed */}
       <UpdatePrompt />
     </View>
   );
@@ -51,8 +63,8 @@ export default function SplashScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fdfffeff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fdfffeff",
   },
 });

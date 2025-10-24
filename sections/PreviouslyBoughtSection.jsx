@@ -11,25 +11,20 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useCart } from "../contexts/CartContext";
 import styles from "../styles/PreviouslyBoughtStyles";
 
-const PreviouslyBoughtSection = ({ products }) => {
+const PreviouslyBoughtSection = ({ products = [] }) => {
   const navigation = useNavigation();
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
 
   const renderItem = ({ item }) => {
-    const quantity = cartItems[item.product_id] || 0;
+    const productId = item.id?.toString();
+    const quantity = cartItems[item.id]?.quantity || 0;
 
     return (
       <View style={styles.card}>
         {/* Product Image */}
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate("ProductDetails", {
-              product: {
-                ...item,
-                product_id: item.product_id,
-                image_url: item.image_url,
-              },
-            })
+            navigation.navigate("ProductDetails", { product: item })
           }
           activeOpacity={0.8}
         >
@@ -48,9 +43,7 @@ const PreviouslyBoughtSection = ({ products }) => {
           {item.name}
         </Text>
 
-        <Text style={styles.productWeight}>
-          {item.weight || "—"}
-        </Text>
+        <Text style={styles.productWeight}>{item.weight || "—"}</Text>
 
         {/* Price */}
         <View style={styles.priceRow}>
@@ -68,18 +61,26 @@ const PreviouslyBoughtSection = ({ products }) => {
         {quantity === 0 ? (
           <TouchableOpacity
             style={styles.addToCartButton}
-            onPress={() => addToCart(item.product_id)}
+            onPress={() =>
+              addToCart({
+                id: String(item.id),
+                name: item.name,
+                price: item.sale_price || item.price,
+                image: item.image,
+              })
+            }
+
           >
             <Ionicons name="cart-outline" size={18} color="#fff" />
             <Text style={styles.addToCartText}>Add</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+            <TouchableOpacity onPress={() => decrementQty(productId)}>
               <Ionicons name="remove-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+            <TouchableOpacity onPress={() => incrementQty(productId)}>
               <Ionicons name="add-circle-outline" size={24} color="#006B3D" />
             </TouchableOpacity>
           </View>
@@ -93,13 +94,16 @@ const PreviouslyBoughtSection = ({ products }) => {
       <Text style={styles.topTitle}>Previously Bought</Text>
       <FlatList
         data={products}
-        keyExtractor={(item, index) =>
-          (item?.product_id ?? index).toString()
-        }
+        keyExtractor={(item, index) => (item?.id ?? index).toString()}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.horizontalList}
+        ListEmptyComponent={
+          <Text style={{ color: "#666", padding: 10 }}>
+            No previously bought products yet.
+          </Text>
+        }
       />
     </View>
   );

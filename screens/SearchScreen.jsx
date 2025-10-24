@@ -25,30 +25,31 @@ const SearchScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (query) => {
-    if (!query || query.trim() === "") {
-      setSearchResults([]);
-      return;
-    }
+  if (!query || query.trim() === "") {
+    setSearchResults([]);
+    return;
+  }
 
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `${API_BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`
-      );
-      const data = await res.json();
-      if (res.ok) {
-        setSearchResults(data);
-      } else {
-        console.error("Search error:", data.error);
-        setSearchResults([]);
-      }
-    } catch (err) {
-      console.error("Search fetch failed:", err);
+  try {
+    setLoading(true);
+    const res = await fetch(
+      `${API_BASE_URL}/api/products?search=${encodeURIComponent(query)}`
+    );
+    const data = await res.json();
+    if (res.ok) {
+      setSearchResults(data);
+    } else {
+      console.error("Search error:", data.error);
       setSearchResults([]);
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (err) {
+    console.error("Search fetch failed:", err);
+    setSearchResults([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
@@ -66,12 +67,9 @@ const SearchScreen = () => {
     const quantity = cartItems[item.product_id?.toString()] || 0;
 
     // ✅ Handle Out of Stock cases (false, 0, "false", null, undefined)
-    const isOutOfStock =
-      item.product_stock_available === false ||
-      item.product_stock_available === 0 ||
-      item.product_stock_available === "false" ||
-      item.product_stock_available === null ||
-      item.product_stock_available === undefined;
+    
+     const isOutOfStock = item.in_stock === false;
+
 
     return (
       <View style={styles.resultCard}>
@@ -83,7 +81,7 @@ const SearchScreen = () => {
           }
         >
           <View style={styles.imageWrapper}>
-            <Image source={{ uri: item.image_url }} style={styles.resultImage} />
+            <Image source={{ uri: item.image }} style={styles.resultImage} />
 
             {/* Discount Ribbon */}
             {item.sale_price && (
@@ -135,7 +133,7 @@ const SearchScreen = () => {
         ) : quantity === 0 ? (
           <TouchableOpacity
             style={styles.addBtn}
-            onPress={() => addToCart(item.product_id.toString())}
+            onPress={() => addToCart(item.id.toString())}
           >
             <Ionicons name="cart-outline" size={18} color="#fff" />
             <Text style={styles.addBtnText}>Add</Text>
@@ -143,13 +141,13 @@ const SearchScreen = () => {
         ) : (
           <View style={styles.qtySelector}>
             <TouchableOpacity
-              onPress={() => decrementQty(item.product_id.toString())}
+              onPress={() => decrementQty(item.id.toString())}
             >
               <Ionicons name="remove-circle-outline" size={22} color="#006B3D" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
             <TouchableOpacity
-              onPress={() => incrementQty(item.product_id.toString())}
+              onPress={() => incrementQty(item.id.toString())}
             >
               <Ionicons name="add-circle-outline" size={22} color="#006B3D" />
             </TouchableOpacity>
@@ -207,7 +205,7 @@ const SearchScreen = () => {
       {/* Results Grid */}
       <FlatList
         data={searchResults}
-        keyExtractor={(item) => item.product_id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
         numColumns={2}
         contentContainerStyle={styles.resultsGrid}

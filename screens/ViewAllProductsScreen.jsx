@@ -15,7 +15,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import CartBar from "../components/CartBar";
 import { API_BASE_URL } from "@env";
 
-const REFRESH_INTERVAL = 3000; // 🔁 refresh every 3 seconds
+const REFRESH_INTERVAL = 100000; // 🔁 refresh every 3 seconds
 
 const ViewAllProductsScreen = ({ route }) => {
   const { products, title } = route.params;
@@ -55,9 +55,11 @@ const ViewAllProductsScreen = ({ route }) => {
   }, [productList]);
 
   const renderItem = ({ item }) => {
-    const quantity = cartItems[item.product_id] || 0;
-    const isOutOfStock =
-      item.product_stock_available === false || item.stock_quantity <= 0;
+    const productKey = String(item.id);
+    const quantity = cartItems[item.id]?.quantity || 0;
+
+    const isOutOfStock = item.in_stock === false;
+
 
     return (
       <View style={styles.card}>
@@ -65,11 +67,19 @@ const ViewAllProductsScreen = ({ route }) => {
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={() =>
-            navigation.navigate("ProductDetails", { product: item })
+             navigation.navigate("ProductDetails", {
+              product: {
+                ...item,
+                product_id: productKey,
+                image_url: item.image,
+                product_short_description: item.short_description,
+                category_id: item.category_id,
+              },
+            })
           }
         >
           <View style={styles.imageWrapper}>
-            <Image source={{ uri: item.image_url }} style={styles.image} />
+            <Image source={{ uri: item.image }} style={styles.image} />
 
             {/* Discount Ribbon */}
             {item.sale_price && (
@@ -121,14 +131,22 @@ const ViewAllProductsScreen = ({ route }) => {
         ) : quantity === 0 ? (
           <TouchableOpacity
             style={styles.addBtn}
-            onPress={() => addToCart(item.product_id)}
+            onPress={() =>
+              addToCart({
+                id: String(item.id),
+                name: item.name,
+                price: item.sale_price || item.price,
+                image: item.image,
+              })
+            }
+
           >
             <Ionicons name="cart-outline" size={18} color="#fff" />
             <Text style={styles.addBtnText}>Add</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.qtySelector}>
-            <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+            <TouchableOpacity onPress={() => decrementQty(item.id)}>
               <Ionicons
                 name="remove-circle-outline"
                 size={22}
@@ -136,7 +154,7 @@ const ViewAllProductsScreen = ({ route }) => {
               />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{quantity}</Text>
-            <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+            <TouchableOpacity onPress={() => incrementQty(item.id)}>
               <Ionicons name="add-circle-outline" size={22} color="#006B3D" />
             </TouchableOpacity>
           </View>

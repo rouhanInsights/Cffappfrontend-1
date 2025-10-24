@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "@env";
 import {
   View,
@@ -12,9 +12,6 @@ import { useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import NavBar from "../components/Navbar";
 import styles from "../styles/CartStyles";
-import cardStyles from "../styles/TopOffersStyles";
-
-// ✅ shimmer placeholder (no MaskedView dependency)
 import ShimmerPlaceHolder from "react-native-shimmer-placeholder";
 import LinearGradient from "react-native-linear-gradient";
 
@@ -23,6 +20,7 @@ const BASE_URL = API_BASE_URL;
 const CartScreen = () => {
   const { cartItems, addToCart, incrementQty, decrementQty } = useCart();
   const navigation = useNavigation();
+
   const [allProducts, setAllProducts] = useState([]);
   const [randomProducts, setRandomProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +41,6 @@ const CartScreen = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -52,53 +49,27 @@ const CartScreen = () => {
     return shuffled.slice(0, number);
   };
 
-  const productList = Object.entries(cartItems)
-    .map(([productId, qty]) => {
-      const product = allProducts.find(
-  (p) => p.product_id?.toString() === productId
-);
-      if (!product) return null;
-      return { ...product, quantity: qty };
-    })
-    .filter(Boolean);
-
-  const totalAmount = productList.reduce((sum, item) => {
-    const price = item.sale_price || item.price;
-    return sum + price * item.quantity;
-  }, 0);
+  // ✅ Convert cartItems object into array
+  const productList = Object.values(cartItems);
+  const totalAmount = productList.reduce(
+    (sum, item) => sum + item.price * (item.quantity || 0),
+    0
+  );
 
   const renderItem = ({ item }) => (
     <View style={styles.cartItem}>
-      <Image source={{ uri: item.image_url }} style={styles.cartImage} />
+      <Image source={{ uri: item.image }} style={styles.cartImage} />
       <View style={{ flex: 1, marginLeft: 12 }}>
         <Text style={styles.itemName}>{item.name}</Text>
-        <View style={{ flexDirection: "row", gap: 8, marginTop: 4 }}>
-          {item.sale_price ? (
-            <>
-              <Text
-                style={{
-                  color: "#888",
-                  textDecorationLine: "line-through",
-                }}
-              >
-                ₹{item.price}
-              </Text>
-              <Text style={{ color: "#09b71dff", fontWeight: "bold" }}>
-                ₹{item.sale_price}
-              </Text>
-            </>
-          ) : (
-            <Text style={{ color: "#fff", fontWeight: "600" }}>
-              ₹{item.price}
-            </Text>
-          )}
-        </View>
+        <Text style={{ color: "#09b71dff", fontWeight: "bold", marginTop: 4 }}>
+          ₹{item.price}
+        </Text>
         <View style={styles.qtyControl}>
-          <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
+          <TouchableOpacity onPress={() => decrementQty(item.id)}>
             <Text style={styles.qtyBtn}>−</Text>
           </TouchableOpacity>
           <Text style={styles.qtyText}>{item.quantity}</Text>
-          <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
+          <TouchableOpacity onPress={() => incrementQty(item.id)}>
             <Text style={styles.qtyBtn}>＋</Text>
           </TouchableOpacity>
         </View>
@@ -106,7 +77,6 @@ const CartScreen = () => {
     </View>
   );
 
-  // ✅ Shimmer placeholder while loading (no MaskedView)
   const renderShimmer = () => (
     <View style={{ margin: 16 }}>
       {[...Array(3)].map((_, idx) => (
@@ -130,22 +100,15 @@ const CartScreen = () => {
               LinearGradient={LinearGradient}
               width={180}
               height={16}
-              shimmerColors={["#5AA812", "#8BD24A", "#006B3D"]}
               style={{ borderRadius: 4 }}
+              shimmerColors={["#5AA812", "#8BD24A", "#006B3D"]}
             />
             <ShimmerPlaceHolder
               LinearGradient={LinearGradient}
               width={120}
               height={16}
-              shimmerColors={["#5AA812", "#8BD24A", "#006B3D"]}
               style={{ borderRadius: 4, marginTop: 8 }}
-            />
-            <ShimmerPlaceHolder
-              LinearGradient={LinearGradient}
-              width={100}
-              height={20}
               shimmerColors={["#5AA812", "#8BD24A", "#006B3D"]}
-              style={{ borderRadius: 4, marginTop: 8 }}
             />
           </View>
         </View>
@@ -156,21 +119,17 @@ const CartScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: "#f3f3f3ff" }}>
       <NavBar />
-
-      {/* ✅ Show shimmer or cart only after loading */}
       {loading ? (
         renderShimmer()
       ) : productList.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>🛒 Your cart is empty</Text>
-          <Text style={styles.emptySubtext}>
-            Add fresh items to start your order!
-          </Text>
+          <Text style={styles.emptySubtext}>Add fresh items to start your order!</Text>
         </View>
       ) : (
         <FlatList
           data={productList}
-          keyExtractor={(item) => item.product_id.toString()}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
           contentContainerStyle={styles.container}
           ListHeaderComponent={<Text style={styles.title}>My Cart</Text>}
@@ -184,48 +143,43 @@ const CartScreen = () => {
                 <TouchableOpacity
                   style={styles.checkoutBtn}
                   onPress={() =>
-                    navigation.navigate("Home", { screen: "CheckoutScreen" })
+                    navigation.navigate("CheckoutScreen", { cartItems })
                   }
                 >
                   <Text style={styles.checkoutText}>Proceed to Checkout</Text>
                 </TouchableOpacity>
               </View>
 
-              {/* ✅ You may also like */}
+              {/* ✅ Suggestions */}
               {randomProducts.length > 0 && (
                 <>
                   <Text style={styles.suggestionTitle}>You may also like</Text>
                   <FlatList
                     data={randomProducts}
-                    keyExtractor={(item) => item.product_id.toString()}
+                    keyExtractor={(item) =>
+                      item.product_id?.toString() || item.id.toString()
+                    }
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
                     renderItem={({ item }) => {
-                      const quantity = cartItems[item.product_id] || 0;
+                      const quantity = cartItems[item.id]?.quantity || 0;
                       return (
                         <TouchableOpacity
                           style={styles.card}
                           onPress={() =>
                             navigation.navigate("ProductDetails", {
-                              productId: item.product_id,
+                              product: { ...item, product_id: item.id },
                             })
                           }
                         >
-                          <View style={styles.imageWrapper}>
-                            <Image source={{ uri: item.image_url }} style={styles.productImage} />
-                            {item.sale_price && (
-                              <View style={styles.ribbonContainer}>
-                                <Text style={styles.ribbonText}>
-                                  {Math.round(((item.price - item.sale_price) / item.price) * 100)}%
-                                  OFF
-                                </Text>
-                              </View>
-                            )}
-                          </View>
-
+                          <Image
+                            source={{ uri: item.image }}
+                            style={styles.productImage}
+                          />
                           <Text style={styles.productName} numberOfLines={1}>
                             {item.name}
                           </Text>
                           <Text style={styles.productWeight}>{item.weight}</Text>
-
                           <View style={styles.priceRow}>
                             {item.sale_price ? (
                               <>
@@ -236,32 +190,43 @@ const CartScreen = () => {
                               <Text style={styles.price}>₹{item.price}</Text>
                             )}
                           </View>
-
                           {quantity === 0 ? (
                             <TouchableOpacity
                               style={styles.addToCartButton}
-                              onPress={() => addToCart(item.product_id)}
+                              onPress={() =>
+                                addToCart({
+                                  id: item.id,
+                                  name: item.name,
+                                  price: item.sale_price || item.price,
+                                  image: item.image_url,
+                                })
+                              }
                             >
                               <Ionicons name="cart-outline" size={18} color="#fff" />
                               <Text style={styles.addToCartText}>Add</Text>
                             </TouchableOpacity>
                           ) : (
                             <View style={styles.qtySelector}>
-                              <TouchableOpacity onPress={() => decrementQty(item.product_id)}>
-                                <Ionicons name="remove-circle-outline" size={22} color="#006b3d" />
+                              <TouchableOpacity onPress={() => decrementQty(item.id)}>
+                                <Ionicons
+                                  name="remove-circle-outline"
+                                  size={22}
+                                  color="#006b3d"
+                                />
                               </TouchableOpacity>
                               <Text style={styles.qtyText}>{quantity}</Text>
-                              <TouchableOpacity onPress={() => incrementQty(item.product_id)}>
-                                <Ionicons name="add-circle-outline" size={22} color="#006b3d" />
+                              <TouchableOpacity onPress={() => incrementQty(item.id)}>
+                                <Ionicons
+                                  name="add-circle-outline"
+                                  size={22}
+                                  color="#006b3d"
+                                />
                               </TouchableOpacity>
                             </View>
                           )}
                         </TouchableOpacity>
                       );
                     }}
-
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.suggestionList}
                   />
                 </>
