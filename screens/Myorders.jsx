@@ -126,7 +126,7 @@ export default function MyOrders() {
       </Text>
 
       <Text style={styles.deliveryInfo}>
-        Delivered to:{" "}
+        Deliver to:{" "}
         {order.address_line1
           ? `${order.address_line1}, ${order.city} - ${order.pincode}`
           : "Address not available"}

@@ -380,7 +380,7 @@ const CheckoutScreen = () => {
                 style={[
                   styles.selectBtn,
                   selectedAddress?.address_id === addr.address_id &&
-                    styles.selectBtnActive,
+                  styles.selectBtnActive,
                 ]}
               >
                 <TouchableOpacity onPress={() => setSelectedAddress(addr)}>
@@ -514,6 +514,73 @@ const CheckoutScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
+        {/* ✅ Address Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+            setEditingAddressId(null);
+          }}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>
+                {editingAddressId ? "Edit Address" : "Add New Address"}
+              </Text>
+
+              <ScrollView>
+                {[
+                  "name",
+                  "phone",
+                  "address_line1",
+                  "address_line2",
+                  "floor_no(optional)",
+                  "landmark(optional)",
+                  "city",
+                  "state",
+                  "pincode",
+                ].map((field) => (
+                  <TextInput
+                    key={field}
+                    style={styles.input}
+                    placeholder={field.replace(/_/g, " ").toUpperCase()}
+                    value={newAddress[field]}
+                    onChangeText={(text) =>
+                      setNewAddress((prev) => ({ ...prev, [field]: text }))
+                    }
+                  />
+                ))}
+              </ScrollView>
+
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <TouchableOpacity
+                  style={[styles.confirmBtn, { flex: 1, marginRight: 5 }]}
+                  onPress={handleAddAddress}
+                >
+                  <Text style={styles.confirmText}>
+                    {editingAddressId ? "Update" : "Save"}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.confirmBtn,
+                    { flex: 1, backgroundColor: "#ccc", marginLeft: 5 },
+                  ]}
+                  onPress={() => {
+                    setModalVisible(false);
+                    setEditingAddressId(null);
+                  }}
+                >
+                  <Text style={[styles.confirmText, { color: "#333" }]}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
       </ScrollView>
     </View>
   );

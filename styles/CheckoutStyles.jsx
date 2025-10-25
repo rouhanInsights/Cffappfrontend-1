@@ -113,4 +113,32 @@ export default StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
   },
+  modalOverlay: {
+  flex: 1,
+  backgroundColor: "rgba(0,0,0,0.5)",
+  justifyContent: "center",
+  alignItems: "center",
+},
+modalContainer: {
+  width: "90%",
+  backgroundColor: "#fff",
+  borderRadius: 12,
+  padding: 16,
+  maxHeight: "80%",
+},
+modalTitle: {
+  fontSize: 18,
+  fontWeight: "bold",
+  marginBottom: 12,
+  color: "#006b3d",
+  textAlign: "center",
+},
+input: {
+  borderWidth: 1,
+  borderColor: "#ddd",
+  borderRadius: 8,
+  padding: 10,
+  marginBottom: 8,
+},
+
 });
