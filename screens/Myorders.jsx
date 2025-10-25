@@ -72,40 +72,37 @@ export default function MyOrders() {
   }, []);
 
   // ✅ Download Invoice
-  const handleDownloadInvoice = async (orderId) => {
-    try {
-      const token = await AsyncStorage.getItem("userToken");
-      const url = `${BASE_URL}/api/orders/${orderId}/invoice`;
-      const fileName = `invoice-${orderId}.pdf`;
-      const downloadDest = `${RNFS.DocumentDirectoryPath}/${fileName}`;
+const handleDownloadInvoice = async (orderId) => {
+  try {
+    const token = await AsyncStorage.getItem("userToken");
+    const url = `${BASE_URL}/api/orders/${orderId}/invoice`;
+    const fileName = `invoice-${orderId}.pdf`;
 
-      if (Platform.OS === "android") {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
-        );
-        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          Alert.alert("Permission Denied", "Storage permission is required to save invoice.");
-          return;
-        }
-      }
+    // ✅ Use internal DocumentDirectory (no permission needed)
+    const downloadDest =
+      Platform.OS === "android"
+        ? `${RNFS.DownloadDirectoryPath}/${fileName}` // visible in Downloads
+        : `${RNFS.DocumentDirectoryPath}/${fileName}`;
 
-      const downloadOptions = {
-        fromUrl: url,
-        toFile: downloadDest,
-        headers: { Authorization: `Bearer ${token}` },
-      };
+    const downloadOptions = {
+      fromUrl: url,
+      toFile: downloadDest,
+      headers: { Authorization: `Bearer ${token}` },
+    };
 
-      const result = await RNFS.downloadFile(downloadOptions).promise;
-      if (result.statusCode === 200) {
-        await FileViewer.open(downloadDest);
-      } else {
-        throw new Error(`Download failed: ${result.statusCode}`);
-      }
-    } catch (err) {
-      console.error("Invoice Download Error:", err);
-      Alert.alert("Error", "Failed to download or open invoice.");
+    const result = await RNFS.downloadFile(downloadOptions).promise;
+    if (result.statusCode === 200) {
+      Alert.alert("Success", "Invoice saved successfully!");
+      await FileViewer.open(downloadDest);
+    } else {
+      throw new Error(`Download failed: ${result.statusCode}`);
     }
-  };
+  } catch (err) {
+    console.error("Invoice Download Error:", err);
+    Alert.alert("Error", "Failed to download or open invoice.");
+  }
+};
+
 
   const renderOrderItem = ({ item: order }) => (
     <View key={order.order_id} style={styles.card}>

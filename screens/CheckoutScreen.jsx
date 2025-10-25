@@ -116,9 +116,8 @@ const CheckoutScreen = () => {
 
   const paymentOptions = [
     { value: "COD", label: "Cash on Delivery" },
-    { value: "Pay Online", label: "Pay Online" },
+    { value: "Pay Online", label: "Pay Online" }, // ✅ Match enum exactly
   ];
-
   // ✅ Fetch addresses, slots, and products
   useEffect(() => {
     const fetchInitialData = async () => {
@@ -344,7 +343,7 @@ const CheckoutScreen = () => {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...orderPayload, payment_method: "Razorpay" }),
+            body: JSON.stringify({ ...orderPayload, payment_method: "Pay Online" }),
           });
           clearCart();
           navigation.reset({ index: 0, routes: [{ name: "OrderSuccess" }] });
@@ -473,116 +472,120 @@ const CheckoutScreen = () => {
                   <Text style={styles.cartTextBold}>
                     {item.name} × {item.quantity}
                   </Text>
-                  <Text style={styles.cartText}>
+                  <Text style={styles.cartAmount}>
                     ₹{item.price * item.quantity}
                   </Text>
                 </View>
               ))
             )}
             <View style={styles.cartItem}>
-              <Text style={styles.cartText}>Subtotal</Text>
-              <Text>₹{subtotal}</Text>
-            </View>
-            <View style={styles.cartItem}>
-              <Text style={styles.cartText}>Shipping</Text>
-              <Text>₹30</Text>
-            </View>
-            <View style={styles.cartItem}>
-              <Text style={styles.cartTextBold}>Total</Text>
-              <Text style={styles.cartTextBold}>₹{total}</Text>
-            </View>
+            <Text style={styles.cartText}>Subtotal</Text>
+            <Text style={styles.cartAmount}>₹{subtotal}</Text>
+          </View>
 
-            <Text style={styles.sectionTitle}>Payment Method</Text>
-            {paymentOptions.map((option) => (
-              <TouchableOpacity
-                key={option.value}
-                onPress={() => setPaymentMethod(option.value)}
-                style={[
-                  styles.paymentOption,
-                  paymentMethod === option.value && styles.selectedPayment,
-                ]}
-              >
-                <Text style={styles.paymentText}>{option.label}</Text>
-              </TouchableOpacity>
-            ))}
+          <View style={styles.cartItem}>
+            <Text style={styles.cartText}>Shipping</Text>
+            <Text style={styles.cartAmount}>₹30</Text>
+          </View>
 
+          <View style={styles.cartItem}>
+            <Text style={styles.cartTextBold}>Total</Text>
+            <Text style={[styles.cartAmount, { fontWeight: "700" }]}>
+              ₹{total}
+            </Text>
+          </View>
+
+          <Text style={styles.sectionTitle}>Payment Method</Text>
+          {paymentOptions.map((option) => (
             <TouchableOpacity
-              style={styles.confirmBtn}
-              onPress={handleConfirmOrder}
+              key={option.value}
+              onPress={() => setPaymentMethod(option.value)}
+              style={[
+                styles.paymentOption,
+                paymentMethod === option.value && styles.selectedPayment,
+              ]}
             >
-              <Text style={styles.confirmText}>Place Order</Text>
+              <Text style={styles.paymentText}>{option.label}</Text>
             </TouchableOpacity>
-          </View>
+          ))}
+
+          <TouchableOpacity
+            style={styles.confirmBtn}
+            onPress={handleConfirmOrder}
+          >
+            <Text style={styles.confirmText}>Place Order</Text>
+          </TouchableOpacity>
         </View>
-        {/* ✅ Address Modal */}
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(false);
-            setEditingAddressId(null);
-          }}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>
-                {editingAddressId ? "Edit Address" : "Add New Address"}
-              </Text>
-
-              <ScrollView>
-                {[
-                  "name",
-                  "phone",
-                  "address_line1",
-                  "address_line2",
-                  "floor_no(optional)",
-                  "landmark(optional)",
-                  "city",
-                  "state",
-                  "pincode",
-                ].map((field) => (
-                  <TextInput
-                    key={field}
-                    style={styles.input}
-                    placeholder={field.replace(/_/g, " ").toUpperCase()}
-                    value={newAddress[field]}
-                    onChangeText={(text) =>
-                      setNewAddress((prev) => ({ ...prev, [field]: text }))
-                    }
-                  />
-                ))}
-              </ScrollView>
-
-              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <TouchableOpacity
-                  style={[styles.confirmBtn, { flex: 1, marginRight: 5 }]}
-                  onPress={handleAddAddress}
-                >
-                  <Text style={styles.confirmText}>
-                    {editingAddressId ? "Update" : "Save"}
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[
-                    styles.confirmBtn,
-                    { flex: 1, backgroundColor: "#ccc", marginLeft: 5 },
-                  ]}
-                  onPress={() => {
-                    setModalVisible(false);
-                    setEditingAddressId(null);
-                  }}
-                >
-                  <Text style={[styles.confirmText, { color: "#333" }]}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
-
-      </ScrollView>
     </View>
+        {/* ✅ Address Modal */ }
+  <Modal
+    animationType="slide"
+    transparent={true}
+    visible={modalVisible}
+    onRequestClose={() => {
+      setModalVisible(false);
+      setEditingAddressId(null);
+    }}
+  >
+    <View style={styles.modalOverlay}>
+      <View style={styles.modalContainer}>
+        <Text style={styles.modalTitle}>
+          {editingAddressId ? "Edit Address" : "Add New Address"}
+        </Text>
+
+        <ScrollView>
+          {[
+            "name",
+            "phone",
+            "address_line1",
+            "address_line2",
+            "floor_no(optional)",
+            "landmark(optional)",
+            "city",
+            "state",
+            "pincode",
+          ].map((field) => (
+            <TextInput
+              key={field}
+              style={styles.input}
+              placeholder={field.replace(/_/g, " ").toUpperCase()}
+              value={newAddress[field]}
+              onChangeText={(text) =>
+                setNewAddress((prev) => ({ ...prev, [field]: text }))
+              }
+            />
+          ))}
+        </ScrollView>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <TouchableOpacity
+            style={[styles.confirmBtn, { flex: 1, marginRight: 5 }]}
+            onPress={handleAddAddress}
+          >
+            <Text style={styles.confirmText}>
+              {editingAddressId ? "Update" : "Save"}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.confirmBtn,
+              { flex: 1, backgroundColor: "#ccc", marginLeft: 5 },
+            ]}
+            onPress={() => {
+              setModalVisible(false);
+              setEditingAddressId(null);
+            }}
+          >
+            <Text style={[styles.confirmText, { color: "#333" }]}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  </Modal>
+
+      </ScrollView >
+    </View >
   );
 };
 

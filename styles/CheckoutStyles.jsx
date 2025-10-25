@@ -59,22 +59,44 @@ export default StyleSheet.create({
   },
 
   // Order summary items
-  cartItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#dbdbdbff",
-  },
-  cartText: {
-    color: "#000000ff", // light gray for readability
-    fontSize: 14,
-  },
-  cartTextBold: {
-    color: "#000000ff",
-    fontWeight: "700",
-    fontSize: 14,
-  },
+ cartItem: {
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "flex-start",
+  paddingVertical: 6,
+  borderBottomWidth: 1,
+  borderBottomColor: "#e0e0e0",
+},
+
+cartText: {
+  flex: 1,
+  color: "#000",
+  fontSize: 14,
+  flexWrap: "wrap",
+  marginRight: 10,
+  textAlign: "left",
+},
+
+cartTextBold: {
+  flex: 1,
+  color: "#000",
+  fontWeight: "700",
+  fontSize: 14,
+  flexWrap: "wrap",
+  marginRight: 10,
+  textAlign: "left",
+},
+
+// ✅ New: for right-aligned values
+cartAmount: {
+  minWidth: 70, // consistent width for alignment
+  textAlign: "right",
+  fontSize: 14,
+  color: "#000",
+  fontWeight: "600",
+},
+
+
 
   // Payment options
   paymentOption: {
